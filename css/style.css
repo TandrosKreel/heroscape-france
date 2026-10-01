@@ -227,3 +227,13 @@ header .container{position:relative}
 .pm-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid var(--gold)}
 .pm-avatar-default{display:grid;place-items:center;background:var(--panel2);color:var(--gold2)}
 @media(max-width:600px){.member-message-btn{margin-left:0}.member-row{flex-wrap:wrap}}
+
+.pm-toolbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:10px}
+#pm-warning{color:#ffb36b;font-size:12px}
+.pm-tabs{display:flex;gap:8px;margin:12px 0}
+.pm-tabs .btn.active{border-color:var(--gold);color:var(--gold2)}
+.pm-meta{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.pm-actions{display:flex;gap:14px;align-items:center}
+.pm-delete{background:none;border:0;padding:0;color:#ff8585;cursor:pointer;font:inherit}
+.pm-delete:hover{text-decoration:underline}
+.pm-body{min-width:0}
