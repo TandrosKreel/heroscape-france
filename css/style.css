@@ -140,3 +140,35 @@ footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-s
 .latest-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover}
 .pm-row,.notification-row{padding:12px 0;border-bottom:1px solid var(--line)}
 @media(max-width:800px){.header-main{align-items:flex-start;flex-direction:column}.account-panel{justify-content:flex-start;flex-wrap:wrap}.latest-columns{display:none}.latest-row{grid-template-columns:1fr}.latest-replies:before{content:"Réponses : "}}
+
+/* En-tête compact et flux des 5 derniers messages */
+header .container{position:relative}
+.header-main{width:100%;align-items:center}
+.account-panel{margin-left:auto;gap:6px;flex-wrap:nowrap}
+.account-user{gap:6px;padding:3px 5px;font-size:12px;white-space:nowrap}
+.account-user strong{font-size:12px}
+.account-avatar{width:25px;height:25px;min-width:25px;border-width:1px;font-size:10px}
+.account-icon{width:31px;height:31px;font-size:14px}
+.account-logout{height:31px;padding:0 9px;font-size:12px}
+.compact-login{padding:7px 10px;font-size:12px}
+.latest-section{padding:16px 18px}
+.latest-head{padding-bottom:8px;border-bottom:1px solid var(--line)}
+.latest-head h2{font-size:19px}
+.latest-post-row{display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:center;gap:11px;padding:11px 5px;border-bottom:1px solid var(--line);color:var(--text)}
+.latest-post-row:last-child{border-bottom:0}
+.latest-post-row:hover{background:rgba(255,255,255,.035);text-decoration:none}
+.latest-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--gold)}
+.latest-avatar-default{display:grid;place-items:center;background:var(--panel2);color:var(--gold2);font-size:11px;font-weight:bold}
+.latest-post-text{display:flex;align-items:baseline;gap:6px;min-width:0;font-size:13px}
+.latest-post-text strong{color:var(--gold2);white-space:nowrap}
+.latest-post-text span{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.latest-post-text b{color:var(--text);font-weight:600}
+.latest-post-row time{color:var(--muted);font-size:11px;white-space:nowrap}
+@media(max-width:700px){
+ .header-main{align-items:flex-start}
+ .account-panel{width:100%;justify-content:flex-start;flex-wrap:wrap}
+ .latest-post-row{grid-template-columns:30px minmax(0,1fr)}
+ .latest-post-row time{grid-column:2}
+ .latest-post-text{display:block}
+ .latest-post-text strong{display:block}
+}
