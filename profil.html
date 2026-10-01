@@ -26,6 +26,7 @@
         <div id="avatar-preview" class="post-avatar post-avatar-default">?</div>
         <div class="avatar-controls">
           <h3 id="profile-name"></h3>
+          <p id="profile-message-count" class="count"></p>
           <label for="avatar-file"><strong>Choisir une image</strong></label><br>
           <input type="file" id="avatar-file" accept="image/png,image/jpeg,image/webp,image/gif">
           <p class="count">JPG, PNG, WebP ou GIF — 2 Mo maximum.</p>
@@ -34,6 +35,13 @@
             <p><input type="url" id="avatar-url" placeholder="https://exemple.fr/mon-avatar.jpg"></p>
           </details>
           <p><button class="btn" id="save-avatar" type="button">Enregistrer mon avatar</button></p>
+          <hr class="profile-separator">
+          <label for="profile-signature"><strong>Ma signature</strong></label>
+          <p class="count">Elle apparaîtra sous chacun de tes messages — 60 caractères maximum.</p>
+          <input type="text" id="profile-signature" maxlength="60" placeholder="Ta petite phrase…" style="width:100%;max-width:560px">
+          <p><span id="signature-count" class="count">0 / 60</span></p>
+          <p><button class="btn" id="save-signature" type="button">Enregistrer ma signature</button></p>
+          <p id="signature-message"></p>
           <p id="avatar-message"></p>
         </div>
       </div>
@@ -54,10 +62,29 @@
   if(error||!profile){loading.textContent="Impossible de charger le profil.";return;}
   loading.hidden=true; editor.hidden=false;
   document.getElementById("profile-name").textContent=profile.username;
+  const counts=await getMessageCounts();
+  const total=counts[user.id]||0;
+  document.getElementById("profile-message-count").textContent=total+" message"+(total>1?"s":"")+" publié"+(total>1?"s":"");
   const fileInput=document.getElementById("avatar-file");
   const urlInput=document.getElementById("avatar-url");
   const message=document.getElementById("avatar-message");
   const save=document.getElementById("save-avatar");
+  const signatureInput=document.getElementById("profile-signature");
+  const signatureCount=document.getElementById("signature-count");
+  const signatureMessage=document.getElementById("signature-message");
+  const saveSignature=document.getElementById("save-signature");
+  const {data:signatureProfile}=await window.supabaseClient.from("profiles").select("signature").eq("id",user.id).maybeSingle();
+  signatureInput.value=signatureProfile?.signature||"";
+  signatureCount.textContent=signatureInput.value.length+" / 60";
+  signatureInput.addEventListener("input",()=>signatureCount.textContent=signatureInput.value.length+" / 60");
+  saveSignature.addEventListener("click",async()=>{
+    const signature=signatureInput.value.trim().slice(0,60);
+    saveSignature.disabled=true; signatureMessage.textContent="Enregistrement en cours…"; signatureMessage.className="";
+    const {error}=await window.supabaseClient.from("profiles").update({signature}).eq("id",user.id);
+    if(error){signatureMessage.textContent="La signature nécessite encore l’activation du champ dans Supabase.";signatureMessage.className="error-message";}
+    else{signatureInput.value=signature;signatureCount.textContent=signature.length+" / 60";signatureMessage.textContent="Signature enregistrée !";signatureMessage.className="success-message";}
+    saveSignature.disabled=false;
+  });
   urlInput.value=profile.avatar_url||"";
   function preview(url){
     const old=document.getElementById("avatar-preview"); if(!old)return;
