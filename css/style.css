@@ -277,3 +277,10 @@ header .container{position:relative}
   .heroscape-main-logo{width:min(100%,500px)}
   #account.account-panel{position:static;margin-top:8px}
 }
+
+/* Logo PNG détouré : conserve ses couleurs originales */
+.heroscape-main-logo{
+  width:min(100%,620px);
+  mix-blend-mode:normal;
+  background:transparent;
+}
