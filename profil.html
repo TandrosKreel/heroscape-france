@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mon profil — Heroscape France</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header><div class="container">
+  <div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div>
+  <nav><a href="index.html">Forum</a><a href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav>
+</div></header>
+<main class="container">
+  <section class="hero">
+    <a href="index.html">← Retour au forum</a>
+    <h2>Mon profil</h2>
+    <p>Personnalise l'image qui apparaîtra à côté de tes messages.</p>
+  </section>
+  <section class="card" id="profile-card">
+    <div id="profile-loading">Chargement du profil…</div>
+    <div id="profile-editor" hidden>
+      <div class="avatar-settings">
+        <div id="avatar-preview" class="post-avatar post-avatar-default">?</div>
+        <div class="avatar-controls">
+          <h3 id="profile-name"></h3>
+          <label for="avatar-file"><strong>Choisir une image</strong></label><br>
+          <input type="file" id="avatar-file" accept="image/png,image/jpeg,image/webp,image/gif">
+          <p class="count">JPG, PNG, WebP ou GIF — 2 Mo maximum.</p>
+          <details>
+            <summary>Ou utiliser l'adresse d'une image</summary>
+            <p><input type="url" id="avatar-url" placeholder="https://exemple.fr/mon-avatar.jpg"></p>
+          </details>
+          <p><button class="btn" id="save-avatar" type="button">Enregistrer mon avatar</button></p>
+          <p id="avatar-message"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/forum.js"></script>
+<script>
+(async function () {
+  const loading=document.getElementById("profile-loading");
+  const editor=document.getElementById("profile-editor");
+  const {data:{user}}=await window.supabaseClient.auth.getUser();
+  if(!user){ location.href="connexion.html"; return; }
+  const {data:profile,error}=await window.supabaseClient.from("profiles").select("username, avatar_url").eq("id",user.id).single();
+  if(error||!profile){loading.textContent="Impossible de charger le profil.";return;}
+  loading.hidden=true; editor.hidden=false;
+  document.getElementById("profile-name").textContent=profile.username;
+  const fileInput=document.getElementById("avatar-file");
+  const urlInput=document.getElementById("avatar-url");
+  const message=document.getElementById("avatar-message");
+  const save=document.getElementById("save-avatar");
+  urlInput.value=profile.avatar_url||"";
+  function preview(url){
+    const old=document.getElementById("avatar-preview"); if(!old)return;
+    if(!url){old.textContent=(profile.username||"?").charAt(0).toUpperCase();return;}
+    const img=document.createElement("img"); img.id="avatar-preview"; img.className="post-avatar profile-avatar";
+    img.src=url; img.alt="Avatar de "+profile.username; old.replaceWith(img);
+  }
+  preview(profile.avatar_url);
+  fileInput.addEventListener("change",()=>{
+    const file=fileInput.files?.[0]; if(!file)return;
+    if(file.size>2*1024*1024){message.textContent="L'image dépasse 2 Mo.";message.className="error-message";fileInput.value="";return;}
+    preview(URL.createObjectURL(file)); message.textContent="";
+  });
+  save.addEventListener("click",async()=>{
+    save.disabled=true; message.textContent="Enregistrement en cours…"; message.className="";
+    try{
+      let avatarUrl=urlInput.value.trim()||null;
+      const file=fileInput.files?.[0];
+      if(file){
+        const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+        const path=user.id+"/avatar-"+Date.now()+"."+ext;
+        const {error:uploadError}=await window.supabaseClient.storage.from("avatars").upload(path,file,{cacheControl:"3600",upsert:true,contentType:file.type});
+        if(uploadError)throw uploadError;
+        avatarUrl=window.supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl;
+      }
+      const {error:updateError}=await window.supabaseClient.from("profiles").update({avatar_url:avatarUrl}).eq("id",user.id);
+      if(updateError)throw updateError;
+      urlInput.value=avatarUrl||""; fileInput.value=""; preview(avatarUrl);
+      message.textContent="Avatar enregistré ! Il apparaît maintenant à côté de tes messages."; message.className="success-message";
+    }catch(err){console.error(err);message.textContent="Impossible d'enregistrer l'avatar : "+(err.message||"erreur inconnue");message.className="error-message";}
+    finally{save.disabled=false;}
+  });
+})();
+</script>
+</body>
+</html>
