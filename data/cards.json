@@ -2958,5 +2958,469 @@
     "en": "https://lh6.googleusercontent.com/-udxCuZNw-_Q/T-3J1MXgLzI/AAAAAAAACvM/8iBfu9tczNE/Braxas.jpg",
     "fr": "https://lh5.googleusercontent.com/-Yy7H_WT3xRg/TMrfmzuv8UI/AAAAAAAADrE/LhwwtA4GJZU/Braxas.jpg",
     "points": 210
+  },
+  {
+    "name": "Chana the Zenithwing",
+    "general": "Prerelease",
+    "points": 30,
+    "en": "https://i.shgcdn.com/46df6875-7ef9-45bb-84fe-a064ae09bfe8/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 1
+  },
+  {
+    "name": "Kita the Springrunner",
+    "general": "Prerelease",
+    "points": 30,
+    "en": "https://i.shgcdn.com/0a6c1d69-d3b1-4f0c-a520-b9e011883017/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 2
+  },
+  {
+    "name": "Vrono the Brambletooth",
+    "general": "Prerelease",
+    "points": 45,
+    "en": "https://boardgametoday.com/wp-content/uploads/2022/10/DLO011_Vrono_The_Brambletoth.jpg",
+    "fr": null,
+    "points_order": 3
+  },
+  {
+    "name": "Misaerx the Kyrie Warrior",
+    "general": "Prerelease",
+    "points": 50,
+    "en": "https://zupimages.net/up/23/46/em46.jpg",
+    "fr": null,
+    "points_order": 4
+  },
+  {
+    "name": "Oathbound Legionnaires",
+    "general": "Prerelease",
+    "points": 50,
+    "en": "https://i.shgcdn.com/221e735f-9202-4b96-8281-b836414e528d/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 5
+  },
+  {
+    "name": "Onshu the Welkineye",
+    "general": "Prerelease",
+    "points": 50,
+    "en": "https://i.shgcdn.com/6f19958c-0aa2-4b26-a782-286a10abf1f4/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 6
+  },
+  {
+    "name": "Festering Honor Guard",
+    "general": "Prerelease",
+    "points": 60,
+    "en": "https://i.shgcdn.com/fc12dbab-b0b8-43c1-83af-91815b3d6887/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 7
+  },
+  {
+    "name": "Wing Commander Tuck Harrigan",
+    "general": "Prerelease",
+    "points": 60,
+    "en": "https://i.shgcdn.com/e383f01b-ff53-4c23-a5db-63cc999f4df7/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 8
+  },
+  {
+    "name": "Knaves of the Silver Scimitar",
+    "general": "Prerelease",
+    "points": 65,
+    "en": "https://pbs.twimg.com/media/FfCbxMDaUAE1Zkj?format=jpg&name=large",
+    "fr": null,
+    "points_order": 9
+  },
+  {
+    "name": "Vorid Glide Strikers",
+    "general": "Prerelease",
+    "points": 65,
+    "en": "https://www.heroscapers.com/community/gallery/files/1/1/2/5/9/vorid_glide_strikers_original.jpg",
+    "fr": null,
+    "points_order": 10
+  },
+  {
+    "name": "Exiles of the Sundered Sea",
+    "general": "Prerelease",
+    "points": 75,
+    "en": "https://i.shgcdn.com/a5e0971a-dd0d-4605-aedc-a907d44323b4/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 11
+  },
+  {
+    "name": "Cornelius Breech, the Derelict Prince",
+    "general": "Prerelease",
+    "points": 80,
+    "en": "https://i.shgcdn.com/77655d8f-ac1a-48f8-8429-c233c9b1d3f9/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 12
+  },
+  {
+    "name": "Dreadnoughts of Caraway Cavern",
+    "general": "Prerelease",
+    "points": 80,
+    "en": "https://i.shgcdn.com/660718b1-bc8a-4cf1-9701-a51aec8d15e9/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 13
+  },
+  {
+    "name": "Fia Bonny, the Void Siren",
+    "general": "Prerelease",
+    "points": 80,
+    "en": "https://i.shgcdn.com/eb559ee0-b0b9-4dca-b82d-7646752a6159/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 14
+  },
+  {
+    "name": "Killian Vane III",
+    "general": "Prerelease",
+    "points": 80,
+    "en": "https://i.shgcdn.com/bbda50a1-76f2-4eb3-8477-aebd8d132588/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 15
+  },
+  {
+    "name": "Loviatäk the Kyrie Warrior",
+    "general": "Prerelease",
+    "points": 80,
+    "en": "https://zupimages.net/up/23/46/pv0p.jpg",
+    "fr": null,
+    "points_order": 16
+  },
+  {
+    "name": "Oathbound Phalanx",
+    "general": "Prerelease",
+    "points": 80,
+    "en": "https://i.shgcdn.com/550e2e05-543c-4ab5-80fd-e9ea5479e742/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 17
+  },
+  {
+    "name": "Xiamara the Kyrie Warrior",
+    "general": "Prerelease",
+    "points": 80,
+    "en": "https://zupimages.net/up/23/46/d7d5.jpg",
+    "fr": null,
+    "points_order": 18
+  },
+  {
+    "name": "Girushia, Grove Keeper",
+    "general": "Prerelease",
+    "points": 90,
+    "en": "https://i.shgcdn.com/9fe2bee3-3bc0-4d9c-971d-e6819f16e6b5/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 19
+  },
+  {
+    "name": "Glinerva the Kyrie Warrior",
+    "general": "Prerelease",
+    "points": 90,
+    "en": "https://www.starburstmagazine.com/wp-content/uploads/2022/10/Kyrie_Glinerva.png",
+    "fr": null,
+    "points_order": 20
+  },
+  {
+    "name": "Necrotech Wraithriders",
+    "general": "Prerelease",
+    "points": 90,
+    "en": "https://cdn.vox-cdn.com/thumbor/-5M1XvAeiqkCCjIqQehvT_zFyLw=/1400x0/filters:no_upscale()/cdn.vox-cdn.com/uploads/chorus_asset/file/24083966/ICC003_04_05_Necrotech_Wraithriders.png",
+    "fr": null,
+    "points_order": 21
+  },
+  {
+    "name": "Kilkorax the Kyrie Warrior",
+    "general": "Prerelease",
+    "points": 95,
+    "en": "https://zupimages.net/up/23/46/g82n.jpg",
+    "fr": null,
+    "points_order": 22
+  },
+  {
+    "name": "Dorim the Bulkhead Brawler",
+    "general": "Prerelease",
+    "points": 100,
+    "en": "https://i.shgcdn.com/fe78c688-7a09-4ece-9b6e-61b1890cf78c/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 23
+  },
+  {
+    "name": "Mielki the Kyrie Warrior",
+    "general": "Prerelease",
+    "points": 100,
+    "en": "https://zupimages.net/up/23/46/8hah.jpg",
+    "fr": null,
+    "points_order": 24
+  },
+  {
+    "name": "Raakchott, Steward of Death",
+    "general": "Prerelease",
+    "points": 100,
+    "en": "https://i.shgcdn.com/3612be7b-9427-4f98-8969-ebccb43fedf1/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 25
+  },
+  {
+    "name": "Raelin the Kyrie Warrior (3.0)",
+    "general": "Prerelease",
+    "points": 100,
+    "en": "https://i.shgcdn.com/1bd31438-67d8-472e-9214-34bebf3b4222/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 26
+  },
+  {
+    "name": "Marachott, Mind Whisperer",
+    "general": "Prerelease",
+    "points": 110,
+    "en": "https://i.shgcdn.com/d63b1662-3b5a-418d-88ca-76b1b0129410/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 27
+  },
+  {
+    "name": "Ordo Borealis",
+    "general": "Prerelease",
+    "points": 110,
+    "en": "https://zupimages.net/up/22/43/ef6c.jpg",
+    "fr": null,
+    "points_order": 28
+  },
+  {
+    "name": "Queen Qhyrion",
+    "general": "Prerelease",
+    "points": 110,
+    "en": "https://zupimages.net/up/23/46/xwoy.jpg",
+    "fr": null,
+    "points_order": 29
+  },
+  {
+    "name": "Shiori (2.0)",
+    "general": "Prerelease",
+    "points": 110,
+    "en": "https://www.heroscapers.com/community/gallery/files/1/1/2/5/9/shiori.jpg",
+    "fr": null,
+    "points_order": 30
+  },
+  {
+    "name": "Ewashia, Master of Tides",
+    "general": "Prerelease",
+    "points": 115,
+    "en": "https://i.shgcdn.com/8064c8f6-cb55-49b2-9ffa-7e69008707bf/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 31
+  },
+  {
+    "name": "Frostclaw Paladins",
+    "general": "Prerelease",
+    "points": 120,
+    "en": "https://zupimages.net/up/22/43/svbc.jpg",
+    "fr": null,
+    "points_order": 32
+  },
+  {
+    "name": "Halushia, Scion of the Wild",
+    "general": "Prerelease",
+    "points": 120,
+    "en": "https://www.heroscapers.com/community/gallery/files/1/1/2/5/9/halushia,_scion_of_the_wild_original.jpg",
+    "fr": null,
+    "points_order": 33
+  },
+  {
+    "name": "Bok-Bur-Na",
+    "general": "Prerelease",
+    "points": 125,
+    "en": "https://i.shgcdn.com/43d92b69-c0df-4122-b9ba-9295db340f68/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 34
+  },
+  {
+    "name": "Hellforge Mandukor",
+    "general": "Prerelease",
+    "points": 130,
+    "en": "https://cdn.discordapp.com/attachments/1006255475320422553/1019949514917937252/Screen_Shot_2022-09-15_at_8.33.43_AM.png",
+    "fr": null,
+    "points_order": 35
+  },
+  {
+    "name": "Imperator Kayne",
+    "general": "Prerelease",
+    "points": 130,
+    "en": "https://i.shgcdn.com/36ce6860-2e2a-4a41-bd5b-90dbbfce4c88/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 36
+  },
+  {
+    "name": "Sgt. Drake Alexander (3.0)",
+    "general": "Prerelease",
+    "points": 135,
+    "en": "https://i.shgcdn.com/20c7c8d8-9813-4b2a-ae45-fefb21d5d716/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 37
+  },
+  {
+    "name": "Air Marshal Zed Nesbitt",
+    "general": "Prerelease",
+    "points": 140,
+    "en": "https://boardgametoday.com/wp-content/uploads/2022/10/CC001_Air_Marshal_Zed_Nesbitt.jpg",
+    "fr": null,
+    "points_order": 38
+  },
+  {
+    "name": "Crimson Widow",
+    "general": "Prerelease",
+    "points": 150,
+    "en": "https://i.shgcdn.com/cc8662e2-0e5e-4fca-bc0a-db20f6ef3420/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 39
+  },
+  {
+    "name": "Iron Lich Viscerot",
+    "general": "Prerelease",
+    "points": 150,
+    "en": "https://i.shgcdn.com/5f3ba721-4c97-4513-83c9-412d0504d8f1/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 40
+  },
+  {
+    "name": "Knight Primus Adelbern",
+    "general": "Prerelease",
+    "points": 150,
+    "en": "https://cdn.discordapp.com/attachments/1006934645121765518/1024466092531396628/CC009_Knight_Primus_Adelbern.png",
+    "fr": null,
+    "points_order": 41
+  },
+  {
+    "name": "Major Q11",
+    "general": "Prerelease",
+    "points": 160,
+    "en": "https://i.shgcdn.com/b5844c5f-1e3a-4d37-a3de-9883d30c51df/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 42
+  },
+  {
+    "name": "Queen Maladrix the Conqueror",
+    "general": "Prerelease",
+    "points": 160,
+    "en": "https://boardgametoday.com/wp-content/uploads/2022/10/NHS012_Queen_Maladrix_the_Conquerer.jpg",
+    "fr": null,
+    "points_order": 43
+  },
+  {
+    "name": "Admiral EJ-1M",
+    "general": "Prerelease",
+    "points": 170,
+    "en": "https://www.heroscapers.com/community/gallery/files/1/1/2/5/9/admiral_ej1m_original.jpg",
+    "fr": null,
+    "points_order": 44
+  },
+  {
+    "name": "Sonlen (2.0)",
+    "general": "Prerelease",
+    "points": 170,
+    "en": "https://i.shgcdn.com/b19e40e0-00f6-4226-905e-ed1e8bd021a4/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 45
+  },
+  {
+    "name": "Scavorith, lord of Ruin",
+    "general": "Prerelease",
+    "points": 185,
+    "en": "https://www.heroscapers.com/community/gallery/files/1/1/2/5/9/scavorith,_lord_of_ruin_original.jpg",
+    "fr": null,
+    "points_order": 46
+  },
+  {
+    "name": "Thyraxis Dragoon",
+    "general": "Prerelease",
+    "points": 195,
+    "en": "https://i.shgcdn.com/2cda5092-9d20-41c4-87dc-8e3bc67a0eb7/-/format/auto/-/preview/3000x3000/-/quality/lighter/",
+    "fr": null,
+    "points_order": 47
+  },
+  {
+    "name": "Xenithrax the Vineweaver",
+    "general": "Prerelease",
+    "points": 200,
+    "en": "https://boardgametoday.com/wp-content/uploads/2022/10/DLO001_Xentihrax_The_Soulweaver.jpg",
+    "fr": null,
+    "points_order": 48
+  },
+  {
+    "name": "Venom",
+    "general": "Marvel",
+    "points": 150,
+    "points_order": 1,
+    "en": "https://nsm09.casimages.com/img/2019/11/19//19111908271323232016518261.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//z01XJb-VENOM.png"
+  },
+  {
+    "name": "Spider-Man",
+    "general": "Marvel",
+    "points": 160,
+    "points_order": 2,
+    "en": "https://nsm09.casimages.com/img/2019/11/19//19111908291023232016518263.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//ly1XJb-SPIDER-MAN.png"
+  },
+  {
+    "name": "Red Skull",
+    "general": "Marvel",
+    "points": 190,
+    "points_order": 3,
+    "en": "https://nsm09.casimages.com/img/2019/12/06//19120602280523232016543470.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//Zv1XJb-CRANE-ROUGE.png"
+  },
+  {
+    "name": "Captain America",
+    "general": "Marvel",
+    "points": 220,
+    "points_order": 4,
+    "en": "https://nsm09.casimages.com/img/2019/12/06//19120602291123232016543481.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//Dr1XJb-CAPTAIN-AMERICA.png"
+  },
+  {
+    "name": "Iron Man",
+    "general": "Marvel",
+    "points": 240,
+    "points_order": 5,
+    "en": "https://nsm09.casimages.com/img/2019/12/06//19120602262423232016543466.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//Wt1XJb-IRON-MAN.png"
+  },
+  {
+    "name": "Doctor Doom",
+    "general": "Marvel",
+    "points": 245,
+    "points_order": 6,
+    "en": "https://nsm09.casimages.com/img/2019/12/06//19120602242923232016543464.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//Ss1XJb-DOCTEUR-FATALIS.png"
+  },
+  {
+    "name": "Abomination",
+    "general": "Marvel",
+    "points": 320,
+    "points_order": 7,
+    "en": "https://nsm09.casimages.com/img/2019/12/06//19120602300623232016543488.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//6e1XJb-ABOMINATION.png"
+  },
+  {
+    "name": "Silver Surfer",
+    "general": "Marvel",
+    "points": 320,
+    "points_order": 8,
+    "en": "https://nsm09.casimages.com/img/2019/12/06//19120602252923232016543465.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//fx1XJb-SURFER-DARGENT.png"
+  },
+  {
+    "name": "Thanos",
+    "general": "Marvel",
+    "points": 360,
+    "points_order": 9,
+    "en": "https://nsm09.casimages.com/img/2019/12/06//19120602355823232016543499.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//0z1XJb-THANOS.png"
+  },
+  {
+    "name": "Incredible Hulk",
+    "general": "Marvel",
+    "points": 370,
+    "points_order": 10,
+    "en": "https://nsm09.casimages.com/img/2019/12/06//19120602271323232016543467.jpg",
+    "fr": "https://nsm09.casimages.com/img/2020/07/20//Wu1XJb-INCROYABLE-HULK.png"
   }
 ]
