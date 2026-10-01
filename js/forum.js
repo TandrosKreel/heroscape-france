@@ -1,33 +1,114 @@
-
 const cats = [
- ["general","💬","Général","Discussions générales autour d'Heroscape"],
- ["regles","📖","Règles et questions","Questions de règles, précisions et aides de jeu"],
- ["scenarios","⚔️","Scénarios et parties","Scénarios, comptes-rendus et idées de parties"],
- ["cartes","🗺️","Cartes et VirtualScape","Maps, créations de cartes et fichiers VirtualScape"],
- ["figurines","🧙","Figurines et armées","Figurines, extensions, armées et stratégies"],
- ["traductions","🇫🇷","Traductions et ressources VF","Traductions, aides et ressources francophones"],
- ["tournois","🏆","Tournois et rencontres","Tournois, rencontres et organisation de parties"],
- ["customs","🛠️","Customs et créations","Créations de figurines, cartes et règles maison"]
+  ["general", "💬", "Général", "Discussions générales autour d'Heroscape"],
+  ["regles", "📖", "Règles et questions", "Questions de règles, précisions et aides de jeu"],
+  ["scenarios", "⚔️", "Scénarios et parties", "Scénarios, comptes-rendus et idées de parties"],
+  ["cartes", "🗺️", "Cartes et VirtualScape", "Maps, créations de cartes et fichiers VirtualScape"],
+  ["figurines", "🧙", "Figurines et armées", "Figurines, extensions, armées et stratégies"],
+  ["traductions", "FR", "Traductions et ressources VF", "Traductions, aides et ressources francophones"],
+  ["tournois", "🏆", "Tournois et rencontres", "Tournois, rencontres et organisation de parties"],
+  ["customs", "🛠️", "Customs et créations", "Créations de figurines, cartes et règles maison"]
 ];
-const seed = [
- {id:1,cat:"general",title:"Bienvenue sur le forum Heroscape France",author:"Admin",date:"Archive",body:"Bienvenue dans la reconstruction du forum. Cette discussion sert de point de départ pour les échanges."},
- {id:2,cat:"regles",title:"Questions sur les règles",author:"Admin",date:"Archive",body:"Espace prévu pour poser les questions de règles et partager les précisions utiles."},
- {id:3,cat:"scenarios",title:"Vos scénarios et comptes-rendus",author:"Admin",date:"Archive",body:"Partagez ici vos scénarios et racontez vos parties."}
-];
-async function getTopics(){
+
+function catName(id) {
+  const cat = cats.find(c => c[0] === id);
+  return cat ? cat[2] : id;
+}
+
+function esc(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+async function getTopics() {
+  if (!window.supabaseClient) {
+    console.error("Supabase n'est pas initialisé.");
+    return [];
+  }
+
   const { data, error } = await window.supabaseClient
     .from("topics")
     .select("*")
     .order("created_at", { ascending: true });
 
-  if(error){
+  if (error) {
     console.error("Erreur Supabase :", error);
     return [];
   }
 
   return data || [];
 }
-function catName(id){return cats.find(c=>c[0]===id)?.[2]||id}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-const box=document.getElementById("categories");
-if(box) box.innerHTML=cats.map(c=>`<a class="card forumrow" href="categorie.html?cat=${c[0]}"><div><h3>${c[1]} ${c[2]}</h3><div class="count">${c[3]}</div></div><div class="icon">›</div></a>`).join("");
+
+async function getReplies(topicId) {
+  if (!window.supabaseClient) {
+    return [];
+  }
+
+  const { data, error } = await window.supabaseClient
+    .from("replies")
+    .select("*")
+    .eq("topic_id", topicId)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Erreur réponses Supabase :", error);
+    return [];
+  }
+
+  return data || [];
+}
+
+async function addTopic(cat, title, author, body) {
+  const { data, error } = await window.supabaseClient
+    .from("topics")
+    .insert({
+      cat: cat,
+      title: title,
+      author: author,
+      body: body
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Erreur création sujet :", error);
+    return null;
+  }
+
+  return data;
+}
+
+async function addReply(topicId, author, body) {
+  const { data, error } = await window.supabaseClient
+    .from("replies")
+    .insert({
+      topic_id: topicId,
+      author: author,
+      body: body
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Erreur création réponse :", error);
+    return null;
+  }
+
+  return data;
+}
+
+const categoriesBox = document.getElementById("categories");
+
+if (categoriesBox) {
+  categoriesBox.innerHTML = cats.map(c => `
+    <a class="card forumrow" href="categorie.html?cat=${encodeURIComponent(c[0])}">
+      <div>
+        <h3>${c[1]} ${esc(c[2])}</h3>
+        <div class="count">${esc(c[3])}</div>
+      </div>
+    </a>
+  `).join("");
+}
