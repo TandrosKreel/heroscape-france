@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Membres — Heroscape France</title><link rel="stylesheet" href="css/style.css"></head>
+<body><header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div>
+<nav><a href="index.html">Forum</a><a href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a><a href="liens-utiles.html">Liens utiles</a><a class="active" href="membres.html">Membres</a></nav></div></header>
+<main class="container"><section class="hero"><h2>👥 Membres du forum</h2><p>Les membres sont classés selon leur nombre total de messages publiés.</p></section>
+<section id="members-list" class="members-list"><div class="empty">Chargement des membres…</div></section></main>
+<footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js"></script>
+<script>
+(async()=>{
+ const box=document.getElementById("members-list");
+ const [{data:profiles,error:pe},{data:posts,error:po}]=await Promise.all([
+   window.supabaseClient.from("profiles").select("id,username,avatar_url,created_at"),
+   window.supabaseClient.from("posts").select("user_id")
+ ]);
+ if(pe||po){console.error(pe||po);box.innerHTML='<div class="empty">Impossible de charger la liste des membres.</div>';return;}
+ const counts={}; (posts||[]).forEach(p=>counts[p.user_id]=(counts[p.user_id]||0)+1);
+ const members=(profiles||[]).map(p=>({...p,message_count:counts[p.id]||0}))
+   .sort((a,b)=>b.message_count-a.message_count||String(a.username).localeCompare(String(b.username),"fr"));
+ if(!members.length){box.innerHTML='<div class="empty">Aucun membre pour le moment.</div>';return;}
+ box.innerHTML=members.map((m,i)=>{
+   const avatar=m.avatar_url?'<img class="member-avatar" src="'+esc(m.avatar_url)+'" alt="" loading="lazy">':'<div class="member-avatar post-avatar-default">'+esc((m.username||"M").charAt(0).toUpperCase())+'</div>';
+   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div></div></div>';
+ }).join("");
+})();
+</script></body></html>
