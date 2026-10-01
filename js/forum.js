@@ -11,7 +11,7 @@
 
 const cats = [
   ["general", "💬", "Général", "Discussions générales autour d'Heroscape", 1],
-  ["news", "📰", "Les News d'Heroscape", "Les dernières nouvelles et actualités autour d'Heroscape", null],
+  ["news", "📰", "Les News d'Heroscape", "Les dernières nouvelles et actualités autour d'Heroscape", 9],
   ["regles", "📖", "Règles et questions", "Questions de règles, précisions et aides de jeu", 2],
   ["scenarios", "⚔️", "Scénarios et parties", "Scénarios, comptes-rendus et idées de parties", 3],
   ["cartes", "🗺️", "Cartes et VirtualScape", "Maps, créations de cartes et fichiers VirtualScape", 4],
@@ -420,7 +420,7 @@ if (categoriesBox) {
   categoriesBox.innerHTML = cats.map(c => `
     <a
       class="card forumrow"
-      href="${c[0] === "news" ? "news.html" : `categorie.html?cat=${encodeURIComponent(c[0])}`}"
+      href="categorie.html?cat=${encodeURIComponent(c[0])}"
     >
       <div>
         <h3>${c[1]} ${esc(c[2])}</h3>
@@ -429,3 +429,37 @@ if (categoriesBox) {
     </a>
   `).join("");
 }
+
+
+// ------------------------------------------------------------
+// 10. BLOC COMPTE COMMUN À TOUTES LES PAGES
+// ------------------------------------------------------------
+async function renderGlobalAccount() {
+  const headerContainer = document.querySelector("header .container");
+  if (!headerContainer) return;
+  let account = document.getElementById("account");
+  if (!account) {
+    account = document.createElement("div");
+    account.id = "account";
+    account.className = "account-panel global-account";
+    headerContainer.appendChild(account);
+  } else {
+    account.classList.add("account-panel","global-account");
+  }
+  const profile = await getCurrentProfile();
+  if (!profile) {
+    account.innerHTML = '<a class="btn compact-login" href="connexion.html">Connexion</a>';
+    return;
+  }
+  const avatar = profile.avatar_url
+    ? '<img class="account-avatar" src="' + esc(profile.avatar_url) + '" alt="">'
+    : '<span class="account-avatar account-avatar-default">' + esc((profile.username || "M").charAt(0).toUpperCase()) + '</span>';
+  account.innerHTML =
+    '<a class="account-user" href="profil.html" title="Mon profil">' + avatar + '<strong>' + esc(profile.username) + '</strong></a>' +
+    '<a class="account-icon" href="messages.html" title="Messages privés" aria-label="Messages privés">✉</a>' +
+    '<a class="account-icon" href="notifications.html" title="Notifications" aria-label="Notifications">🔔</a>' +
+    '<a class="account-icon" href="profil.html" title="Paramètres du profil" aria-label="Paramètres">⚙</a>' +
+    '<button class="account-logout" type="button" data-global-logout>Se déconnecter</button>';
+  account.querySelector("[data-global-logout]")?.addEventListener("click", logout);
+}
+document.addEventListener("DOMContentLoaded", renderGlobalAccount);
