@@ -5,7 +5,10 @@
 <main class="container"><section class="hero"><a href="index.html">← Retour au forum</a><h2 id="title"></h2><p id="desc"></p></section>
 <div class="toolbar"><input id="search" placeholder="Rechercher un sujet…"><button class="btn" onclick="newTopic()">Nouveau sujet</button></div>
 <div id="topics"></div></main><footer><div class="container">Heroscape France</div></footer>
-<script src="js/forum.js"></script><script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/forum.js"></script>
+<script>
 const params=new URLSearchParams(location.search), cat=params.get("cat")||"general";
 const meta=cats.find(c=>c[0]===cat)||cats[0]; document.getElementById("title").textContent=meta[1]+" "+meta[2];document.getElementById("desc").textContent=meta[3];
 function render(){let q=document.getElementById("search").value.toLowerCase(), arr=getTopics().filter(t=>t.cat===cat && (t.title+t.body+t.author).toLowerCase().includes(q));document.getElementById("topics").innerHTML=arr.length?arr.map(t=>`<div class="topic"><div class="topichead"><a href="sujet.html?id=${t.id}"><strong>${esc(t.title)}</strong></a><span class="count">${esc(t.date)}</span></div><p>${esc(t.body)}</p><span class="count">par ${esc(t.author)}</span></div>`).join(""):'<div class="empty">Aucune discussion pour le moment.</div>'}
