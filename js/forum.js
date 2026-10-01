@@ -22,7 +22,6 @@ function esc(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
-
 async function getTopics() {
   if (!window.supabaseClient) {
     console.error("Supabase n'est pas initialisé.");
