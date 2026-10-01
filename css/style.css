@@ -364,3 +364,85 @@ header nav a{
   header nav{margin-top:22px}
   #account.account-panel,.global-account{position:static;margin-top:12px}
 }
+
+/* RESET RADICAL DE L'EN-TETE — même géométrie partout */
+header{padding:0!important}
+header>.container{
+  position:relative!important;
+  max-width:960px!important;
+  min-height:390px!important;
+  margin:0 auto!important;
+  padding:0 20px!important;
+  display:block!important;
+}
+.header-main{display:block!important}
+.home-brand{
+  position:absolute!important;
+  top:18px!important;
+  left:50%!important;
+  width:620px!important;
+  max-width:calc(100% - 40px)!important;
+  height:285px!important;
+  margin:0!important;
+  padding:0!important;
+  transform:translateX(-50%)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  pointer-events:none!important;
+  z-index:1!important;
+}
+.heroscape-main-logo{
+  display:block!important;
+  width:620px!important;
+  max-width:100%!important;
+  height:250px!important;
+  object-fit:contain!important;
+  margin:0!important;
+}
+.home-brand .tag{
+  position:static!important;
+  margin:0!important;
+  line-height:20px!important;
+  height:20px!important;
+  pointer-events:none!important;
+}
+header nav{
+  position:absolute!important;
+  left:20px!important;
+  bottom:14px!important;
+  z-index:100!important;
+  margin:0!important;
+  padding:0!important;
+  min-height:42px!important;
+  display:flex!important;
+  align-items:stretch!important;
+  gap:8px!important;
+}
+header nav a{
+  position:relative!important;
+  z-index:101!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:42px!important;
+  padding:0 14px!important;
+  pointer-events:auto!important;
+  cursor:pointer!important;
+}
+#account.account-panel,.global-account{
+  position:absolute!important;
+  right:20px!important;
+  bottom:14px!important;
+  top:auto!important;
+  z-index:100!important;
+  margin:0!important;
+}
+@media(max-width:850px){
+  header>.container{min-height:460px!important;padding:0 14px!important}
+  .home-brand{top:12px!important;width:500px!important;max-width:calc(100% - 28px)!important;height:245px!important}
+  .heroscape-main-logo{width:500px!important;height:215px!important}
+  header nav{left:14px!important;right:14px!important;bottom:72px!important;flex-wrap:wrap!important}
+  #account.account-panel,.global-account{left:14px!important;right:auto!important;bottom:12px!important}
+}
