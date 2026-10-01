@@ -68,7 +68,7 @@ async function renderAccount() {
   if (profile) {
     account.innerHTML = `
       <p>
-        Connecté : <strong>${esc(profile.username)}</strong>
+        Connecté : <a href="profil.html" class="profile-link"><strong>${esc(profile.username)}</strong></a>
         —
         <button type="button" onclick="logout()">Se déconnecter</button>
       </p>
