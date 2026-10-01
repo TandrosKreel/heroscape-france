@@ -211,8 +211,19 @@ async function getThread() {
 
 function messageHtml(post, isFirstMessage = false, title = "") {
 
+  const avatar = post.avatar_url
+    ? `<img class="post-avatar" src="${esc(post.avatar_url)}" alt="Avatar de ${esc(post.author || "Membre")}" loading="lazy">`
+    : `<div class="post-avatar post-avatar-default" aria-hidden="true">${esc((post.author || "M").charAt(0).toUpperCase())}</div>`;
+
   return `
-    <article>
+    <article class="forum-post">
+
+      <div class="post-author">
+        ${avatar}
+        <strong>${esc(post.author || "Membre")}</strong>
+      </div>
+
+      <div class="post-content">
 
       ${
         isFirstMessage
@@ -235,6 +246,7 @@ function messageHtml(post, isFirstMessage = false, title = "") {
 
       <p style="white-space:pre-wrap">${esc(post.body)}</p>
 
+      </div>
     </article>
   `;
 }
