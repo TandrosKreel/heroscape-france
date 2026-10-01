@@ -3,6 +3,8 @@
 <header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div>
 <nav><a class="active" href="index.html">Forum</a><a href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav></div></header>
 <main class="container"><div class="hero"><a href="index.html">← Forum</a></div><div id="subject"></div></main><footer><div class="container">Heroscape France</div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
 <script src="js/forum.js"></script><script>
 let id=Number(new URLSearchParams(location.search).get("id"));let t=getTopics().find(x=>x.id===id);
 if(!t)document.getElementById("subject").innerHTML='<div class="empty">Sujet introuvable.</div>';
