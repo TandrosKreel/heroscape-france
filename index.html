@@ -51,7 +51,7 @@
   <section class="grid" id="categories"></section>
 
   <section class="latest-section">
-    <div class="latest-head"><h2>Derniers sujets</h2><a href="categorie.html?cat=general">Voir les discussions →</a></div>
+    <div class="latest-head"><h2>Derniers messages</h2></div>
     <div id="latest-topics"><div class="empty">Chargement des derniers sujets…</div></div>
   </section>
 
@@ -74,17 +74,14 @@ async function renderAccount() {
   const account = document.getElementById("account");
   const profile = await getCurrentProfile();
   if (!profile) {
-    account.innerHTML = '<a class="btn" href="connexion.html">Connexion / Créer un compte</a>';
+    account.innerHTML = '<a class="btn compact-login" href="connexion.html">Connexion</a>';
     return;
   }
-  const counts = await getMessageCounts();
-  const total = counts[profile.id] || 0;
   const avatar = profile.avatar_url
     ? '<img class="account-avatar" src="' + esc(profile.avatar_url) + '" alt="">'
     : '<span class="account-avatar account-avatar-default">' + esc((profile.username || "M").charAt(0).toUpperCase()) + '</span>';
   account.innerHTML =
-    '<a class="account-user" href="profil.html">' + avatar +
-      '<span><strong>' + esc(profile.username) + '</strong><small>' + total + ' message' + (total > 1 ? 's' : '') + '</small></span></a>' +
+    '<a class="account-user" href="profil.html" title="Mon profil">' + avatar + '<strong>' + esc(profile.username) + '</strong></a>' +
     '<a class="account-icon" href="messages.html" title="Messages privés" aria-label="Messages privés">✉</a>' +
     '<a class="account-icon" href="notifications.html" title="Notifications" aria-label="Notifications">🔔</a>' +
     '<a class="account-icon" href="profil.html" title="Paramètres du profil" aria-label="Paramètres">⚙</a>' +
@@ -94,23 +91,37 @@ async function renderAccount() {
 
 async function renderLatestTopics() {
   const box = document.getElementById("latest-topics");
-  const topics = (await getTopics()).slice(0, 5);
-  if (!topics.length) { box.innerHTML = '<div class="empty">Aucun sujet pour le moment.</div>'; return; }
-  const { data: posts } = await window.supabaseClient.from("posts").select("thread_id,user_id,created_at,profiles(username,avatar_url)").in("thread_id", topics.map(t => t.id));
-  const rows = topics.map(topic => {
-    const topicPosts = (posts || []).filter(p => Number(p.thread_id) === Number(topic.id));
-    const last = topicPosts.slice().sort((a,b) => new Date(b.created_at)-new Date(a.created_at))[0];
-    const replies = Math.max(0, topicPosts.length - 1);
-    const lastName = last?.profiles?.username || topic.author || "Membre";
-    const avatar = last?.profiles?.avatar_url ? '<img class="latest-avatar" src="' + esc(last.profiles.avatar_url) + '" alt="">' : '';
-    return '<a class="latest-row" href="sujet.html?id=' + topic.id + '">' +
-      '<span class="latest-title">💬 <strong>' + esc(topic.title) + '</strong></span>' +
-      '<span class="latest-cat">' + esc(catName(topic.cat)) + '</span>' +
-      '<span class="latest-replies">' + replies + '</span>' +
-      '<span class="latest-last">' + avatar + '<span>' + esc(lastName) + '<small>' + (last?.created_at ? new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(last.created_at)) : "") + '</small></span></span>' +
+  const { data: posts, error } = await window.supabaseClient
+    .from("posts")
+    .select("id,thread_id,user_id,created_at,profiles(username,avatar_url),threads(title)")
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (error) {
+    console.error("Erreur derniers messages :", error);
+    box.innerHTML = '<div class="empty">Impossible de charger les derniers messages.</div>';
+    return;
+  }
+  if (!posts?.length) {
+    box.innerHTML = '<div class="empty">Aucun message pour le moment.</div>';
+    return;
+  }
+
+  box.innerHTML = posts.map(post => {
+    const name = post.profiles?.username || "Membre";
+    const title = post.threads?.title || "Sujet";
+    const avatar = post.profiles?.avatar_url
+      ? '<img class="latest-avatar" src="' + esc(post.profiles.avatar_url) + '" alt="">'
+      : '<span class="latest-avatar latest-avatar-default">' + esc(name.charAt(0).toUpperCase()) + '</span>';
+    const date = post.created_at
+      ? new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(post.created_at))
+      : "";
+    return '<a class="latest-post-row" href="sujet.html?id=' + post.thread_id + '">' +
+      avatar +
+      '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(title) + '</b></span></span>' +
+      '<time>' + esc(date) + '</time>' +
     '</a>';
   }).join("");
-  box.innerHTML = '<div class="latest-columns"><span>Sujet</span><span>Catégorie</span><span>Réponses</span><span>Dernier message</span></div>' + rows;
 }
 
 renderAccount();
