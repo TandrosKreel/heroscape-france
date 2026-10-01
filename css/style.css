@@ -297,3 +297,11 @@ header{padding-top:8px}
   .home-brand{padding-bottom:10px;transform:translateY(12px)}
   .heroscape-main-logo{width:min(100%,500px)}
 }
+
+/* Ajustement global final de l'en-tête */
+header{padding-top:0;padding-bottom:12px}
+.home-brand{padding-bottom:22px;transform:translateY(48px)}
+@media(max-width:850px){
+  header{padding-top:0;padding-bottom:10px}
+  .home-brand{padding-bottom:6px;transform:translateY(16px)}
+}
