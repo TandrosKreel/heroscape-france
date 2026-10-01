@@ -111,6 +111,26 @@ async function getCurrentProfile() {
   return data;
 }
 
+async function getMessageCounts() {
+  const supabase = getSupabase();
+  if (!supabase) return {};
+  const { data, error } = await supabase.from("posts").select("user_id");
+  if (error) { console.error("Erreur comptage messages :", error); return {}; }
+  const counts = {};
+  (data || []).forEach(post => { counts[post.user_id] = (counts[post.user_id] || 0) + 1; });
+  return counts;
+}
+
+async function getSignatures(userIds) {
+  const ids = [...new Set((userIds || []).filter(Boolean))];
+  if (!ids.length) return {};
+  const { data, error } = await getSupabase().from("profiles").select("id, signature").in("id", ids);
+  if (error) return {};
+  const signatures = {};
+  (data || []).forEach(profile => { signatures[profile.id] = profile.signature || ""; });
+  return signatures;
+}
+
 
 // ------------------------------------------------------------
 // 4. SUJETS
