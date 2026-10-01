@@ -26,7 +26,7 @@ async function getTopics(){
   }
 
   return data || [];
-}}
+}
 function catName(id){return cats.find(c=>c[0]===id)?.[2]||id}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 const box=document.getElementById("categories");
