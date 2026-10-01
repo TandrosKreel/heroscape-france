@@ -305,3 +305,62 @@ header{padding-top:0;padding-bottom:12px}
   header{padding-top:0;padding-bottom:10px}
   .home-brand{padding-bottom:6px;transform:translateY(16px)}
 }
+
+/* En-tête unique et stable sur toutes les pages */
+header{padding:18px 0 12px}
+header .container{position:relative}
+.header-main{display:contents}
+.home-brand{
+  width:100%;
+  padding:0;
+  margin:0;
+  transform:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.heroscape-main-logo{
+  display:block;
+  width:620px;
+  max-width:100%;
+  height:auto;
+  object-fit:contain;
+}
+.home-brand .tag{
+  margin:2px 0 0;
+  line-height:1.4;
+}
+header nav{
+  position:relative;
+  z-index:20;
+  margin-top:34px;
+  padding:0;
+  min-height:38px;
+  display:flex;
+  align-items:center;
+}
+header nav a{
+  position:relative;
+  z-index:21;
+  display:inline-flex;
+  align-items:center;
+  min-height:38px;
+}
+#account.account-panel,
+.global-account{
+  position:absolute;
+  z-index:20;
+  right:20px;
+  bottom:12px;
+  top:auto;
+  margin:0;
+}
+@media(max-width:850px){
+  header{padding:12px 0}
+  .home-brand{width:100%;padding:0;margin:0;transform:none}
+  .heroscape-main-logo{width:500px;max-width:100%}
+  header nav{margin-top:22px}
+  #account.account-panel,.global-account{position:static;margin-top:12px}
+}
