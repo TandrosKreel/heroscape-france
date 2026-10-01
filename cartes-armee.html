@@ -1,16 +1,72 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Cartes d'armée — Heroscape France</title><link rel="stylesheet" href="css/style.css"></head><body>
-<header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Cartes d'armée</div></div></div>
-<nav><a href="index.html">Forum</a><a class="active" href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav></div></header>
-<main class="container"><section class="hero"><h2>Cartes d'armée</h2><p>Catalogue consultable par nom, général, type et coût. Les scans/PDF des cartes doivent être ajoutés séparément dans le dossier local du site si tu disposes des fichiers.</p></section>
-<div class="toolbar"><input id="q" placeholder="Rechercher une figurine…"><select id="g"><option value="">Tous les généraux</option></select><select id="t"><option value="">Tous les types</option><option>Héros</option><option>Escouade</option></select></div>
-<table><thead><tr><th>Nom</th><th>Général</th><th>Type</th><th>Points</th></tr></thead><tbody id="rows"></tbody></table>
-<div class="notice">Le catalogue ci-dessus est une base de navigation locale. Pour constituer une archive exhaustive, ajoute les scans/PDF des cartes que tu possèdes dans <code>documents/cartes-armee/</code>, puis associe chaque fichier à sa fiche.</div>
-</main><footer><div class="container">Les cartes Heroscape et leurs textes sont protégés par leurs ayants droit.</div></footer>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cartes d'armée — Heroscape France</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .cards-toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+    .cards-toolbar input,.cards-toolbar select{padding:10px;min-width:210px}
+    .general-section{margin:28px 0}
+    .army-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+    .army-card{padding:16px}
+    .army-card h3{margin:0 0 8px}
+    .army-meta{margin:0 0 12px;opacity:.8}
+    .army-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .army-actions a,.army-actions span{display:inline-block;padding:8px 11px;border-radius:6px;text-decoration:none}
+    .army-actions span{opacity:.5}
+    .section-count{font-weight:normal;font-size:.8em;opacity:.7}
+    #cards-status{margin:12px 0}
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Cartes d'armée</div></div></div>
+    <nav><a href="index.html">Forum</a><a class="active" href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav>
+  </div>
+</header>
+<main class="container">
+  <section class="hero">
+    <h2>Cartes d'armée</h2>
+    <p>Bibliothèque des cartes classées par général et selon l'ordre de points de la collection source. Ouvre directement la carte française ou anglaise.</p>
+  </section>
+  <div class="cards-toolbar">
+    <input id="q" type="search" placeholder="Rechercher une unité…">
+    <select id="g"><option value="">Tous les généraux</option></select>
+    <select id="band">
+      <option value="">Tous les coûts</option>
+      <option value="Moins de 100">Moins de 100 points</option>
+      <option value="100 à 149">100 à 149 points</option>
+      <option value="150 et plus">150 points et plus</option>
+    </select>
+  </div>
+  <div id="cards-status">Chargement des cartes…</div>
+  <div id="cards"></div>
+</main>
+<footer><div class="container">Heroscape France — cartes d'armée VF et anglaises.</div></footer>
 <script>
-fetch("data/cards.json").then(r=>r.json()).then(data=>{
- const gs=[...new Set(data.map(x=>x.general))].sort(); g.innerHTML+=[...gs].map(x=>`<option>${x}</option>`).join("");
- function render(){let s=q.value.toLowerCase(),gg=g.value,tt=t.value;rows.innerHTML=data.filter(x=>(!s||x.name.toLowerCase().includes(s))&&(!gg||x.general===gg)&&(!tt||x.type===tt)).map(x=>`<tr><td>${x.name}</td><td>${x.general}</td><td>${x.type}</td><td>${x.points}</td></tr>`).join("")}
- q.oninput=g.onchange=t.onchange=render;render();
-});
-</script></body></html>
+const escCard=s=>String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+fetch("data/cards.json").then(r=>{if(!r.ok)throw new Error("Catalogue introuvable");return r.json()}).then(data=>{
+  const q=document.getElementById("q"),g=document.getElementById("g"),band=document.getElementById("band"),box=document.getElementById("cards"),status=document.getElementById("cards-status");
+  const generals=[...new Set(data.map(x=>x.general))];
+  g.innerHTML+=generals.map(x=>`<option value="${escCard(x)}">${escCard(x)}</option>`).join("");
+  function button(url,label){
+    return url?`<a class="btn" href="${escCard(url)}" target="_blank" rel="noopener noreferrer">${label}</a>`:`<span>${label} indisponible</span>`;
+  }
+  function render(){
+    const term=q.value.trim().toLowerCase();
+    const filtered=data.filter(x=>(!term||x.name.toLowerCase().includes(term))&&(!g.value||x.general===g.value)&&(!band.value||x.points_band===band.value));
+    status.textContent=filtered.length+" carte"+(filtered.length>1?"s":"")+" affichée"+(filtered.length>1?"s":"")+".";
+    box.innerHTML=generals.map(general=>{
+      const list=filtered.filter(x=>x.general===general);
+      if(!list.length)return "";
+      return `<section class="general-section"><h2>${escCard(general)} <span class="section-count">(${list.length})</span></h2><div class="army-grid">${list.map(x=>`<article class="card army-card"><h3>${escCard(x.name)}</h3><p class="army-meta">${escCard(x.points_band)} points</p><div class="army-actions">${button(x.fr,"🇫🇷 VF")}${button(x.en,"🇬🇧 English")}</div></article>`).join("")}</div></section>`;
+    }).join("");
+  }
+  q.addEventListener("input",render);g.addEventListener("change",render);band.addEventListener("change",render);render();
+}).catch(err=>{console.error(err);document.getElementById("cards-status").textContent="Impossible de charger le catalogue.";});
+</script>
+</body>
+</html>
