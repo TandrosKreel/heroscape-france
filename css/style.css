@@ -219,3 +219,11 @@ header .container{position:relative}
 .pagination a:hover,.pagination a.active{background:var(--gold);border-color:var(--gold);color:#17130a;text-decoration:none}
 .thread-page-title{margin:20px 0 10px}
 @media(max-width:850px){.global-account{position:static;margin-top:14px;justify-content:flex-start;flex-wrap:wrap}}
+
+.member-message-btn{margin-left:auto;white-space:nowrap;font-size:12px}
+.pm-row{display:grid;grid-template-columns:38px minmax(0,1fr);gap:12px}
+.pm-row small{display:block;color:var(--muted);font-size:11px}
+.pm-row p{margin:7px 0}
+.pm-avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1px solid var(--gold)}
+.pm-avatar-default{display:grid;place-items:center;background:var(--panel2);color:var(--gold2)}
+@media(max-width:600px){.member-message-btn{margin-left:0}.member-row{flex-wrap:wrap}}
