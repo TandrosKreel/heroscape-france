@@ -95,3 +95,11 @@ footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-s
 .success-message{color:#77d68c;font-weight:bold}
 .error-message{color:#ff8585;font-weight:bold}
 @media(max-width:600px){.avatar-settings{flex-direction:column}.avatar-settings .profile-avatar,.avatar-settings>.post-avatar{width:90px;height:90px;flex-basis:90px}}
+
+.useful-links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:10px 0 50px}
+.useful-link{display:block;min-height:175px}
+.useful-link p{color:var(--muted)}
+.useful-link:hover{text-decoration:none}
+.link-cta{display:inline-block;margin-top:8px;color:var(--gold2);font-weight:bold}
+.placeholder-link{border-style:dashed;opacity:.58}
+.placeholder-link:hover{transform:none;border-color:var(--line)}
