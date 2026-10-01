@@ -1,1 +1,36 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages privés — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261002-2"></head><body><header><div class="container"><h1>Heroscape France</h1><nav><a href="index.html">← Forum</a><a href="profil.html">Mon profil</a></nav></div></header><main class="container"><section class="hero"><h2>✉ Messages privés</h2><p>Ta messagerie privée Heroscape France.</p></section><div id="private-messages" class="card"><p>Chargement…</p></div></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script>(async()=>{const b=document.getElementById("private-messages");const {data:{user}}=await window.supabaseClient.auth.getUser();if(!user){location.href="connexion.html";return}const {data,error}=await window.supabaseClient.from("private_messages").select("id,sender_id,recipient_id,content,created_at,is_read").or("sender_id.eq."+user.id+",recipient_id.eq."+user.id).order("created_at",{ascending:false});if(error){b.innerHTML="<p>La messagerie sera disponible dès que sa table Supabase sera activée.</p>";return}b.innerHTML=data.length?data.map(m=>"<div class='pm-row'><strong>"+(m.sender_id===user.id?"Envoyé":"Reçu")+"</strong><p>"+String(m.content).replace(/[&<>]/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[x]))+"</p></div>").join(""):"<p>Aucun message privé pour le moment.</p>";})();</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js"></script></body></html>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages privés — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261002-3"></head><body>
+<header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div><nav><a href="index.html">Forum</a><a href="membres.html">Membres</a><a href="profil.html">Mon profil</a></nav></div></header>
+<main class="container"><section class="hero"><h2>✉ Messages privés</h2><p>Ta boîte contient uniquement tes 20 messages reçus les plus récents.</p></section>
+<section id="compose" class="card" hidden><h3 id="compose-title">Nouveau message</h3><textarea id="pm-content" rows="6" maxlength="5000" placeholder="Écris ton message…" style="width:100%;box-sizing:border-box"></textarea><p><button class="btn" id="send-pm" type="button">Envoyer</button> <a href="membres.html">Annuler</a></p><p id="pm-status"></p></section>
+<section class="private-inbox"><h3>Messages reçus</h3><div id="private-messages" class="card"><p>Chargement…</p></div></section></main>
+<footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js"></script>
+<script>
+(async()=>{
+ const supabase=window.supabaseClient,b=document.getElementById("private-messages");
+ const {data:{user}}=await supabase.auth.getUser(); if(!user){location.href="connexion.html";return}
+ const to=new URLSearchParams(location.search).get("to");
+ if(to&&to!==user.id){
+   const {data:recipient}=await supabase.from("profiles").select("id,username").eq("id",to).maybeSingle();
+   if(recipient){
+     document.getElementById("compose").hidden=false;
+     document.getElementById("compose-title").textContent="Nouveau message à "+recipient.username;
+     document.getElementById("send-pm").addEventListener("click",async()=>{
+       const content=document.getElementById("pm-content").value.trim(),status=document.getElementById("pm-status");
+       if(!content){status.textContent="Écris un message avant de l’envoyer.";return}
+       const btn=document.getElementById("send-pm");btn.disabled=true;status.textContent="Envoi…";
+       const {error}=await supabase.from("private_messages").insert({sender_id:user.id,recipient_id:recipient.id,content});
+       if(error){console.error(error);status.textContent="Impossible d’envoyer le message : "+error.message;btn.disabled=false;return}
+       status.textContent="Message envoyé !";document.getElementById("pm-content").value="";
+       setTimeout(()=>location.href="messages.html",600);
+     });
+   }
+ }
+ const {data,error}=await supabase.from("private_messages").select("id,sender_id,content,created_at,is_read").eq("recipient_id",user.id).order("created_at",{ascending:false}).limit(20);
+ if(error){console.error(error);b.innerHTML="<p>Impossible de charger les messages.</p>";return}
+ const senderIds=[...new Set((data||[]).map(m=>m.sender_id))];
+ let names={};
+ if(senderIds.length){const {data:profiles}=await supabase.from("profiles").select("id,username,avatar_url").in("id",senderIds);(profiles||[]).forEach(p=>names[p.id]=p)}
+ b.innerHTML=data?.length?data.map(m=>{const p=names[m.sender_id]||{},date=new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(m.created_at));const av=p.avatar_url?'<img class="pm-avatar" src="'+esc(p.avatar_url)+'" alt="">':'<span class="pm-avatar pm-avatar-default">'+esc((p.username||"M").charAt(0))+'</span>';return '<article class="pm-row">'+av+'<div><strong>'+esc(p.username||"Membre")+'</strong><small>'+esc(date)+'</small><p>'+esc(m.content)+'</p><a href="messages.html?to='+encodeURIComponent(m.sender_id)+'">Répondre</a></div></article>'}).join(""):"<p>Aucun message reçu pour le moment.</p>";
+})();
+</script></body></html>
