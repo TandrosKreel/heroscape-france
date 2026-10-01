@@ -1,78 +1,431 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Catégorie — Heroscape France</title><link rel="stylesheet" href="css/style.css"></head><body>
-<header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div>
-<nav><a class="active" href="index.html">Forum</a><a href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav></div></header>
-<main class="container"><section class="hero"><a href="index.html">← Retour au forum</a><h2 id="title"></h2><p id="desc"></p></section>
-<div class="toolbar"><input id="search" placeholder="Rechercher un sujet…"><button class="btn" onclick="newTopic()">Nouveau sujet</button></div>
-<div id="topics"></div></main><footer><div class="container">Heroscape France</div></footer>
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Catégorie — Heroscape France</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+
+    <div class="brand">
+      <div class="logo">HS</div>
+
+      <div>
+        <h1>Heroscape France</h1>
+        <div class="tag">Forum & archives francophones</div>
+      </div>
+    </div>
+
+    <nav>
+      <a class="active" href="index.html">Forum</a>
+      <a href="cartes-armee.html">Cartes d'armée</a>
+      <a href="regles.html">Règles</a>
+    </nav>
+
+  </div>
+</header>
+
+
+<main class="container">
+
+  <section class="hero">
+
+    <a href="index.html">← Retour au forum</a>
+
+    <h2 id="title"></h2>
+
+    <p id="desc"></p>
+
+    <div id="member-area"></div>
+
+  </section>
+
+
+  <div class="toolbar">
+
+    <input
+      id="search"
+      type="search"
+      placeholder="Rechercher un sujet…"
+    >
+
+    <button
+      class="btn"
+      id="new-topic-button"
+      type="button"
+    >
+      Nouveau sujet
+    </button>
+
+  </div>
+
+
+  <div id="new-topic-form" class="card" hidden>
+
+    <h3>Nouveau sujet</h3>
+
+    <p>
+      <label for="topic-title">Titre</label><br>
+
+      <input
+        id="topic-title"
+        type="text"
+        minlength="3"
+        maxlength="200"
+        style="width:100%;box-sizing:border-box"
+      >
+    </p>
+
+    <p>
+      <label for="topic-body">Message</label><br>
+
+      <textarea
+        id="topic-body"
+        rows="8"
+        maxlength="20000"
+        style="width:100%;box-sizing:border-box"
+      ></textarea>
+    </p>
+
+    <p>
+      <button
+        class="btn"
+        id="publish-topic-button"
+        type="button"
+      >
+        Publier le sujet
+      </button>
+
+      <button
+        id="cancel-topic-button"
+        type="button"
+      >
+        Annuler
+      </button>
+    </p>
+
+    <p id="topic-message"></p>
+
+  </div>
+
+
+  <div id="topics"></div>
+
+</main>
+
+
+<footer>
+  <div class="container">
+    Heroscape France
+  </div>
+</footer>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="js/supabase-config.js"></script>
+
 <script src="js/forum.js"></script>
+
+
 <script>
+
 const params = new URLSearchParams(location.search);
+
 const cat = params.get("cat") || "general";
 
-const meta = cats.find(c => c[0] === cat) || cats[0];
-document.getElementById("title").textContent = meta[1] + " " + meta[2];
-document.getElementById("desc").textContent = meta[3];
+const meta =
+  cats.find(c => c[0] === cat) || cats[0];
 
-async function render() {
-  const q = document.getElementById("search").value.toLowerCase();
 
-  const topics = await getTopics();
+document.getElementById("title").textContent =
+  meta[1] + " " + meta[2];
 
-  const arr = topics.filter(t =>
-    t.cat === cat &&
-    ((t.title || "") + (t.body || "") + (t.author || ""))
-      .toLowerCase()
-      .includes(q)
-  );
+document.getElementById("desc").textContent =
+  meta[3];
 
-  document.getElementById("topics").innerHTML = arr.length
-    ? arr.map(t => `
-        <a class="topic" href="sujet.html?id=${t.id}">
-          <div>
-            <strong>${esc(t.title)}</strong>
-            <div class="count">
-              Par ${esc(t.author || "Visiteur")}
-            </div>
-          </div>
+
+const topicsBox =
+  document.getElementById("topics");
+
+const searchInput =
+  document.getElementById("search");
+
+const memberArea =
+  document.getElementById("member-area");
+
+const newTopicButton =
+  document.getElementById("new-topic-button");
+
+const newTopicForm =
+  document.getElementById("new-topic-form");
+
+const topicTitle =
+  document.getElementById("topic-title");
+
+const topicBody =
+  document.getElementById("topic-body");
+
+const topicMessage =
+  document.getElementById("topic-message");
+
+const publishTopicButton =
+  document.getElementById("publish-topic-button");
+
+const cancelTopicButton =
+  document.getElementById("cancel-topic-button");
+
+
+// ------------------------------------------------------------
+// AFFICHAGE DU MEMBRE CONNECTÉ
+// ------------------------------------------------------------
+
+async function renderMember() {
+
+  const profile = await getCurrentProfile();
+
+  if (!profile) {
+
+    memberArea.innerHTML = `
+      <p>
+        <a href="connexion.html">
+          Se connecter ou créer un compte
         </a>
-      `).join("")
-    : '<div class="empty">Aucun sujet dans cette catégorie.</div>';
-}
+      </p>
+    `;
 
-document.getElementById("search").addEventListener("input", render);
-
-async function newTopic() {
-  const title = prompt("Titre du sujet :");
-  if (!title) return;
-
-  const author = prompt("Votre pseudo :", "Visiteur") || "Visiteur";
-  const body = prompt("Votre message :");
-  if (!body) return;
-
-  const { data, error } = await window.supabaseClient
-    .from("topics")
-    .insert({
-      cat: cat,
-      title: title,
-      author: author,
-      body: body
-    })
-    .select()
-    .single();
-
-  if (error) {
-    console.error(error);
-    alert("Impossible de créer le sujet.");
     return;
   }
 
-  location.href = "sujet.html?id=" + data.id;
+  memberArea.innerHTML = `
+    <p>
+      Connecté :
+      <strong>${esc(profile.username)}</strong>
+      —
+      <button
+        type="button"
+        id="logout-button"
+      >
+        Se déconnecter
+      </button>
+    </p>
+  `;
+
+  document
+    .getElementById("logout-button")
+    .addEventListener("click", logout);
 }
 
+
+// ------------------------------------------------------------
+// AFFICHAGE DES SUJETS
+// ------------------------------------------------------------
+
+async function render() {
+
+  topicsBox.innerHTML =
+    '<div class="empty">Chargement des sujets…</div>';
+
+  const q =
+    searchInput.value
+      .trim()
+      .toLowerCase();
+
+  const topics =
+    await getTopics(cat);
+
+  const arr =
+    topics.filter(topic => {
+
+      const searchable =
+        (
+          (topic.title || "") +
+          " " +
+          (topic.author || "")
+        ).toLowerCase();
+
+      return searchable.includes(q);
+    });
+
+
+  if (!arr.length) {
+
+    topicsBox.innerHTML =
+      '<div class="empty">Aucun sujet dans cette catégorie.</div>';
+
+    return;
+  }
+
+
+  topicsBox.innerHTML =
+    arr.map(topic => `
+
+      <a
+        class="topic"
+        href="sujet.html?id=${encodeURIComponent(topic.id)}"
+      >
+
+        <div>
+
+          <strong>
+            ${topic.is_pinned ? "📌 " : ""}
+            ${esc(topic.title)}
+          </strong>
+
+          <div class="count">
+            Par ${esc(topic.author || "Membre")}
+          </div>
+
+        </div>
+
+      </a>
+
+    `).join("");
+}
+
+
+// ------------------------------------------------------------
+// BOUTON NOUVEAU SUJET
+// ------------------------------------------------------------
+
+newTopicButton.addEventListener(
+  "click",
+  async () => {
+
+    const user =
+      await getCurrentUser();
+
+    if (!user) {
+
+      alert(
+        "Tu dois être connecté pour créer un sujet."
+      );
+
+      location.href =
+        "connexion.html";
+
+      return;
+    }
+
+    topicMessage.textContent = "";
+
+    newTopicForm.hidden = false;
+
+    topicTitle.focus();
+  }
+);
+
+
+// ------------------------------------------------------------
+// ANNULER
+// ------------------------------------------------------------
+
+cancelTopicButton.addEventListener(
+  "click",
+  () => {
+
+    newTopicForm.hidden = true;
+
+    topicTitle.value = "";
+    topicBody.value = "";
+    topicMessage.textContent = "";
+  }
+);
+
+
+// ------------------------------------------------------------
+// PUBLIER LE SUJET
+// ------------------------------------------------------------
+
+publishTopicButton.addEventListener(
+  "click",
+  async () => {
+
+    const title =
+      topicTitle.value.trim();
+
+    const body =
+      topicBody.value.trim();
+
+
+    if (title.length < 3) {
+
+      topicMessage.textContent =
+        "Le titre doit contenir au moins 3 caractères.";
+
+      return;
+    }
+
+
+    if (!body) {
+
+      topicMessage.textContent =
+        "Écris un message avant de publier.";
+
+      return;
+    }
+
+
+    publishTopicButton.disabled = true;
+
+    topicMessage.textContent =
+      "Publication en cours…";
+
+
+    const topic =
+      await addTopic(
+        cat,
+        title,
+        null,
+        body
+      );
+
+
+    if (!topic) {
+
+      topicMessage.textContent =
+        "Impossible de créer le sujet.";
+
+      publishTopicButton.disabled = false;
+
+      return;
+    }
+
+
+    location.href =
+      "sujet.html?id=" +
+      encodeURIComponent(topic.id);
+  }
+);
+
+
+// ------------------------------------------------------------
+// RECHERCHE
+// ------------------------------------------------------------
+
+searchInput.addEventListener(
+  "input",
+  render
+);
+
+
+// ------------------------------------------------------------
+// DÉMARRAGE
+// ------------------------------------------------------------
+
+renderMember();
+
 render();
+
 </script>
+
 </body>
 </html>
