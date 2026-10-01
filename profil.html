@@ -81,7 +81,7 @@
     const signature=signatureInput.value.trim().slice(0,60);
     saveSignature.disabled=true; signatureMessage.textContent="Enregistrement en cours…"; signatureMessage.className="";
     const {error}=await window.supabaseClient.from("profiles").update({signature}).eq("id",user.id);
-    if(error){signatureMessage.textContent="La signature nécessite encore l’activation du champ dans Supabase.";signatureMessage.className="error-message";}
+    if(error){console.error("Erreur signature :",error);signatureMessage.textContent="Impossible d’enregistrer la signature : "+(error.message||"erreur inconnue");signatureMessage.className="error-message";}
     else{signatureInput.value=signature;signatureCount.textContent=signature.length+" / 60";signatureMessage.textContent="Signature enregistrée !";signatureMessage.className="success-message";}
     saveSignature.disabled=false;
   });
