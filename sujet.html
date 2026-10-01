@@ -5,9 +5,85 @@
 <main class="container"><div class="hero"><a href="index.html">← Forum</a></div><div id="subject"></div></main><footer><div class="container">Heroscape France</div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
-<script src="js/forum.js"></script><script>
-let id=Number(new URLSearchParams(location.search).get("id"));let t=getTopics().find(x=>x.id===id);
-if(!t)document.getElementById("subject").innerHTML='<div class="empty">Sujet introuvable.</div>';
-else {document.title=t.title+" — Heroscape France";document.getElementById("subject").innerHTML=`<article><h2>${esc(t.title)}</h2><div class="count">Par ${esc(t.author)} — ${esc(t.date)} — ${esc(catName(t.cat))}</div><p>${esc(t.body)}</p></article><button class="btn" onclick="reply()">Répondre</button>`}
-function reply(){let author=prompt("Votre pseudo :","Visiteur")||"Visiteur";let body=prompt("Votre réponse :","");if(body===null)return;let a=getTopics();a.push({id:Date.now(),cat:t.cat,title:"Re: "+t.title,author,date:new Date().toLocaleDateString("fr-FR"),body:"En réponse à « "+t.title+" » : "+body});localStorage.setItem("hs_topics",JSON.stringify(a));location.reload()}
-</script></body></html>
+<script>
+const id = Number(new URLSearchParams(location.search).get("id"));
+
+async function renderSubject() {
+  const { data: topic, error } = await window.supabaseClient
+    .from("topics")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !topic) {
+    console.error(error);
+    document.getElementById("subject").innerHTML =
+      '<div class="empty">Sujet introuvable.</div>';
+    return;
+  }
+
+  document.title = topic.title + " – Heroscape France";
+
+  const { data: replies, error: repliesError } = await window.supabaseClient
+    .from("replies")
+    .select("*")
+    .eq("topic_id", id)
+    .order("created_at", { ascending: true });
+
+  if (repliesError) {
+    console.error(repliesError);
+  }
+
+  const repliesHtml = (replies || []).map(r => `
+    <article>
+      <div class="count">Par ${esc(r.author || "Visiteur")}</div>
+      <p>${esc(r.body)}</p>
+    </article>
+  `).join("");
+
+  document.getElementById("subject").innerHTML = `
+    <article>
+      <h2>${esc(topic.title)}</h2>
+      <div class="count">Par ${esc(topic.author || "Visiteur")}</div>
+      <p>${esc(topic.body)}</p>
+    </article>
+
+    <h3>Réponses</h3>
+
+    <div id="replies">
+      ${repliesHtml || '<div class="empty">Aucune réponse pour le moment.</div>'}
+    </div>
+
+    <p>
+      <button class="btn" onclick="reply()">Répondre</button>
+    </p>
+  `;
+}
+
+async function reply() {
+  const author = prompt("Votre pseudo :", "Visiteur") || "Visiteur";
+  const body = prompt("Votre réponse :");
+
+  if (!body) return;
+
+  const { error } = await window.supabaseClient
+    .from("replies")
+    .insert({
+      topic_id: id,
+      author: author,
+      body: body
+    });
+
+  if (error) {
+    console.error(error);
+    alert("Impossible d'enregistrer la réponse.");
+    return;
+  }
+
+  await renderSubject();
+}
+
+renderSubject();
+</script>
+</body>
+</html>
