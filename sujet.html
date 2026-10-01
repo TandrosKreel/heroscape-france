@@ -1,89 +1,466 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sujet — Heroscape France</title><link rel="stylesheet" href="css/style.css"></head><body>
-<header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div>
-<nav><a class="active" href="index.html">Forum</a><a href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav></div></header>
-<main class="container"><div class="hero"><a href="index.html">← Forum</a></div><div id="subject"></div></main><footer><div class="container">Heroscape France</div></footer>
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Sujet — Heroscape France</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="container">
+
+    <div class="brand">
+      <div class="logo">HS</div>
+
+      <div>
+        <h1>Heroscape France</h1>
+        <div class="tag">Forum & archives francophones</div>
+      </div>
+    </div>
+
+    <nav>
+      <a class="active" href="index.html">Forum</a>
+      <a href="cartes-armee.html">Cartes d'armée</a>
+      <a href="regles.html">Règles</a>
+    </nav>
+
+  </div>
+</header>
+
+
+<main class="container">
+
+  <div class="hero">
+
+    <a id="back-link" href="index.html">
+      ← Retour au forum
+    </a>
+
+    <div id="member-area"></div>
+
+  </div>
+
+
+  <div id="subject">
+    <div class="empty">
+      Chargement du sujet…
+    </div>
+  </div>
+
+</main>
+
+
+<footer>
+  <div class="container">
+    Heroscape France
+  </div>
+</footer>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="js/supabase-config.js"></script>
+
+<script src="js/forum.js"></script>
+
+
 <script>
-const id = Number(new URLSearchParams(location.search).get("id"));
 
-async function renderSubject() {
-  const { data: topic, error } = await window.supabaseClient
-    .from("topics")
-    .select("*")
-    .eq("id", id)
-    .single();
+const params =
+  new URLSearchParams(location.search);
 
-  if (error || !topic) {
-    console.error(error);
-    document.getElementById("subject").innerHTML =
-      '<div class="empty">Sujet introuvable.</div>';
+const id =
+  Number(params.get("id"));
+
+
+const subjectBox =
+  document.getElementById("subject");
+
+const memberArea =
+  document.getElementById("member-area");
+
+const backLink =
+  document.getElementById("back-link");
+
+
+// ------------------------------------------------------------
+// DATE
+// ------------------------------------------------------------
+
+function formatDate(value) {
+
+  if (!value) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat(
+    "fr-FR",
+    {
+      dateStyle: "medium",
+      timeStyle: "short"
+    }
+  ).format(new Date(value));
+}
+
+
+// ------------------------------------------------------------
+// MEMBRE CONNECTÉ
+// ------------------------------------------------------------
+
+async function renderMember() {
+
+  const profile =
+    await getCurrentProfile();
+
+
+  if (!profile) {
+
+    memberArea.innerHTML = `
+      <p>
+        <a href="connexion.html">
+          Se connecter ou créer un compte
+        </a>
+      </p>
+    `;
+
     return;
   }
 
-  document.title = topic.title + " – Heroscape France";
 
-  const { data: replies, error: repliesError } = await window.supabaseClient
-    .from("replies")
-    .select("*")
-    .eq("topic_id", id)
-    .order("created_at", { ascending: true });
+  memberArea.innerHTML = `
+    <p>
+      Connecté :
+      <strong>${esc(profile.username)}</strong>
+      —
+      <button
+        type="button"
+        id="logout-button"
+      >
+        Se déconnecter
+      </button>
+    </p>
+  `;
 
-  if (repliesError) {
-    console.error(repliesError);
+
+  document
+    .getElementById("logout-button")
+    .addEventListener(
+      "click",
+      logout
+    );
+}
+
+
+// ------------------------------------------------------------
+// CHARGEMENT DU SUJET
+// ------------------------------------------------------------
+
+async function getThread() {
+
+  if (!Number.isInteger(id) || id <= 0) {
+    return null;
   }
 
-  const repliesHtml = (replies || []).map(r => `
-    <article>
-      <div class="count">Par ${esc(r.author || "Visiteur")}</div>
-      <p>${esc(r.body)}</p>
-    </article>
-  `).join("");
 
-  document.getElementById("subject").innerHTML = `
-    <article>
-      <h2>${esc(topic.title)}</h2>
-      <div class="count">Par ${esc(topic.author || "Visiteur")}</div>
-      <p>${esc(topic.body)}</p>
-    </article>
+  const { data, error } =
+    await window.supabaseClient
+      .from("threads")
+      .select(`
+        id,
+        category_id,
+        user_id,
+        title,
+        is_locked,
+        is_pinned,
+        created_at,
+        updated_at
+      `)
+      .eq("id", id)
+      .single();
+
+
+  if (error) {
+
+    console.error(
+      "Erreur chargement sujet :",
+      error
+    );
+
+    return null;
+  }
+
+
+  return data;
+}
+
+
+// ------------------------------------------------------------
+// AFFICHAGE DU SUJET ET DES MESSAGES
+// ------------------------------------------------------------
+
+async function renderSubject() {
+
+  const thread =
+    await getThread();
+
+
+  if (!thread) {
+
+    subjectBox.innerHTML =
+      '<div class="empty">Sujet introuvable.</div>';
+
+    return;
+  }
+
+
+  document.title =
+    thread.title + " — Heroscape France";
+
+
+  const slug =
+    catSlug(thread.category_id);
+
+
+  if (slug) {
+
+    backLink.href =
+      "categorie.html?cat=" +
+      encodeURIComponent(slug);
+
+    backLink.textContent =
+      "← Retour à " +
+      catName(slug);
+  }
+
+
+  const posts =
+    await getReplies(id);
+
+
+  let messagesHtml = "";
+
+
+  if (posts.length) {
+
+    messagesHtml =
+      posts.map((post, index) => `
+
+        <article>
+
+          ${
+            index === 0
+              ? `<h2>${esc(thread.title)}</h2>`
+              : ""
+          }
+
+          <div class="count">
+            Par
+            <strong>
+              ${esc(post.author || "Membre")}
+            </strong>
+
+            ${
+              post.created_at
+                ? " — " + esc(formatDate(post.created_at))
+                : ""
+            }
+          </div>
+
+          <p style="white-space:pre-wrap">${esc(post.body)}</p>
+
+        </article>
+
+      `).join("");
+
+  } else {
+
+    messagesHtml = `
+      <article>
+
+        <h2>
+          ${esc(thread.title)}
+        </h2>
+
+        <div class="empty">
+          Aucun message dans ce sujet.
+        </div>
+
+      </article>
+    `;
+  }
+
+
+  const user =
+    await getCurrentUser();
+
+
+  let replyHtml = "";
+
+
+  if (thread.is_locked) {
+
+    replyHtml = `
+      <div class="empty">
+        🔒 Ce sujet est verrouillé.
+      </div>
+    `;
+
+  } else if (!user) {
+
+    replyHtml = `
+      <div class="card">
+
+        <h3>Répondre</h3>
+
+        <p>
+          Tu dois être connecté pour répondre.
+        </p>
+
+        <p>
+          <a href="connexion.html">
+            Se connecter ou créer un compte
+          </a>
+        </p>
+
+      </div>
+    `;
+
+  } else {
+
+    replyHtml = `
+      <div class="card">
+
+        <h3>Répondre</h3>
+
+        <textarea
+          id="reply-body"
+          rows="7"
+          maxlength="20000"
+          placeholder="Écris ta réponse…"
+          style="width:100%;box-sizing:border-box"
+        ></textarea>
+
+        <p>
+          <button
+            class="btn"
+            id="reply-button"
+            type="button"
+          >
+            Publier la réponse
+          </button>
+        </p>
+
+        <p id="reply-message"></p>
+
+      </div>
+    `;
+  }
+
+
+  subjectBox.innerHTML = `
+    ${messagesHtml}
 
     <h3>Réponses</h3>
 
-    <div id="replies">
-      ${repliesHtml || '<div class="empty">Aucune réponse pour le moment.</div>'}
-    </div>
-
-    <p>
-      <button class="btn" onclick="reply()">Répondre</button>
-    </p>
+    ${replyHtml}
   `;
+
+
+  if (user && !thread.is_locked) {
+
+    const replyButton =
+      document.getElementById(
+        "reply-button"
+      );
+
+
+    replyButton.addEventListener(
+      "click",
+      publishReply
+    );
+  }
 }
 
-async function reply() {
-  const author = prompt("Votre pseudo :", "Visiteur") || "Visiteur";
-  const body = prompt("Votre réponse :");
 
-  if (!body) return;
+// ------------------------------------------------------------
+// PUBLIER UNE RÉPONSE
+// ------------------------------------------------------------
 
-  const { error } = await window.supabaseClient
-    .from("replies")
-    .insert({
-      topic_id: id,
-      author: author,
-      body: body
-    });
+async function publishReply() {
 
-  if (error) {
-    console.error(error);
-    alert("Impossible d'enregistrer la réponse.");
+  const replyBody =
+    document.getElementById(
+      "reply-body"
+    );
+
+  const replyButton =
+    document.getElementById(
+      "reply-button"
+    );
+
+  const replyMessage =
+    document.getElementById(
+      "reply-message"
+    );
+
+
+  const body =
+    replyBody.value.trim();
+
+
+  if (!body) {
+
+    replyMessage.textContent =
+      "Écris une réponse avant de publier.";
+
     return;
   }
+
+
+  replyButton.disabled = true;
+
+  replyMessage.textContent =
+    "Publication en cours…";
+
+
+  const result =
+    await addReply(
+      id,
+      null,
+      body
+    );
+
+
+  if (!result) {
+
+    replyMessage.textContent =
+      "Impossible d'enregistrer la réponse.";
+
+    replyButton.disabled = false;
+
+    return;
+  }
+
 
   await renderSubject();
 }
 
+
+// ------------------------------------------------------------
+// DÉMARRAGE
+// ------------------------------------------------------------
+
+renderMember();
+
 renderSubject();
+
 </script>
+
 </body>
 </html>
