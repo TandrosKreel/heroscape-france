@@ -37,9 +37,9 @@
     <select id="g"><option value="">Tous les généraux</option></select>
     <select id="band">
       <option value="">Tous les coûts</option>
-      <option value="Moins de 100">Moins de 100 points</option>
-      <option value="100 à 149">100 à 149 points</option>
-      <option value="150 et plus">150 points et plus</option>
+      <option value="lt100">Moins de 100 points</option>
+      <option value="100to149">100 à 149 points</option>
+      <option value="gte150">150 points et plus</option>
     </select>
   </div>
   <div id="cards-status">Chargement des cartes…</div>
@@ -50,6 +50,7 @@
 const escCard=s=>String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
 fetch("data/cards.json").then(r=>{if(!r.ok)throw new Error("Catalogue introuvable");return r.json()}).then(data=>{
   const q=document.getElementById("q"),g=document.getElementById("g"),band=document.getElementById("band"),box=document.getElementById("cards"),status=document.getElementById("cards-status");
+  data.sort((a,b)=>a.general.localeCompare(b.general,"fr")||a.points-b.points||a.points_order-b.points_order);
   const generals=[...new Set(data.map(x=>x.general))];
   g.innerHTML+=generals.map(x=>`<option value="${escCard(x)}">${escCard(x)}</option>`).join("");
   function button(url,label){
@@ -57,12 +58,15 @@ fetch("data/cards.json").then(r=>{if(!r.ok)throw new Error("Catalogue introuvabl
   }
   function render(){
     const term=q.value.trim().toLowerCase();
-    const filtered=data.filter(x=>(!term||x.name.toLowerCase().includes(term))&&(!g.value||x.general===g.value)&&(!band.value||x.points_band===band.value));
+    const filtered=data.filter(x=>{
+      const costOk=!band.value||(band.value==="lt100"&&x.points<100)||(band.value==="100to149"&&x.points>=100&&x.points<150)||(band.value==="gte150"&&x.points>=150);
+      return (!term||x.name.toLowerCase().includes(term))&&(!g.value||x.general===g.value)&&costOk;
+    });
     status.textContent=filtered.length+" carte"+(filtered.length>1?"s":"")+" affichée"+(filtered.length>1?"s":"")+".";
     box.innerHTML=generals.map(general=>{
       const list=filtered.filter(x=>x.general===general);
       if(!list.length)return "";
-      return `<section class="general-section"><h2>${escCard(general)} <span class="section-count">(${list.length})</span></h2><div class="army-grid">${list.map(x=>`<article class="card army-card"><h3>${escCard(x.name)}</h3><p class="army-meta">${escCard(x.points_band)} points</p><div class="army-actions">${button(x.fr,"🇫🇷 VF")}${button(x.en,"🇬🇧 English")}</div></article>`).join("")}</div></section>`;
+      return `<section class="general-section"><h2>${escCard(general)} <span class="section-count">(${list.length})</span></h2><div class="army-grid">${list.map(x=>`<article class="card army-card"><h3>${escCard(x.name)}</h3><p class="army-meta">${escCard(x.points)} points</p><div class="army-actions">${button(x.fr,"🇫🇷 VF")}${button(x.en,"🇬🇧 English")}</div></article>`).join("")}</div></section>`;
     }).join("");
   }
   q.addEventListener("input",render);g.addEventListener("change",render);band.addEventListener("change",render);render();
