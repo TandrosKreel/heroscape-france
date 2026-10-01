@@ -9,9 +9,70 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/forum.js"></script>
 <script>
-const params=new URLSearchParams(location.search), cat=params.get("cat")||"general";
-const meta=cats.find(c=>c[0]===cat)||cats[0]; document.getElementById("title").textContent=meta[1]+" "+meta[2];document.getElementById("desc").textContent=meta[3];
-function render(){let q=document.getElementById("search").value.toLowerCase(), arr=getTopics().filter(t=>t.cat===cat && (t.title+t.body+t.author).toLowerCase().includes(q));document.getElementById("topics").innerHTML=arr.length?arr.map(t=>`<div class="topic"><div class="topichead"><a href="sujet.html?id=${t.id}"><strong>${esc(t.title)}</strong></a><span class="count">${esc(t.date)}</span></div><p>${esc(t.body)}</p><span class="count">par ${esc(t.author)}</span></div>`).join(""):'<div class="empty">Aucune discussion pour le moment.</div>'}
-document.getElementById("search").addEventListener("input",render);render();
-function newTopic(){let title=prompt("Titre du sujet :");if(!title)return;let author=prompt("Votre pseudo :","Visiteur")||"Visiteur";let body=prompt("Votre message :","");if(body===null)return;let a=getTopics();a.push({id:Date.now(),cat,title,author,date:new Date().toLocaleDateString("fr-FR"),body});localStorage.setItem("hs_topics",JSON.stringify(a));render()}
-</script></body></html>
+const params = new URLSearchParams(location.search);
+const cat = params.get("cat") || "general";
+
+const meta = cats.find(c => c[0] === cat) || cats[0];
+document.getElementById("title").textContent = meta[1] + " " + meta[2];
+document.getElementById("desc").textContent = meta[3];
+
+async function render() {
+  const q = document.getElementById("search").value.toLowerCase();
+
+  const topics = await getTopics();
+
+  const arr = topics.filter(t =>
+    t.cat === cat &&
+    ((t.title || "") + (t.body || "") + (t.author || ""))
+      .toLowerCase()
+      .includes(q)
+  );
+
+  document.getElementById("topics").innerHTML = arr.length
+    ? arr.map(t => `
+        <a class="topic" href="sujet.html?id=${t.id}">
+          <div>
+            <strong>${esc(t.title)}</strong>
+            <div class="count">
+              Par ${esc(t.author || "Visiteur")}
+            </div>
+          </div>
+        </a>
+      `).join("")
+    : '<div class="empty">Aucun sujet dans cette catégorie.</div>';
+}
+
+document.getElementById("search").addEventListener("input", render);
+
+async function newTopic() {
+  const title = prompt("Titre du sujet :");
+  if (!title) return;
+
+  const author = prompt("Votre pseudo :", "Visiteur") || "Visiteur";
+  const body = prompt("Votre message :");
+  if (!body) return;
+
+  const { data, error } = await window.supabaseClient
+    .from("topics")
+    .insert({
+      cat: cat,
+      title: title,
+      author: author,
+      body: body
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    alert("Impossible de créer le sujet.");
+    return;
+  }
+
+  location.href = "sujet.html?id=" + data.id;
+}
+
+render();
+</script>
+</body>
+</html>
