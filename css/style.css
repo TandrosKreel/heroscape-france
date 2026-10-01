@@ -112,3 +112,31 @@ footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-s
 .member-avatar{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);display:grid;place-items:center}
 .member-info{flex:1}
 .profile-separator{border:0;border-top:1px solid var(--line);margin:24px 0}
+
+.header-main{display:flex;justify-content:space-between;align-items:center;gap:24px}
+.account-panel{display:flex;align-items:center;justify-content:flex-end;gap:9px}
+.account-user{display:flex;align-items:center;gap:9px;color:var(--text);padding-right:4px}
+.account-user:hover{text-decoration:none}
+.account-user strong{display:block;color:var(--gold2);font-size:13px}
+.account-user small{display:block;color:var(--gold);font-size:11px}
+.account-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)}
+.account-avatar-default{display:grid;place-items:center;background:var(--panel2);font-weight:bold}
+.account-icon,.account-logout{height:38px;display:grid;place-items:center;background:#10161c;color:var(--text);border:1px solid var(--line);border-radius:7px}
+.account-icon{width:40px;font-size:17px}
+.account-icon:hover{border-color:var(--gold);text-decoration:none}
+.account-logout{padding:0 13px;cursor:pointer}
+.latest-section{margin:5px 0 50px;background:rgba(10,15,20,.72);border:1px solid var(--line);border-radius:10px;padding:18px}
+.latest-head{display:flex;justify-content:space-between;align-items:center;gap:15px}
+.latest-head h2{margin:0;font-size:21px}
+.latest-head a{font-size:12px;font-weight:bold}
+.latest-columns,.latest-row{display:grid;grid-template-columns:minmax(260px,2fr) minmax(140px,1fr) 90px minmax(170px,1.1fr);gap:14px;align-items:center}
+.latest-columns{padding:16px 8px 7px;color:var(--muted);font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--line)}
+.latest-row{padding:11px 8px;border-bottom:1px solid rgba(57,68,79,.55);color:var(--text)}
+.latest-row:hover{text-decoration:none;background:rgba(255,255,255,.025)}
+.latest-title strong{color:var(--gold2)}
+.latest-cat,.latest-replies{color:var(--muted);font-size:12px}
+.latest-last{display:flex;align-items:center;gap:8px;font-size:12px}
+.latest-last small{display:block;color:var(--muted)}
+.latest-avatar{width:30px;height:30px;border-radius:50%;object-fit:cover}
+.pm-row,.notification-row{padding:12px 0;border-bottom:1px solid var(--line)}
+@media(max-width:800px){.header-main{align-items:flex-start;flex-direction:column}.account-panel{justify-content:flex-start;flex-wrap:wrap}.latest-columns{display:none}.latest-row{grid-template-columns:1fr}.latest-replies:before{content:"Réponses : "}}
