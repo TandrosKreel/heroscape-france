@@ -36,3 +36,39 @@ th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}th{color:
 footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-size:13px}
 .empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:8px}
 @media(max-width:600px){h1{font-size:22px}.hero h2{font-size:28px}.container{padding:0 13px}.forumrow{align-items:flex-start}.topichead{flex-direction:column}}
+
+
+/* Liste des sujets du forum */
+#topics{display:flex;flex-direction:column;gap:10px;margin:18px 0 50px}
+#topics .topic{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  width:100%;
+  margin:0;
+  padding:17px 20px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:9px;
+  color:var(--text);
+  transition:.15s ease;
+}
+#topics .topic:hover{
+  background:var(--panel2);
+  border-color:var(--gold);
+  text-decoration:none;
+  transform:translateY(-1px);
+}
+.topic-main{min-width:0;flex:1}
+.topic-title{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:17px}
+.topic-title strong{color:var(--gold2);overflow-wrap:anywhere}
+.topic-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:7px;color:var(--muted);font-size:12px}
+.topic-pin{display:inline-block;background:var(--gold);color:#17130a;border-radius:5px;padding:2px 7px;font-size:11px;font-weight:bold}
+.topic-arrow{color:var(--gold);font-size:30px;line-height:1;font-weight:normal}
+@media(max-width:600px){
+  #topics .topic{padding:14px 15px;gap:10px}
+  .topic-title{font-size:16px}
+  .topic-meta{gap:8px 12px}
+  .topic-arrow{font-size:25px}
+}
