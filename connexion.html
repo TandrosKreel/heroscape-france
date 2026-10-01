@@ -26,6 +26,20 @@
       <a href="index.html">← Retour à l'accueil</a>
     </p>
 
+    <section class="card" id="profile-card" hidden>
+      <h2>Mon profil</h2>
+      <p>Choisis l'image qui apparaîtra à côté de tes messages.</p>
+      <div class="avatar-settings">
+        <div id="avatar-preview" class="post-avatar post-avatar-default">?</div>
+        <div>
+          <label for="avatar-url">Adresse de l'image (URL)</label><br>
+          <input type="url" id="avatar-url" placeholder="https://exemple.fr/mon-avatar.jpg" style="width:100%;max-width:520px">
+          <p><button class="btn" id="save-avatar" type="button">Enregistrer mon avatar</button></p>
+          <p id="avatar-message"></p>
+        </div>
+      </div>
+    </section>
+
     <section class="card">
       <h2>Connexion</h2>
 
@@ -102,6 +116,53 @@
   </main>
 
   <script>
+
+    async function loadProfileEditor() {
+      const { data: { user } } = await window.supabaseClient.auth.getUser();
+      if (!user) return;
+
+      const { data: profile } = await window.supabaseClient
+        .from("profiles")
+        .select("username, avatar_url")
+        .eq("id", user.id)
+        .single();
+
+      if (!profile) return;
+
+      const card = document.getElementById("profile-card");
+      const input = document.getElementById("avatar-url");
+      const preview = document.getElementById("avatar-preview");
+      card.hidden = false;
+      input.value = profile.avatar_url || "";
+
+      function refreshPreview() {
+        const url = input.value.trim();
+        if (url) {
+          preview.outerHTML = '<img id="avatar-preview" class="post-avatar" src="' +
+            url.replaceAll('"', '&quot;') + '" alt="Aperçu de l\'avatar">';
+        }
+      }
+
+      refreshPreview();
+
+      document.getElementById("save-avatar").addEventListener("click", async () => {
+        const avatarUrl = input.value.trim() || null;
+        const message = document.getElementById("avatar-message");
+
+        const { error } = await window.supabaseClient
+          .from("profiles")
+          .update({ avatar_url: avatarUrl })
+          .eq("id", user.id);
+
+        message.textContent = error
+          ? "Impossible d'enregistrer l'avatar : " + error.message
+          : "Avatar enregistré !";
+        message.style.color = error ? "crimson" : "green";
+      });
+    }
+
+    loadProfileEditor();
+
     const loginForm = document.getElementById("login-form");
     const signupForm = document.getElementById("signup-form");
 
