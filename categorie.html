@@ -229,6 +229,18 @@ async function renderMember() {
 // AFFICHAGE DES SUJETS
 // ------------------------------------------------------------
 
+function formatTopicDate(value) {
+  if (!value) return "";
+
+  return new Intl.DateTimeFormat("fr-FR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(new Date(value));
+}
+
 async function render() {
 
   topicsBox.innerHTML =
@@ -273,18 +285,21 @@ async function render() {
         href="sujet.html?id=${encodeURIComponent(topic.id)}"
       >
 
-        <div>
+        <div class="topic-main">
 
-          <strong>
-            ${topic.is_pinned ? "📌 " : ""}
-            ${esc(topic.title)}
-          </strong>
+          <div class="topic-title">
+            ${topic.is_pinned ? '<span class="topic-pin">📌 Épinglé</span>' : ""}
+            <strong>${esc(topic.title)}</strong>
+          </div>
 
-          <div class="count">
-            Par ${esc(topic.author || "Membre")}
+          <div class="topic-meta">
+            <span>👤 ${esc(topic.author || "Membre")}</span>
+            <span>🕒 ${formatTopicDate(topic.updated_at || topic.created_at)}</span>
           </div>
 
         </div>
+
+        <div class="topic-arrow" aria-hidden="true">›</div>
 
       </a>
 
