@@ -21,7 +21,7 @@
  if(!members.length){box.innerHTML='<div class="empty">Aucun membre pour le moment.</div>';return;}
  box.innerHTML=members.map((m,i)=>{
    const avatar=m.avatar_url?'<img class="member-avatar" src="'+esc(m.avatar_url)+'" alt="" loading="lazy">':'<div class="member-avatar post-avatar-default">'+esc((m.username||"M").charAt(0).toUpperCase())+'</div>';
-   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div></div></div>';
+   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div></div><a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Envoyer un message</a></div>';
  }).join("");
 })();
 </script></body></html>
