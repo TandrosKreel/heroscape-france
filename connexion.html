@@ -32,8 +32,13 @@
       <div class="avatar-settings">
         <div id="avatar-preview" class="post-avatar post-avatar-default">?</div>
         <div>
-          <label for="avatar-url">Adresse de l'image (URL)</label><br>
-          <input type="url" id="avatar-url" placeholder="https://exemple.fr/mon-avatar.jpg" style="width:100%;max-width:520px">
+          <label for="avatar-file">Choisir une image</label><br>
+          <input type="file" id="avatar-file" accept="image/png,image/jpeg,image/webp,image/gif">
+          <p class="count">JPG, PNG, WebP ou GIF — 2 Mo maximum.</p>
+          <details>
+            <summary>Ou utiliser l'adresse d'une image</summary>
+            <p><input type="url" id="avatar-url" placeholder="https://exemple.fr/mon-avatar.jpg" style="width:100%;max-width:520px"></p>
+          </details>
           <p><button class="btn" id="save-avatar" type="button">Enregistrer mon avatar</button></p>
           <p id="avatar-message"></p>
         </div>
@@ -130,34 +135,92 @@
       if (!profile) return;
 
       const card = document.getElementById("profile-card");
-      const input = document.getElementById("avatar-url");
-      const preview = document.getElementById("avatar-preview");
-      card.hidden = false;
-      input.value = profile.avatar_url || "";
+      const urlInput = document.getElementById("avatar-url");
+      const fileInput = document.getElementById("avatar-file");
+      const message = document.getElementById("avatar-message");
+      const saveButton = document.getElementById("save-avatar");
 
-      function refreshPreview() {
-        const url = input.value.trim();
+      card.hidden = false;
+      urlInput.value = profile.avatar_url || "";
+
+      function setPreview(url) {
+        const old = document.getElementById("avatar-preview");
+        if (!old) return;
         if (url) {
-          preview.outerHTML = '<img id="avatar-preview" class="post-avatar" src="' +
-            url.replaceAll('"', '&quot;') + '" alt="Aperçu de l\'avatar">';
+          const img = document.createElement("img");
+          img.id = "avatar-preview";
+          img.className = "post-avatar";
+          img.src = url;
+          img.alt = "Aperçu de l'avatar";
+          old.replaceWith(img);
         }
       }
 
-      refreshPreview();
+      setPreview(profile.avatar_url);
 
-      document.getElementById("save-avatar").addEventListener("click", async () => {
-        const avatarUrl = input.value.trim() || null;
-        const message = document.getElementById("avatar-message");
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files?.[0];
+        if (!file) return;
+        if (file.size > 2 * 1024 * 1024) {
+          message.textContent = "L'image dépasse 2 Mo.";
+          message.style.color = "crimson";
+          fileInput.value = "";
+          return;
+        }
+        setPreview(URL.createObjectURL(file));
+        message.textContent = "";
+      });
 
-        const { error } = await window.supabaseClient
-          .from("profiles")
-          .update({ avatar_url: avatarUrl })
-          .eq("id", user.id);
+      saveButton.addEventListener("click", async () => {
+        saveButton.disabled = true;
+        message.textContent = "Enregistrement en cours…";
+        message.style.color = "";
 
-        message.textContent = error
-          ? "Impossible d'enregistrer l'avatar : " + error.message
-          : "Avatar enregistré !";
-        message.style.color = error ? "crimson" : "green";
+        try {
+          let avatarUrl = urlInput.value.trim() || null;
+          const file = fileInput.files?.[0];
+
+          if (file) {
+            const extension = (file.name.split(".").pop() || "jpg").toLowerCase();
+            const path = user.id + "/avatar-" + Date.now() + "." + extension;
+
+            const { error: uploadError } = await window.supabaseClient.storage
+              .from("avatars")
+              .upload(path, file, {
+                cacheControl: "3600",
+                upsert: true,
+                contentType: file.type
+              });
+
+            if (uploadError) throw uploadError;
+
+            const { data: publicData } = window.supabaseClient.storage
+              .from("avatars")
+              .getPublicUrl(path);
+
+            avatarUrl = publicData.publicUrl;
+          }
+
+          const { error } = await window.supabaseClient
+            .from("profiles")
+            .update({ avatar_url: avatarUrl })
+            .eq("id", user.id);
+
+          if (error) throw error;
+
+          urlInput.value = avatarUrl || "";
+          setPreview(avatarUrl);
+          fileInput.value = "";
+          message.textContent = "Avatar enregistré !";
+          message.style.color = "green";
+        } catch (error) {
+          console.error("Erreur avatar :", error);
+          message.textContent =
+            "Impossible d'enregistrer l'avatar. Si tu as choisi un fichier, le stockage « avatars » doit être activé dans Supabase.";
+          message.style.color = "crimson";
+        } finally {
+          saveButton.disabled = false;
+        }
       });
     }
 
