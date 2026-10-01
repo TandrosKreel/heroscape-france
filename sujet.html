@@ -86,6 +86,9 @@ const params =
 const id =
   Number(params.get("id"));
 
+const page = Math.max(1, Number(params.get("page")) || 1);
+const POSTS_PER_PAGE = 25;
+
 const subjectBox =
   document.getElementById("subject");
 
@@ -296,46 +299,34 @@ async function renderSubject() {
   }
 
 
-  const posts =
-    await getReplies(id);
-
+  const posts = await getReplies(id);
   const messageCounts = await getMessageCounts();
   const signatures = await getSignatures(posts.map(post => post.user_id));
-
+  const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+  const currentPage = Math.min(page, totalPages);
+  const start = (currentPage - 1) * POSTS_PER_PAGE;
+  const pagePosts = posts.slice(start, start + POSTS_PER_PAGE);
 
   let firstPostHtml = "";
-
   let repliesHtml = "";
 
-
   if (posts.length) {
-
-    firstPostHtml =
-      messageHtml(
-        posts[0],
-        true,
-        thread.title,
-        messageCounts[posts[0].user_id] || 0,
-        signatures[posts[0].user_id] || ""
+    if (currentPage === 1 && pagePosts.length) {
+      firstPostHtml = messageHtml(
+        pagePosts[0], true, thread.title,
+        messageCounts[pagePosts[0].user_id] || 0,
+        signatures[pagePosts[0].user_id] || ""
       );
+    } else {
+      firstPostHtml = '<h2 class="thread-page-title">' + esc(thread.title) + '</h2>';
+    }
 
-
-    const replies =
-      posts.slice(1);
-
-
-    repliesHtml =
-      replies.length
-        ? replies
-            .map(post =>
-              messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "")
-            )
-            .join("")
-        : `
-            <div class="empty">
-              Aucune réponse pour le moment.
-            </div>
-          `;
+    const visibleReplies = currentPage === 1 ? pagePosts.slice(1) : pagePosts;
+    repliesHtml = visibleReplies.length
+      ? visibleReplies.map(post =>
+          messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "")
+        ).join("")
+      : '<div class="empty">Aucune réponse sur cette page.</div>';
 
   } else {
 
@@ -432,8 +423,11 @@ async function renderSubject() {
   }
 
 
+  const paginationHtml = totalPages > 1 ? `<nav class="pagination" aria-label="Pages du sujet">${Array.from({length:totalPages},(_,i)=>i+1).map(n => `<a class="${n===currentPage ? "active" : ""}" href="sujet.html?id=${id}&page=${n}">${n}</a>`).join("")}</nav>` : "";
+
   subjectBox.innerHTML = `
 
+    ${paginationHtml}
     ${firstPostHtml}
 
     <h3>Réponses</h3>
@@ -442,6 +436,7 @@ async function renderSubject() {
       ${repliesHtml}
     </div>
 
+    ${paginationHtml}
     ${replyFormHtml}
 
   `;
@@ -519,7 +514,9 @@ async function publishReply() {
   }
 
 
-  await renderSubject();
+  const postsAfter = await getReplies(id);
+  const lastPage = Math.max(1, Math.ceil(postsAfter.length / POSTS_PER_PAGE));
+  location.href = "sujet.html?id=" + id + "&page=" + lastPage;
 }
 
 
