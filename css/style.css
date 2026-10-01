@@ -284,3 +284,7 @@ header .container{position:relative}
   mix-blend-mode:normal;
   background:transparent;
 }
+
+/* Décalage léger du logo d'accueil vers le bas */
+.home-brand{transform:translateY(18px)}
+@media(max-width:850px){.home-brand{transform:translateY(8px)}}
