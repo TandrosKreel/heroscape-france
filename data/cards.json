@@ -1,0 +1,338 @@
+[
+  {
+    "name": "Raelin the Kyrie Warrior",
+    "general": "Jandar",
+    "type": "Héros",
+    "points": 80
+  },
+  {
+    "name": "Sgt. Drake Alexander",
+    "general": "Jandar",
+    "type": "Héros",
+    "points": 170
+  },
+  {
+    "name": "Finn the Viking Champion",
+    "general": "Jandar",
+    "type": "Héros",
+    "points": 80
+  },
+  {
+    "name": "Thorgrim the Viking Champion",
+    "general": "Jandar",
+    "type": "Héros",
+    "points": 80
+  },
+  {
+    "name": "Knights of Weston",
+    "general": "Jandar",
+    "type": "Escouade",
+    "points": 70
+  },
+  {
+    "name": "4th Massachusetts Line",
+    "general": "Jandar",
+    "type": "Escouade",
+    "points": 70
+  },
+  {
+    "name": "Airborne Elite",
+    "general": "Jandar",
+    "type": "Escouade",
+    "points": 110
+  },
+  {
+    "name": "Sir Gilbert",
+    "general": "Jandar",
+    "type": "Héros",
+    "points": 105
+  },
+  {
+    "name": "Agent Carr",
+    "general": "Ullar",
+    "type": "Héros",
+    "points": 100
+  },
+  {
+    "name": "Syvarris",
+    "general": "Ullar",
+    "type": "Héros",
+    "points": 100
+  },
+  {
+    "name": "Acolarh",
+    "general": "Ullar",
+    "type": "Héros",
+    "points": 110
+  },
+  {
+    "name": "Aubri en Archers",
+    "general": "Ullar",
+    "type": "Escouade",
+    "points": 70
+  },
+  {
+    "name": "Venoc Vipers",
+    "general": "Ullar",
+    "type": "Escouade",
+    "points": 40
+  },
+  {
+    "name": "Charos",
+    "general": "Ullar",
+    "type": "Héros",
+    "points": 210
+  },
+  {
+    "name": "Krug",
+    "general": "Ullar",
+    "type": "Héros",
+    "points": 120
+  },
+  {
+    "name": "Deathwalker 9000",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 140
+  },
+  {
+    "name": "Marcu Esenwein",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 20
+  },
+  {
+    "name": "Isamu",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 10
+  },
+  {
+    "name": "Ornak",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 100
+  },
+  {
+    "name": "Grimnak",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 120
+  },
+  {
+    "name": "Blade Gruts",
+    "general": "Utgar",
+    "type": "Escouade",
+    "points": 40
+  },
+  {
+    "name": "Arrow Gruts",
+    "general": "Utgar",
+    "type": "Escouade",
+    "points": 40
+  },
+  {
+    "name": "Heavy Gruts",
+    "general": "Utgar",
+    "type": "Escouade",
+    "points": 70
+  },
+  {
+    "name": "Minions of Utgar",
+    "general": "Utgar",
+    "type": "Escouade",
+    "points": 110
+  },
+  {
+    "name": "Marrden Hounds",
+    "general": "Utgar",
+    "type": "Escouade",
+    "points": 90
+  },
+  {
+    "name": "Zombies of Morindan",
+    "general": "Utgar",
+    "type": "Escouade",
+    "points": 60
+  },
+  {
+    "name": "Ne-Gok-Sa",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 90
+  },
+  {
+    "name": "Me-Burq-Sa",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 50
+  },
+  {
+    "name": "Nakita Agents",
+    "general": "Vydar",
+    "type": "Escouade",
+    "points": 120
+  },
+  {
+    "name": "Major Q9",
+    "general": "Vydar",
+    "type": "Héros",
+    "points": 180
+  },
+  {
+    "name": "Major Q10",
+    "general": "Vydar",
+    "type": "Héros",
+    "points": 150
+  },
+  {
+    "name": "Krav Maga Agents",
+    "general": "Vydar",
+    "type": "Escouade",
+    "points": 100
+  },
+  {
+    "name": "Gladiatrons",
+    "general": "Vydar",
+    "type": "Escouade",
+    "points": 90
+  },
+  {
+    "name": "Blastatrons",
+    "general": "Vydar",
+    "type": "Escouade",
+    "points": 60
+  },
+  {
+    "name": "Agent Skahen",
+    "general": "Vydar",
+    "type": "Héros",
+    "points": 120
+  },
+  {
+    "name": "Morsbane",
+    "general": "Ullar",
+    "type": "Héros",
+    "points": 100
+  },
+  {
+    "name": "WoA / Warriors of Ashra",
+    "general": "Ullar",
+    "type": "Escouade",
+    "points": 50
+  },
+  {
+    "name": "Einar Imperium",
+    "general": "Einar",
+    "type": "Escouade",
+    "points": 140
+  },
+  {
+    "name": "Empress Kiova",
+    "general": "Einar",
+    "type": "Héros",
+    "points": 90
+  },
+  {
+    "name": "Kaemon Awa",
+    "general": "Einar",
+    "type": "Héros",
+    "points": 120
+  },
+  {
+    "name": "10th Regiment of Foot",
+    "general": "Einar",
+    "type": "Escouade",
+    "points": 75
+  },
+  {
+    "name": "Ashigaru Harquebus",
+    "general": "Einar",
+    "type": "Escouade",
+    "points": 60
+  },
+  {
+    "name": "Ashigaru Yari",
+    "general": "Einar",
+    "type": "Escouade",
+    "points": 40
+  },
+  {
+    "name": "Tagawa Samurai",
+    "general": "Einar",
+    "type": "Escouade",
+    "points": 120
+  },
+  {
+    "name": "Izumi Samurai",
+    "general": "Einar",
+    "type": "Escouade",
+    "points": 60
+  },
+  {
+    "name": "Atlaga the Kyrie Warrior",
+    "general": "Aquilla",
+    "type": "Héros",
+    "points": 90
+  },
+  {
+    "name": "Fyorlag Spiders",
+    "general": "Aquilla",
+    "type": "Escouade",
+    "points": 40
+  },
+  {
+    "name": "Sujoah",
+    "general": "Aquilla",
+    "type": "Héros",
+    "points": 185
+  },
+  {
+    "name": "Quasatch Hunters",
+    "general": "Aquilla",
+    "type": "Escouade",
+    "points": 100
+  },
+  {
+    "name": "Master Win Chiu Woo",
+    "general": "Einar",
+    "type": "Héros",
+    "points": 140
+  },
+  {
+    "name": "Nilfheim",
+    "general": "Jandar",
+    "type": "Héros",
+    "points": 185
+  },
+  {
+    "name": "Braxas",
+    "general": "Ullar",
+    "type": "Héros",
+    "points": 210
+  },
+  {
+    "name": "Mimring",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 150
+  },
+  {
+    "name": "Zelrig",
+    "general": "Einar",
+    "type": "Héros",
+    "points": 185
+  },
+  {
+    "name": "Moltenclaw",
+    "general": "Utgar",
+    "type": "Héros",
+    "points": 170
+  },
+  {
+    "name": "Greenscale Warriors",
+    "general": "Ullar",
+    "type": "Escouade",
+    "points": 60
+  }
+]

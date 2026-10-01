@@ -1,0 +1,11 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sujet — Heroscape France</title><link rel="stylesheet" href="css/style.css"></head><body>
+<header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div>
+<nav><a class="active" href="index.html">Forum</a><a href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav></div></header>
+<main class="container"><div class="hero"><a href="index.html">← Forum</a></div><div id="subject"></div></main><footer><div class="container">Heroscape France</div></footer>
+<script src="js/forum.js"></script><script>
+let id=Number(new URLSearchParams(location.search).get("id"));let t=getTopics().find(x=>x.id===id);
+if(!t)document.getElementById("subject").innerHTML='<div class="empty">Sujet introuvable.</div>';
+else {document.title=t.title+" — Heroscape France";document.getElementById("subject").innerHTML=`<article><h2>${esc(t.title)}</h2><div class="count">Par ${esc(t.author)} — ${esc(t.date)} — ${esc(catName(t.cat))}</div><p>${esc(t.body)}</p></article><button class="btn" onclick="reply()">Répondre</button>`}
+function reply(){let author=prompt("Votre pseudo :","Visiteur")||"Visiteur";let body=prompt("Votre réponse :","");if(body===null)return;let a=getTopics();a.push({id:Date.now(),cat:t.cat,title:"Re: "+t.title,author,date:new Date().toLocaleDateString("fr-FR"),body:"En réponse à « "+t.title+" » : "+body});localStorage.setItem("hs_topics",JSON.stringify(a));location.reload()}
+</script></body></html>

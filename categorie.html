@@ -1,0 +1,14 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Catégorie — Heroscape France</title><link rel="stylesheet" href="css/style.css"></head><body>
+<header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div>
+<nav><a class="active" href="index.html">Forum</a><a href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav></div></header>
+<main class="container"><section class="hero"><a href="index.html">← Retour au forum</a><h2 id="title"></h2><p id="desc"></p></section>
+<div class="toolbar"><input id="search" placeholder="Rechercher un sujet…"><button class="btn" onclick="newTopic()">Nouveau sujet</button></div>
+<div id="topics"></div></main><footer><div class="container">Heroscape France</div></footer>
+<script src="js/forum.js"></script><script>
+const params=new URLSearchParams(location.search), cat=params.get("cat")||"general";
+const meta=cats.find(c=>c[0]===cat)||cats[0]; document.getElementById("title").textContent=meta[1]+" "+meta[2];document.getElementById("desc").textContent=meta[3];
+function render(){let q=document.getElementById("search").value.toLowerCase(), arr=getTopics().filter(t=>t.cat===cat && (t.title+t.body+t.author).toLowerCase().includes(q));document.getElementById("topics").innerHTML=arr.length?arr.map(t=>`<div class="topic"><div class="topichead"><a href="sujet.html?id=${t.id}"><strong>${esc(t.title)}</strong></a><span class="count">${esc(t.date)}</span></div><p>${esc(t.body)}</p><span class="count">par ${esc(t.author)}</span></div>`).join(""):'<div class="empty">Aucune discussion pour le moment.</div>'}
+document.getElementById("search").addEventListener("input",render);render();
+function newTopic(){let title=prompt("Titre du sujet :");if(!title)return;let author=prompt("Votre pseudo :","Visiteur")||"Visiteur";let body=prompt("Votre message :","");if(body===null)return;let a=getTopics();a.push({id:Date.now(),cat,title,author,date:new Date().toLocaleDateString("fr-FR"),body});localStorage.setItem("hs_topics",JSON.stringify(a));render()}
+</script></body></html>

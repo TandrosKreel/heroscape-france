@@ -1,0 +1,16 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cartes d'armée — Heroscape France</title><link rel="stylesheet" href="css/style.css"></head><body>
+<header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Cartes d'armée</div></div></div>
+<nav><a href="index.html">Forum</a><a class="active" href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav></div></header>
+<main class="container"><section class="hero"><h2>Cartes d'armée</h2><p>Catalogue consultable par nom, général, type et coût. Les scans/PDF des cartes doivent être ajoutés séparément dans le dossier local du site si tu disposes des fichiers.</p></section>
+<div class="toolbar"><input id="q" placeholder="Rechercher une figurine…"><select id="g"><option value="">Tous les généraux</option></select><select id="t"><option value="">Tous les types</option><option>Héros</option><option>Escouade</option></select></div>
+<table><thead><tr><th>Nom</th><th>Général</th><th>Type</th><th>Points</th></tr></thead><tbody id="rows"></tbody></table>
+<div class="notice">Le catalogue ci-dessus est une base de navigation locale. Pour constituer une archive exhaustive, ajoute les scans/PDF des cartes que tu possèdes dans <code>documents/cartes-armee/</code>, puis associe chaque fichier à sa fiche.</div>
+</main><footer><div class="container">Les cartes Heroscape et leurs textes sont protégés par leurs ayants droit.</div></footer>
+<script>
+fetch("data/cards.json").then(r=>r.json()).then(data=>{
+ const gs=[...new Set(data.map(x=>x.general))].sort(); g.innerHTML+=[...gs].map(x=>`<option>${x}</option>`).join("");
+ function render(){let s=q.value.toLowerCase(),gg=g.value,tt=t.value;rows.innerHTML=data.filter(x=>(!s||x.name.toLowerCase().includes(s))&&(!gg||x.general===gg)&&(!tt||x.type===tt)).map(x=>`<tr><td>${x.name}</td><td>${x.general}</td><td>${x.type}</td><td>${x.points}</td></tr>`).join("")}
+ q.oninput=g.onchange=t.onchange=render;render();
+});
+</script></body></html>
