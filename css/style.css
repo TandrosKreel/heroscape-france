@@ -446,3 +446,75 @@ header nav a{
   header nav{left:14px!important;right:14px!important;bottom:72px!important;flex-wrap:wrap!important}
   #account.account-panel,.global-account{left:14px!important;right:auto!important;bottom:12px!important}
 }
+
+/* En-tête v14 : flux normal, aucune superposition logo/navigation */
+header{padding:8px 0 12px!important}
+header>.container{
+  position:relative!important;
+  max-width:960px!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  padding:0 20px!important;
+  display:block!important;
+}
+.home-brand{
+  position:static!important;
+  width:100%!important;
+  max-width:none!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  transform:none!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  pointer-events:none!important;
+}
+.heroscape-main-logo{
+  width:620px!important;
+  max-width:100%!important;
+  height:auto!important;
+  margin:0 auto!important;
+  object-fit:contain!important;
+}
+.home-brand .tag{
+  position:static!important;
+  display:block!important;
+  height:auto!important;
+  margin:4px 0 0!important;
+  line-height:18px!important;
+}
+header nav{
+  position:static!important;
+  margin:20px 0 0!important;
+  padding:0!important;
+  min-height:42px!important;
+  display:flex!important;
+  gap:8px!important;
+  align-items:stretch!important;
+  z-index:50!important;
+}
+header nav a{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:42px!important;
+  padding:0 14px!important;
+  z-index:51!important;
+  pointer-events:auto!important;
+  cursor:pointer!important;
+}
+#account.account-panel,.global-account{
+  position:absolute!important;
+  right:20px!important;
+  bottom:0!important;
+  top:auto!important;
+  z-index:50!important;
+  margin:0!important;
+}
+@media(max-width:850px){
+  header>.container{padding:0 14px!important}
+  .heroscape-main-logo{width:500px!important}
+  header nav{margin-top:18px!important;flex-wrap:wrap!important;padding-bottom:58px!important}
+  #account.account-panel,.global-account{left:14px!important;right:auto!important;bottom:0!important}
+}
