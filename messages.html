@@ -1,36 +1,62 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages privés — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261002-3"></head><body>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages privés — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261002-4"></head><body>
 <header><div class="container"><div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div><nav><a href="index.html">Forum</a><a href="membres.html">Membres</a><a href="profil.html">Mon profil</a></nav></div></header>
-<main class="container"><section class="hero"><h2>✉ Messages privés</h2><p>Ta boîte contient uniquement tes 20 messages reçus les plus récents.</p></section>
+<main class="container">
+<section class="hero"><h2>✉ Messages privés</h2><p>Messages reçus et envoyés. Capacité maximale : 20 messages par boîte.</p></section>
 <section id="compose" class="card" hidden><h3 id="compose-title">Nouveau message</h3><textarea id="pm-content" rows="6" maxlength="5000" placeholder="Écris ton message…" style="width:100%;box-sizing:border-box"></textarea><p><button class="btn" id="send-pm" type="button">Envoyer</button> <a href="membres.html">Annuler</a></p><p id="pm-status"></p></section>
-<section class="private-inbox"><h3>Messages reçus</h3><div id="private-messages" class="card"><p>Chargement…</p></div></section></main>
-<footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js"></script>
+<section class="pm-toolbar card"><strong id="pm-counter">Chargement…</strong><span id="pm-warning"></span></section>
+<section class="pm-tabs"><button class="btn active" id="tab-received" type="button">Reçus</button><button class="btn" id="tab-sent" type="button">Envoyés</button></section>
+<div id="private-messages" class="card"><p>Chargement…</p></div>
+</main><footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js?v=20261002-4"></script>
 <script>
 (async()=>{
- const supabase=window.supabaseClient,b=document.getElementById("private-messages");
- const {data:{user}}=await supabase.auth.getUser(); if(!user){location.href="connexion.html";return}
+ const sb=window.supabaseClient,box=document.getElementById("private-messages"),counter=document.getElementById("pm-counter"),warning=document.getElementById("pm-warning");
+ const {data:{user}}=await sb.auth.getUser();if(!user){location.href="connexion.html";return}
+ let all=[],profiles={},view="received";
+ const escPm=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ async function load(){
+   const {data,error}=await sb.from("private_messages").select("id,sender_id,recipient_id,content,created_at,is_read").or("sender_id.eq."+user.id+",recipient_id.eq."+user.id).order("created_at",{ascending:false});
+   if(error){box.innerHTML="<p>Impossible de charger les messages : "+escPm(error.message)+"</p>";return}
+   all=data||[];
+   const ids=[...new Set(all.flatMap(m=>[m.sender_id,m.recipient_id]))];
+   if(ids.length){const {data:ps}=await sb.from("profiles").select("id,username,avatar_url").in("id",ids);profiles={};(ps||[]).forEach(p=>profiles[p.id]=p)}
+   const received=all.filter(m=>m.recipient_id===user.id),sent=all.filter(m=>m.sender_id===user.id);
+   counter.textContent="Boîte : "+received.length+" / 20 reçus • "+sent.length+" envoyés";
+   warning.textContent=received.length>=20?" ⚠ Boîte de réception pleine : supprime un message pour en recevoir un nouveau.":"";
+   render();
+ }
+ function render(){
+   const rows=all.filter(m=>view==="received"?m.recipient_id===user.id:m.sender_id===user.id);
+   document.getElementById("tab-received").classList.toggle("active",view==="received");
+   document.getElementById("tab-sent").classList.toggle("active",view==="sent");
+   if(!rows.length){box.innerHTML="<p>Aucun message "+(view==="received"?"reçu":"envoyé")+" pour le moment.</p>";return}
+   box.innerHTML=rows.map(m=>{
+     const other=profiles[view==="received"?m.sender_id:m.recipient_id]||{},date=new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(m.created_at));
+     const av=other.avatar_url?'<img class="pm-avatar" src="'+escPm(other.avatar_url)+'" alt="">':'<span class="pm-avatar pm-avatar-default">'+escPm((other.username||"M").charAt(0))+'</span>';
+     return '<article class="pm-row">'+av+'<div class="pm-body"><div class="pm-meta"><strong>'+(view==="received"?"De ":"À ")+escPm(other.username||"Membre")+'</strong><small>'+escPm(date)+'</small></div><p>'+escPm(m.content)+'</p><div class="pm-actions">'+(view==="received"?'<a href="messages.html?to='+encodeURIComponent(m.sender_id)+'">Répondre</a>':'')+'<button type="button" class="pm-delete" data-id="'+m.id+'">Supprimer</button></div></div></article>';
+   }).join("");
+   box.querySelectorAll(".pm-delete").forEach(btn=>btn.addEventListener("click",async()=>{if(!confirm("Supprimer ce message ?"))return;btn.disabled=true;const {error}=await sb.from("private_messages").delete().eq("id",btn.dataset.id);if(error){alert("Suppression impossible : "+error.message);btn.disabled=false;return}await load()}));
+ }
+ document.getElementById("tab-received").onclick=()=>{view="received";render()};
+ document.getElementById("tab-sent").onclick=()=>{view="sent";render()};
  const to=new URLSearchParams(location.search).get("to");
  if(to&&to!==user.id){
-   const {data:recipient}=await supabase.from("profiles").select("id,username").eq("id",to).maybeSingle();
+   const {data:recipient}=await sb.from("profiles").select("id,username").eq("id",to).maybeSingle();
    if(recipient){
-     document.getElementById("compose").hidden=false;
-     document.getElementById("compose-title").textContent="Nouveau message à "+recipient.username;
-     document.getElementById("send-pm").addEventListener("click",async()=>{
-       const content=document.getElementById("pm-content").value.trim(),status=document.getElementById("pm-status");
+     document.getElementById("compose").hidden=false;document.getElementById("compose-title").textContent="Nouveau message à "+recipient.username;
+     document.getElementById("send-pm").onclick=async()=>{
+       const content=document.getElementById("pm-content").value.trim(),status=document.getElementById("pm-status"),btn=document.getElementById("send-pm");
        if(!content){status.textContent="Écris un message avant de l’envoyer.";return}
-       const btn=document.getElementById("send-pm");btn.disabled=true;status.textContent="Envoi…";
-       const {error}=await supabase.from("private_messages").insert({sender_id:user.id,recipient_id:recipient.id,content});
-       if(error){console.error(error);status.textContent="Impossible d’envoyer le message : "+error.message;btn.disabled=false;return}
-       status.textContent="Message envoyé !";document.getElementById("pm-content").value="";
-       setTimeout(()=>location.href="messages.html",600);
-     });
+       const {count,error:ce}=await sb.from("private_messages").select("id",{count:"exact",head:true}).eq("recipient_id",recipient.id);
+       if(ce){status.textContent="Impossible de vérifier la boîte du destinataire.";return}
+       if((count||0)>=20){status.textContent="La boîte de "+recipient.username+" est pleine (20/20). Il doit supprimer un message avant de pouvoir en recevoir un nouveau.";return}
+       btn.disabled=true;status.textContent="Envoi…";
+       const {error}=await sb.from("private_messages").insert({sender_id:user.id,recipient_id:recipient.id,content});
+       if(error){status.textContent="Impossible d’envoyer : "+error.message;btn.disabled=false;return}
+       status.textContent="Message envoyé !";setTimeout(()=>location.href="messages.html",500);
+     };
    }
  }
- const {data,error}=await supabase.from("private_messages").select("id,sender_id,content,created_at,is_read").eq("recipient_id",user.id).order("created_at",{ascending:false}).limit(20);
- if(error){console.error(error);b.innerHTML="<p>Impossible de charger les messages.</p>";return}
- const senderIds=[...new Set((data||[]).map(m=>m.sender_id))];
- let names={};
- if(senderIds.length){const {data:profiles}=await supabase.from("profiles").select("id,username,avatar_url").in("id",senderIds);(profiles||[]).forEach(p=>names[p.id]=p)}
- b.innerHTML=data?.length?data.map(m=>{const p=names[m.sender_id]||{},date=new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(m.created_at));const av=p.avatar_url?'<img class="pm-avatar" src="'+esc(p.avatar_url)+'" alt="">':'<span class="pm-avatar pm-avatar-default">'+esc((p.username||"M").charAt(0))+'</span>';return '<article class="pm-row">'+av+'<div><strong>'+esc(p.username||"Membre")+'</strong><small>'+esc(date)+'</small><p>'+esc(m.content)+'</p><a href="messages.html?to='+encodeURIComponent(m.sender_id)+'">Répondre</a></div></article>'}).join(""):"<p>Aucun message reçu pour le moment.</p>";
+ await load();
 })();
 </script></body></html>
