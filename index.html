@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Heroscape France — Forum & Archives</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261002-1">
 </head>
 
 <body>
@@ -52,7 +52,7 @@
 
   <section class="latest-section">
     <div class="latest-head"><h2>Derniers messages</h2></div>
-    <div id="latest-topics"><div class="empty">Chargement des derniers sujets…</div></div>
+    <div id="latest-topics" style="display:block;width:100%"><div class="empty">Chargement des derniers messages…</div></div>
   </section>
 
 </main>
@@ -116,7 +116,7 @@ async function renderLatestTopics() {
     const date = post.created_at
       ? new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(post.created_at))
       : "";
-    return '<a class="latest-post-row" href="sujet.html?id=' + post.thread_id + '">' +
+    return '<a class="latest-post-row" style="display:grid;grid-template-columns:30px minmax(0,1fr) 145px;width:100%;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid #39444f" href="sujet.html?id=' + post.thread_id + '">' +
       avatar +
       '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(title) + '</b></span></span>' +
       '<time>' + esc(date) + '</time>' +
