@@ -11,6 +11,7 @@
 
 const cats = [
   ["general", "💬", "Général", "Discussions générales autour d'Heroscape", 1],
+  ["news", "📰", "Les News d'Heroscape", "Les dernières nouvelles et actualités autour d'Heroscape", null],
   ["regles", "📖", "Règles et questions", "Questions de règles, précisions et aides de jeu", 2],
   ["scenarios", "⚔️", "Scénarios et parties", "Scénarios, comptes-rendus et idées de parties", 3],
   ["cartes", "🗺️", "Cartes et VirtualScape", "Maps, créations de cartes et fichiers VirtualScape", 4],
@@ -398,7 +399,7 @@ if (categoriesBox) {
   categoriesBox.innerHTML = cats.map(c => `
     <a
       class="card forumrow"
-      href="categorie.html?cat=${encodeURIComponent(c[0])}"
+      href="${c[0] === "news" ? "news.html" : `categorie.html?cat=${encodeURIComponent(c[0])}`}"
     >
       <div>
         <h3>${c[1]} ${esc(c[2])}</h3>
