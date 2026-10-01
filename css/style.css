@@ -288,3 +288,12 @@ header .container{position:relative}
 /* Décalage léger du logo d'accueil vers le bas */
 .home-brand{transform:translateY(18px)}
 @media(max-width:850px){.home-brand{transform:translateY(8px)}}
+
+/* En-tête uniforme : logo identique à l'accueil sur toutes les pages */
+header{padding-top:8px}
+.home-brand{padding-bottom:34px;transform:translateY(36px)}
+.heroscape-main-logo{width:min(100%,620px)}
+@media(max-width:850px){
+  .home-brand{padding-bottom:10px;transform:translateY(12px)}
+  .heroscape-main-logo{width:min(100%,500px)}
+}
