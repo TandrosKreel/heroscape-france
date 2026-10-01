@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - Heroscape France</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+</head>
+
+<body>
+
+  <header>
+    <div class="container">
+      <h1>Heroscape France</h1>
+      <p>Communauté francophone Heroscape</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <p>
+      <a href="index.html">← Retour à l'accueil</a>
+    </p>
+
+    <section class="card">
+      <h2>Connexion</h2>
+
+      <form id="login-form">
+        <p>
+          <label for="login-email">Adresse e-mail</label><br>
+          <input
+            type="email"
+            id="login-email"
+            required
+            autocomplete="email"
+          >
+        </p>
+
+        <p>
+          <label for="login-password">Mot de passe</label><br>
+          <input
+            type="password"
+            id="login-password"
+            required
+            autocomplete="current-password"
+          >
+        </p>
+
+        <button type="submit">Se connecter</button>
+      </form>
+
+      <p id="login-message"></p>
+    </section>
+
+    <section class="card">
+      <h2>Créer un compte</h2>
+
+      <form id="signup-form">
+        <p>
+          <label for="signup-username">Pseudo</label><br>
+          <input
+            type="text"
+            id="signup-username"
+            minlength="3"
+            maxlength="30"
+            required
+            autocomplete="username"
+          >
+        </p>
+
+        <p>
+          <label for="signup-email">Adresse e-mail</label><br>
+          <input
+            type="email"
+            id="signup-email"
+            required
+            autocomplete="email"
+          >
+        </p>
+
+        <p>
+          <label for="signup-password">Mot de passe</label><br>
+          <input
+            type="password"
+            id="signup-password"
+            minlength="6"
+            required
+            autocomplete="new-password"
+          >
+        </p>
+
+        <button type="submit">Créer mon compte</button>
+      </form>
+
+      <p id="signup-message"></p>
+    </section>
+
+  </main>
+
+  <script>
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
+
+    const loginMessage = document.getElementById("login-message");
+    const signupMessage = document.getElementById("signup-message");
+
+    function showMessage(element, message, success = false) {
+      element.textContent = message;
+      element.style.fontWeight = "bold";
+      element.style.color = success ? "green" : "crimson";
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      loginMessage.textContent = "Connexion en cours...";
+
+      const email = document
+        .getElementById("login-email")
+        .value
+        .trim();
+
+      const password = document
+        .getElementById("login-password")
+        .value;
+
+      const { data, error } =
+        await window.supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) {
+        console.error("Erreur connexion :", error);
+
+        showMessage(
+          loginMessage,
+          "Connexion impossible : " + error.message
+        );
+
+        return;
+      }
+
+      showMessage(
+        loginMessage,
+        "Connexion réussie. Retour au forum...",
+        true
+      );
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 800);
+    });
+
+
+    signupForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      signupMessage.textContent = "Création du compte...";
+
+      const username = document
+        .getElementById("signup-username")
+        .value
+        .trim();
+
+      const email = document
+        .getElementById("signup-email")
+        .value
+        .trim();
+
+      const password = document
+        .getElementById("signup-password")
+        .value;
+
+      if (username.length < 3) {
+        showMessage(
+          signupMessage,
+          "Le pseudo doit contenir au moins 3 caractères."
+        );
+        return;
+      }
+
+      const { data, error } =
+        await window.supabaseClient.auth.signUp({
+          email,
+          password,
+
+          options: {
+            emailRedirectTo:
+              "https://tandroskreel.github.io/heroscape-france/connexion.html",
+
+            data: {
+              username: username
+            }
+          }
+        });
+
+      if (error) {
+        console.error("Erreur inscription :", error);
+
+        showMessage(
+          signupMessage,
+          "Inscription impossible : " + error.message
+        );
+
+        return;
+      }
+
+      signupForm.reset();
+
+      if (data.session) {
+        showMessage(
+          signupMessage,
+          "Compte créé avec succès.",
+          true
+        );
+      } else {
+        showMessage(
+          signupMessage,
+          "Compte créé ! Consulte ta boîte e-mail et clique sur le lien de confirmation avant de te connecter.",
+          true
+        );
+      }
+    });
+  </script>
+
+</body>
+</html>
