@@ -36,7 +36,7 @@
 
 <main class="container">
 
-  <div class="hero">
+  <section class="hero">
 
     <a id="back-link" href="index.html">
       ← Retour au forum
@@ -44,13 +44,15 @@
 
     <div id="member-area"></div>
 
-  </div>
+  </section>
 
 
   <div id="subject">
+
     <div class="empty">
       Chargement du sujet…
     </div>
+
   </div>
 
 </main>
@@ -58,7 +60,7 @@
 
 <footer>
   <div class="container">
-    Heroscape France
+    Heroscape France — communauté francophone Heroscape.
   </div>
 </footer>
 
@@ -72,12 +74,15 @@
 
 <script>
 
+// ============================================================
+// PARAMÈTRES
+// ============================================================
+
 const params =
   new URLSearchParams(location.search);
 
 const id =
   Number(params.get("id"));
-
 
 const subjectBox =
   document.getElementById("subject");
@@ -89,9 +94,9 @@ const backLink =
   document.getElementById("back-link");
 
 
-// ------------------------------------------------------------
+// ============================================================
 // DATE
-// ------------------------------------------------------------
+// ============================================================
 
 function formatDate(value) {
 
@@ -109,9 +114,9 @@ function formatDate(value) {
 }
 
 
-// ------------------------------------------------------------
+// ============================================================
 // MEMBRE CONNECTÉ
-// ------------------------------------------------------------
+// ============================================================
 
 async function renderMember() {
 
@@ -124,7 +129,7 @@ async function renderMember() {
     memberArea.innerHTML = `
       <p>
         <a href="connexion.html">
-          Se connecter ou créer un compte
+          Connexion / Créer un compte
         </a>
       </p>
     `;
@@ -157,9 +162,9 @@ async function renderMember() {
 }
 
 
-// ------------------------------------------------------------
+// ============================================================
 // CHARGEMENT DU SUJET
-// ------------------------------------------------------------
+// ============================================================
 
 async function getThread() {
 
@@ -200,9 +205,44 @@ async function getThread() {
 }
 
 
-// ------------------------------------------------------------
-// AFFICHAGE DU SUJET ET DES MESSAGES
-// ------------------------------------------------------------
+// ============================================================
+// UN MESSAGE
+// ============================================================
+
+function messageHtml(post, isFirstMessage = false, title = "") {
+
+  return `
+    <article>
+
+      ${
+        isFirstMessage
+          ? `<h2>${esc(title)}</h2>`
+          : ""
+      }
+
+      <div class="count">
+        Par
+        <strong>
+          ${esc(post.author || "Membre")}
+        </strong>
+
+        ${
+          post.created_at
+            ? " — " + esc(formatDate(post.created_at))
+            : ""
+        }
+      </div>
+
+      <p style="white-space:pre-wrap">${esc(post.body)}</p>
+
+    </article>
+  `;
+}
+
+
+// ============================================================
+// AFFICHAGE DU SUJET
+// ============================================================
 
 async function renderSubject() {
 
@@ -243,44 +283,41 @@ async function renderSubject() {
     await getReplies(id);
 
 
-  let messagesHtml = "";
+  let firstPostHtml = "";
+
+  let repliesHtml = "";
 
 
   if (posts.length) {
 
-    messagesHtml =
-      posts.map((post, index) => `
+    firstPostHtml =
+      messageHtml(
+        posts[0],
+        true,
+        thread.title
+      );
 
-        <article>
 
-          ${
-            index === 0
-              ? `<h2>${esc(thread.title)}</h2>`
-              : ""
-          }
+    const replies =
+      posts.slice(1);
 
-          <div class="count">
-            Par
-            <strong>
-              ${esc(post.author || "Membre")}
-            </strong>
 
-            ${
-              post.created_at
-                ? " — " + esc(formatDate(post.created_at))
-                : ""
-            }
-          </div>
-
-          <p style="white-space:pre-wrap">${esc(post.body)}</p>
-
-        </article>
-
-      `).join("");
+    repliesHtml =
+      replies.length
+        ? replies
+            .map(post =>
+              messageHtml(post)
+            )
+            .join("")
+        : `
+            <div class="empty">
+              Aucune réponse pour le moment.
+            </div>
+          `;
 
   } else {
 
-    messagesHtml = `
+    firstPostHtml = `
       <article>
 
         <h2>
@@ -293,6 +330,13 @@ async function renderSubject() {
 
       </article>
     `;
+
+
+    repliesHtml = `
+      <div class="empty">
+        Aucune réponse pour le moment.
+      </div>
+    `;
   }
 
 
@@ -300,12 +344,12 @@ async function renderSubject() {
     await getCurrentUser();
 
 
-  let replyHtml = "";
+  let replyFormHtml = "";
 
 
   if (thread.is_locked) {
 
-    replyHtml = `
+    replyFormHtml = `
       <div class="empty">
         🔒 Ce sujet est verrouillé.
       </div>
@@ -313,18 +357,21 @@ async function renderSubject() {
 
   } else if (!user) {
 
-    replyHtml = `
+    replyFormHtml = `
       <div class="card">
 
-        <h3>Répondre</h3>
+        <h3>Participer à la discussion</h3>
 
         <p>
           Tu dois être connecté pour répondre.
         </p>
 
         <p>
-          <a href="connexion.html">
-            Se connecter ou créer un compte
+          <a
+            class="btn"
+            href="connexion.html"
+          >
+            Connexion / Créer un compte
           </a>
         </p>
 
@@ -333,7 +380,7 @@ async function renderSubject() {
 
   } else {
 
-    replyHtml = `
+    replyFormHtml = `
       <div class="card">
 
         <h3>Répondre</h3>
@@ -364,33 +411,35 @@ async function renderSubject() {
 
 
   subjectBox.innerHTML = `
-    ${messagesHtml}
+
+    ${firstPostHtml}
 
     <h3>Réponses</h3>
 
-    ${replyHtml}
+    <div id="replies">
+      ${repliesHtml}
+    </div>
+
+    ${replyFormHtml}
+
   `;
 
 
   if (user && !thread.is_locked) {
 
-    const replyButton =
-      document.getElementById(
-        "reply-button"
+    document
+      .getElementById("reply-button")
+      .addEventListener(
+        "click",
+        publishReply
       );
-
-
-    replyButton.addEventListener(
-      "click",
-      publishReply
-    );
   }
 }
 
 
-// ------------------------------------------------------------
+// ============================================================
 // PUBLIER UNE RÉPONSE
-// ------------------------------------------------------------
+// ============================================================
 
 async function publishReply() {
 
@@ -452,9 +501,9 @@ async function publishReply() {
 }
 
 
-// ------------------------------------------------------------
+// ============================================================
 // DÉMARRAGE
-// ------------------------------------------------------------
+// ============================================================
 
 renderMember();
 
