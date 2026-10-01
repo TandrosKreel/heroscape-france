@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Cartes d'armée — Heroscape France</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261002-2">
   <style>
     .cards-toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
     .cards-toolbar input,.cards-toolbar select{padding:10px;min-width:210px}
@@ -74,5 +74,5 @@ fetch("data/cards.json").then(r=>{if(!r.ok)throw new Error("Catalogue introuvabl
   q.addEventListener("input",render);g.addEventListener("change",render);band.addEventListener("change",render);render();
 }).catch(err=>{console.error(err);document.getElementById("cards-status").textContent="Impossible de charger le catalogue.";});
 </script>
-</body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js"></script></body>
 </html>
