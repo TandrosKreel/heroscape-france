@@ -86,3 +86,12 @@ footer{border-top:1px solid var(--line);padding:25px 0;color:var(--muted);font-s
   .post-avatar{width:48px;height:48px}
   .post-avatar-default{font-size:20px}
 }
+
+.avatar-settings{display:flex;align-items:flex-start;gap:24px}
+.avatar-settings .profile-avatar,.avatar-settings>.post-avatar{width:110px;height:110px;flex:0 0 110px}
+.avatar-controls{flex:1;min-width:0}
+.avatar-controls input[type="url"]{width:100%;max-width:560px}
+.profile-link{font-weight:bold}
+.success-message{color:#77d68c;font-weight:bold}
+.error-message{color:#ff8585;font-weight:bold}
+@media(max-width:600px){.avatar-settings{flex-direction:column}.avatar-settings .profile-avatar,.avatar-settings>.post-avatar{width:90px;height:90px;flex-basis:90px}}
