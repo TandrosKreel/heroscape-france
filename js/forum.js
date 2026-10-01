@@ -14,7 +14,19 @@ const seed = [
  {id:2,cat:"regles",title:"Questions sur les règles",author:"Admin",date:"Archive",body:"Espace prévu pour poser les questions de règles et partager les précisions utiles."},
  {id:3,cat:"scenarios",title:"Vos scénarios et comptes-rendus",author:"Admin",date:"Archive",body:"Partagez ici vos scénarios et racontez vos parties."}
 ];
-function getTopics(){let x=localStorage.getItem("hs_topics"); if(!x){localStorage.setItem("hs_topics",JSON.stringify(seed));return seed} return JSON.parse(x)}
+async function getTopics(){
+  const { data, error } = await window.supabaseClient
+    .from("topics")
+    .select("*")
+    .order("created_at", { ascending: true });
+
+  if(error){
+    console.error("Erreur Supabase :", error);
+    return [];
+  }
+
+  return data || [];
+}}
 function catName(id){return cats.find(c=>c[0]===id)?.[2]||id}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 const box=document.getElementById("categories");
