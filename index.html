@@ -1,20 +1,89 @@
 <!doctype html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Heroscape France — Forum & Archives</title><link rel="stylesheet" href="css/style.css"></head>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Heroscape France — Forum & Archives</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
 <body>
-<header><div class="container">
-<div class="brand"><div class="logo">HS</div><div><h1>Heroscape France</h1><div class="tag">Forum & archives francophones</div></div></div>
-<nav><a class="active" href="index.html">Forum</a><a href="cartes-armee.html">Cartes d'armée</a><a href="regles.html">Règles</a></nav>
-</div></header>
+
+<header>
+  <div class="container">
+
+    <div class="brand">
+      <div class="logo">HS</div>
+      <div>
+        <h1>Heroscape France</h1>
+        <div class="tag">Forum & archives francophones</div>
+      </div>
+    </div>
+
+    <nav>
+      <a class="active" href="index.html">Forum</a>
+      <a href="cartes-armee.html">Cartes d'armée</a>
+      <a href="regles.html">Règles</a>
+    </nav>
+
+  </div>
+</header>
+
+
 <main class="container">
-<section class="hero"><h2>Forum Heroscape</h2>
-<p>Un espace simple pour retrouver l'esprit du forum francophone historique : choisir une catégorie, consulter les discussions et participer.</p></section>
-<div class="notice">Cette version est autonome : les discussions de démonstration et celles que tu crées sont conservées dans le navigateur. Pour un forum réellement partagé entre plusieurs visiteurs, il faudra ensuite connecter une base de données.</div>
-<section class="grid" id="categories"></section>
+
+  <section class="hero">
+    <h2>Forum Heroscape</h2>
+
+    <p>
+      Un espace pour retrouver l'esprit du forum francophone historique :
+      choisir une catégorie, consulter les discussions et participer.
+    </p>
+
+    <div id="account"></div>
+  </section>
+
+  <section class="grid" id="categories"></section>
+
 </main>
-<footer><div class="container">Heroscape France — reconstruction autonome. Les intitulés des catégories sont une reconstitution des grands thèmes documentés de l'ancienne communauté.</div></footer>
+
+
+<footer>
+  <div class="container">
+    Heroscape France — communauté francophone Heroscape.
+  </div>
+</footer>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/forum.js"></script>
+
+<script>
+async function renderAccount() {
+  const account = document.getElementById("account");
+
+  const profile = await getCurrentProfile();
+
+  if (profile) {
+    account.innerHTML = `
+      <p>
+        Connecté : <strong>${esc(profile.username)}</strong>
+        —
+        <button type="button" onclick="logout()">Se déconnecter</button>
+      </p>
+    `;
+  } else {
+    account.innerHTML = `
+      <p>
+        <a class="btn" href="connexion.html">Connexion / Créer un compte</a>
+      </p>
+    `;
+  }
+}
+
+renderAccount();
+</script>
+
 </body>
 </html>
