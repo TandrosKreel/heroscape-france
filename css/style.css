@@ -246,3 +246,34 @@ header .container{position:relative}
  .home-brand{padding-right:0;width:100%}
  .heroscape-main-logo{width:min(100%,380px)}
 }
+
+/* Ajustement final de l'en-tête d'accueil */
+.home-brand{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:0 0 46px;
+}
+.heroscape-main-logo{
+  display:block;
+  width:min(100%,580px);
+  height:auto;
+  object-fit:contain;
+  mix-blend-mode:multiply;
+}
+.home-brand .tag{margin-top:0}
+#account.account-panel{
+  position:absolute;
+  right:20px;
+  bottom:10px;
+  top:auto;
+  margin:0;
+}
+@media(max-width:850px){
+  .home-brand{width:100%;padding:0 0 12px}
+  .heroscape-main-logo{width:min(100%,500px)}
+  #account.account-panel{position:static;margin-top:8px}
+}
