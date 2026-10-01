@@ -172,3 +172,41 @@ header .container{position:relative}
  .latest-post-text{display:block}
  .latest-post-text strong{display:block}
 }
+
+/* Correction stricte : 5 derniers messages = 5 lignes */
+#latest-topics{display:block;width:100%}
+#latest-topics .latest-post-row{
+  display:grid !important;
+  grid-template-columns:30px minmax(0,1fr) 145px !important;
+  width:100%;
+  min-height:54px;
+  align-items:center;
+  gap:12px;
+  padding:10px 8px;
+  margin:0;
+  border-bottom:1px solid var(--line);
+}
+#latest-topics .latest-post-row:last-child{border-bottom:0}
+#latest-topics .latest-avatar{
+  display:grid;
+  width:28px;
+  height:28px;
+  min-width:28px;
+  margin:0;
+}
+#latest-topics .latest-post-text{
+  display:flex;
+  min-width:0;
+  align-items:center;
+  gap:6px;
+}
+#latest-topics .latest-post-row time{
+  display:block;
+  text-align:right;
+  white-space:nowrap;
+}
+@media(max-width:700px){
+  #latest-topics .latest-post-row{grid-template-columns:30px minmax(0,1fr) !important}
+  #latest-topics .latest-post-row time{grid-column:2;text-align:left}
+  #latest-topics .latest-post-text{display:block}
+}
