@@ -207,7 +207,8 @@ async function getReplies(topicId) {
     ...post,
     topic_id: post.thread_id,
     body: post.content,
-    author: post.profiles?.username || "Membre"
+    author: post.profiles?.username || "Membre",
+    avatar_url: post.profiles?.avatar_url || ""
   }));
 }
 
