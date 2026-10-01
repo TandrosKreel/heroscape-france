@@ -211,7 +211,7 @@ async function getThread() {
 // UN MESSAGE
 // ============================================================
 
-function messageHtml(post, isFirstMessage = false, title = "") {
+function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0, signature = "") {
 
   const avatar = post.avatar_url
     ? `<img class="post-avatar" src="${esc(post.avatar_url)}" alt="Avatar de ${esc(post.author || "Membre")}" loading="lazy">`
@@ -223,6 +223,7 @@ function messageHtml(post, isFirstMessage = false, title = "") {
       <div class="post-author">
         ${avatar}
         <strong>${esc(post.author || "Membre")}</strong>
+        <span class="post-message-count">${messageCount} message${messageCount > 1 ? "s" : ""}</span>
       </div>
 
       <div class="post-content">
@@ -247,6 +248,8 @@ function messageHtml(post, isFirstMessage = false, title = "") {
       </div>
 
       <p style="white-space:pre-wrap">${esc(post.body)}</p>
+
+      ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}
 
       </div>
     </article>
@@ -296,6 +299,9 @@ async function renderSubject() {
   const posts =
     await getReplies(id);
 
+  const messageCounts = await getMessageCounts();
+  const signatures = await getSignatures(posts.map(post => post.user_id));
+
 
   let firstPostHtml = "";
 
@@ -308,7 +314,9 @@ async function renderSubject() {
       messageHtml(
         posts[0],
         true,
-        thread.title
+        thread.title,
+        messageCounts[posts[0].user_id] || 0,
+        signatures[posts[0].user_id] || ""
       );
 
 
@@ -320,7 +328,7 @@ async function renderSubject() {
       replies.length
         ? replies
             .map(post =>
-              messageHtml(post)
+              messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "")
             )
             .join("")
         : `
