@@ -458,7 +458,6 @@ async function renderGlobalAccount() {
     '<a class="account-user" href="profil.html" title="Mon profil">' + avatar + '<strong>' + esc(profile.username) + '</strong></a>' +
     '<a class="account-icon account-message-icon" href="messages.html" title="Messages privés" aria-label="Messages privés">✉<span class="message-badge" data-message-badge hidden></span></a>' +
     '<a class="account-icon" href="notifications.html" title="Notifications" aria-label="Notifications">🔔</a>' +
-    '<a class="account-icon" href="profil.html" title="Paramètres du profil" aria-label="Paramètres">⚙</a>' +
     '<button class="account-logout" type="button" data-global-logout>Se déconnecter</button>';
   account.querySelector("[data-global-logout]")?.addEventListener("click", logout);
   const { count: unreadCount, error: unreadError } = await window.supabaseClient
