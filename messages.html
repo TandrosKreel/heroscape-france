@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages privés — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261002-14"></head><body>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages privés — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261004-2"></head><body>
 <header><div class="container"><div class="brand home-brand">
       <img class="heroscape-main-logo" src="Logo%20Heroscape%20_%20bataille%20%C3%A9ternelle.png" alt="Heroscape">
       <div class="tag">Forum & archives francophones</div>
@@ -21,10 +21,15 @@
    const {data,error}=await sb.from("private_messages").select("id,sender_id,recipient_id,content,created_at,is_read,sender_deleted,recipient_deleted").or("sender_id.eq."+user.id+",recipient_id.eq."+user.id).order("created_at",{ascending:false});
    if(error){box.innerHTML="<p>Impossible de charger les messages : "+escPm(error.message)+"</p>";return}
    all=data||[];
+   const unreadIds=all.filter(m=>m.recipient_id===user.id&&!m.recipient_deleted&&!m.is_read).map(m=>m.id);
+   if(unreadIds.length){
+     const {error:readError}=await sb.from("private_messages").update({is_read:true}).in("id",unreadIds);
+     if(!readError) all.forEach(m=>{if(unreadIds.includes(m.id))m.is_read=true});
+   }
    const ids=[...new Set(all.flatMap(m=>[m.sender_id,m.recipient_id]))];
    if(ids.length){const {data:ps}=await sb.from("profiles").select("id,username,avatar_url").in("id",ids);profiles={};(ps||[]).forEach(p=>profiles[p.id]=p)}
    const received=all.filter(m=>m.recipient_id===user.id&&!m.recipient_deleted),sent=all.filter(m=>m.sender_id===user.id&&!m.sender_deleted);
-   counter.textContent="Boîte : "+received.length+" / 20 reçus • "+sent.length+" envoyés";
+   counter.textContent="Boîte : "+received.length+" / 20 reçus • "+sent.length+" / 20 envoyés";
    warning.textContent=received.length>=20?" ⚠ Boîte de réception pleine : supprime un message pour en recevoir un nouveau.":"";
    render();
  }
