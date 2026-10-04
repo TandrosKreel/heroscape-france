@@ -593,3 +593,18 @@ header nav a{
   width:28px!important;
   height:28px!important;
 }
+
+/* Contrôles compte v2 — plus grands et plus lisibles */
+.account-panel .account-icon{
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  min-height:42px!important;
+  font-size:20px!important;
+}
+.account-panel .account-avatar{
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  min-height:34px!important;
+}
