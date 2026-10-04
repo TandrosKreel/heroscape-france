@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Mon profil — Heroscape France</title>
-  <link rel="stylesheet" href="css/style.css?v=20261002-14">
+  <link rel="stylesheet" href="css/style.css?v=20261004-1">
 </head>
 <body>
 <header><div class="container">
@@ -31,8 +31,8 @@
           <h3 id="profile-name"></h3>
           <p id="profile-message-count" class="count"></p>
           <label for="avatar-file"><strong>Choisir une image</strong></label><br>
-          <input type="file" id="avatar-file" accept="image/png,image/jpeg,image/webp,image/gif">
-          <p class="count">JPG, PNG, WebP ou GIF — 2 Mo maximum.</p>
+          <input type="file" id="avatar-file" accept="image/png,image/jpeg,image/webp">
+          <p class="count">JPG, PNG ou WebP — 2 Mo maximum.</p>
           <details>
             <summary>Ou utiliser l'adresse d'une image</summary>
             <p><input type="url" id="avatar-url" placeholder="https://exemple.fr/mon-avatar.jpg"></p>
@@ -109,12 +109,16 @@
       if(file){
         const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
         const path=user.id+"/avatar-"+Date.now()+"."+ext;
-        const {error:uploadError}=await window.supabaseClient.storage.from("avatars").upload(path,file,{cacheControl:"3600",upsert:true,contentType:file.type});
-        if(uploadError)throw uploadError;
+        message.textContent="Étape 1/2 — envoi du fichier…";
+        const {error:uploadError}=await window.supabaseClient.storage.from("avatars").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+        if(uploadError){
+          throw new Error("UPLOAD STORAGE refusé — chemin : "+path+" — "+(uploadError.message||"erreur inconnue"));
+        }
+        message.textContent="Étape 2/2 — enregistrement du profil…";
         avatarUrl=window.supabaseClient.storage.from("avatars").getPublicUrl(path).data.publicUrl;
       }
       const {error:updateError}=await window.supabaseClient.from("profiles").update({avatar_url:avatarUrl}).eq("id",user.id);
-      if(updateError)throw updateError;
+      if(updateError)throw new Error("MISE À JOUR PROFIL refusée — "+(updateError.message||"erreur inconnue"));
       urlInput.value=avatarUrl||""; fileInput.value=""; preview(avatarUrl);
       message.textContent="Avatar enregistré ! Il apparaît maintenant à côté de tes messages."; message.className="success-message";
     }catch(err){console.error(err);message.textContent="Impossible d'enregistrer l'avatar : "+(err.message||"erreur inconnue");message.className="error-message";}
