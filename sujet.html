@@ -428,6 +428,7 @@ async function renderSubject() {
   subjectBox.innerHTML = `
 
     ${paginationHtml}
+    ${isAdmin ? '<div class="admin-thread-actions"><button class="btn" id="admin-delete-thread" type="button">Supprimer ce sujet</button></div>' : ""}
     ${firstPostHtml}
 
     <h3>Réponses</h3>
@@ -443,6 +444,21 @@ async function renderSubject() {
 
 
   if (isAdmin) {
+    const deleteThreadButton = document.getElementById("admin-delete-thread");
+    if (deleteThreadButton) {
+      deleteThreadButton.addEventListener("click", async () => {
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce sujet ?")) return;
+        deleteThreadButton.disabled = true;
+        const { error } = await window.supabaseClient.rpc("admin_delete_forum_thread", { p_thread_id: id });
+        if (error) {
+          alert("Suppression impossible : " + error.message);
+          deleteThreadButton.disabled = false;
+          return;
+        }
+        location.href = backLink.href;
+      });
+    }
+
     subjectBox.querySelectorAll(".admin-delete-post").forEach(button => {
       button.addEventListener("click", async () => {
         if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ?")) return;
