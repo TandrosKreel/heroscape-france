@@ -224,7 +224,38 @@
       });
     }
 
-    loadProfileEditor();
+    async function handleEmailConfirmationReturn() {
+      const params = new URLSearchParams(window.location.search);
+      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const errorCode = params.get("error_code") || hash.get("error_code");
+      const errorDescription = params.get("error_description") || hash.get("error_description");
+
+      if (errorCode) {
+        const message = errorCode === "otp_expired"
+          ? "Ce lien de confirmation a expiré ou a déjà été utilisé. Demande un nouvel e-mail de confirmation."
+          : "Confirmation impossible : " + (errorDescription || errorCode);
+        showMessage(loginMessage, message);
+        return;
+      }
+
+      const code = params.get("code");
+      if (code) {
+        const { error } = await window.supabaseClient.auth.exchangeCodeForSession(code);
+        if (error) {
+          showMessage(loginMessage, "Confirmation impossible : " + error.message);
+          return;
+        }
+        window.history.replaceState({}, document.title, "connexion.html");
+        window.location.replace("index.html");
+        return;
+      }
+
+      const { data: { session } } = await window.supabaseClient.auth.getSession();
+      if (session && (hash.get("access_token") || params.get("type") === "signup")) {
+        window.history.replaceState({}, document.title, "connexion.html");
+        window.location.replace("index.html");
+      }
+    }
 
     const loginForm = document.getElementById("login-form");
     const signupForm = document.getElementById("signup-form");
@@ -237,6 +268,9 @@
       element.style.fontWeight = "bold";
       element.style.color = success ? "green" : "crimson";
     }
+
+    handleEmailConfirmationReturn();
+    loadProfileEditor();
 
     loginForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -315,7 +349,7 @@
 
           options: {
             emailRedirectTo:
-              "https://tandroskreel.github.io/heroscape-france/index.html",
+              "https://tandroskreel.github.io/heroscape-france/connexion.html",
 
             data: {
               username: username
