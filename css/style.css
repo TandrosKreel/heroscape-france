@@ -539,3 +539,38 @@ header nav a{
   pointer-events:none;
 }
 .message-badge[hidden]{display:none!important}
+
+/* Position finale du badge de messagerie */
+.account-icon.account-message-icon{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:visible!important;
+}
+.account-message-icon .message-badge{
+  position:absolute!important;
+  top:-8px!important;
+  right:-8px!important;
+  bottom:auto!important;
+  left:auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:18px!important;
+  width:auto!important;
+  height:18px!important;
+  padding:0 5px!important;
+  margin:0!important;
+  border:2px solid #0b1015!important;
+  border-radius:999px!important;
+  background:#d92d20!important;
+  color:#fff!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  text-align:center!important;
+  pointer-events:none!important;
+  z-index:200!important;
+}
+.account-message-icon .message-badge[hidden]{display:none!important}
