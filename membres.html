@@ -13,8 +13,10 @@
 <script>
 (async()=>{
  const box=document.getElementById("members-list");
+ const currentProfile=await getCurrentProfile();
+ const isAdmin=currentProfile?.role==="admin";
  const [{data:profiles,error:pe},{data:posts,error:po}]=await Promise.all([
-   window.supabaseClient.from("profiles").select("id,username,avatar_url,created_at"),
+   window.supabaseClient.from("profiles").select("id,username,avatar_url,role,created_at"),
    window.supabaseClient.from("posts").select("user_id")
  ]);
  if(pe||po){console.error(pe||po);box.innerHTML='<div class="empty">Impossible de charger la liste des membres.</div>';return;}
@@ -24,7 +26,16 @@
  if(!members.length){box.innerHTML='<div class="empty">Aucun membre pour le moment.</div>';return;}
  box.innerHTML=members.map((m,i)=>{
    const avatar=m.avatar_url?'<img class="member-avatar" src="'+esc(m.avatar_url)+'" alt="" loading="lazy">':'<div class="member-avatar post-avatar-default">'+esc((m.username||"M").charAt(0).toUpperCase())+'</div>';
-   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div></div><a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Envoyer un message</a></div>';
+   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div></div><a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Envoyer un message</a>'+(isAdmin&&m.id!==currentProfile.id?'<button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'">Supprimer le profil</button>':'')+'</div>';
  }).join("");
+ if(isAdmin){
+   box.querySelectorAll(".admin-delete-member").forEach(button=>button.addEventListener("click",async()=>{
+     if(!confirm("Êtes-vous sûr de vouloir supprimer ce profil ?"))return;
+     button.disabled=true;
+     const {error}=await window.supabaseClient.rpc("admin_delete_forum_member",{p_user_id:button.dataset.memberId});
+     if(error){alert("Suppression impossible : "+error.message);button.disabled=false;return;}
+     location.reload();
+   }));
+ }
 })();
 </script></body></html>
