@@ -518,3 +518,24 @@ header nav a{
   header nav{margin-top:18px!important;flex-wrap:wrap!important;padding-bottom:58px!important}
   #account.account-panel,.global-account{left:14px!important;right:auto!important;bottom:0!important}
 }
+
+/* Badge rouge des messages privés non lus */
+.account-message-icon{position:relative!important;overflow:visible!important}
+.message-badge{
+  position:absolute;
+  top:-7px;
+  right:-7px;
+  min-width:17px;
+  height:17px;
+  padding:0 4px;
+  box-sizing:border-box;
+  border-radius:999px;
+  background:#d92d20;
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  line-height:17px;
+  text-align:center;
+  pointer-events:none;
+}
+.message-badge[hidden]{display:none!important}
