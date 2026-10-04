@@ -210,7 +210,7 @@ async function getThread() {
 // UN MESSAGE
 // ============================================================
 
-function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0, signature = "") {
+function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0, signature = "", isAdmin = false) {
 
   const avatar = post.avatar_url
     ? `<img class="post-avatar" src="${esc(post.avatar_url)}" alt="Avatar de ${esc(post.author || "Membre")}" loading="lazy">`
@@ -249,6 +249,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
       <p style="white-space:pre-wrap">${esc(post.body)}</p>
 
       ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}
+      ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
 
       </div>
     </article>
@@ -295,6 +296,8 @@ async function renderSubject() {
   }
 
 
+  const currentProfile = await getCurrentProfile();
+  const isAdmin = currentProfile?.role === "admin";
   const posts = await getReplies(id);
   const messageCounts = await getMessageCounts();
   const signatures = await getSignatures(posts.map(post => post.user_id));
@@ -311,7 +314,8 @@ async function renderSubject() {
       firstPostHtml = messageHtml(
         pagePosts[0], true, thread.title,
         messageCounts[pagePosts[0].user_id] || 0,
-        signatures[pagePosts[0].user_id] || ""
+        signatures[pagePosts[0].user_id] || "",
+        isAdmin
       );
     } else {
       firstPostHtml = '<h2 class="thread-page-title">' + esc(thread.title) + '</h2>';
@@ -320,7 +324,7 @@ async function renderSubject() {
     const visibleReplies = currentPage === 1 ? pagePosts.slice(1) : pagePosts;
     repliesHtml = visibleReplies.length
       ? visibleReplies.map(post =>
-          messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "")
+          messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "", isAdmin)
         ).join("")
       : '<div class="empty">Aucune réponse sur cette page.</div>';
 
@@ -437,6 +441,22 @@ async function renderSubject() {
 
   `;
 
+
+  if (isAdmin) {
+    subjectBox.querySelectorAll(".admin-delete-post").forEach(button => {
+      button.addEventListener("click", async () => {
+        if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ?")) return;
+        button.disabled = true;
+        const { error } = await window.supabaseClient.rpc("admin_delete_forum_post", { p_post_id: Number(button.dataset.postId) });
+        if (error) {
+          alert("Suppression impossible : " + error.message);
+          button.disabled = false;
+          return;
+        }
+        location.reload();
+      });
+    });
+  }
 
   if (user && !thread.is_locked) {
 
