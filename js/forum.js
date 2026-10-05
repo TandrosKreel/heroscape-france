@@ -61,6 +61,63 @@ function getSupabase() {
 
 
 // ------------------------------------------------------------
+// 2 bis. SÉCURITÉ DES SESSIONS
+// ------------------------------------------------------------
+
+const SESSION_INACTIVITY_MS = 24 * 60 * 60 * 1000;
+const SESSION_ACTIVITY_KEY = "heroscape_last_activity";
+
+function currentSessionId(session) {
+  try {
+    const payload = JSON.parse(atob(session.access_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+    return payload.session_id || null;
+  } catch (_) {
+    return null;
+  }
+}
+
+async function enforceForumSession() {
+  const supabase = getSupabase();
+  if (!supabase) return;
+
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    localStorage.removeItem(SESSION_ACTIVITY_KEY);
+    return;
+  }
+
+  const now = Date.now();
+  const lastActivity = Number(localStorage.getItem(SESSION_ACTIVITY_KEY) || 0);
+
+  if (lastActivity && now - lastActivity > SESSION_INACTIVITY_MS) {
+    localStorage.removeItem(SESSION_ACTIVITY_KEY);
+    await supabase.auth.signOut();
+    window.location.replace("connexion.html?reason=inactive");
+    return;
+  }
+
+  const sessionId = currentSessionId(session);
+  if (sessionId) {
+    const { data: valid, error } = await supabase.rpc("is_current_forum_session", {
+      p_session_id: sessionId
+    });
+
+    // Si la fonction n'est pas encore installée, le forum reste utilisable.
+    if (!error && valid === false) {
+      localStorage.removeItem(SESSION_ACTIVITY_KEY);
+      await supabase.auth.signOut();
+      window.location.replace("connexion.html?reason=other-device");
+      return;
+    }
+  }
+
+  // Une visite/actualisation du forum renouvelle les 24 h d'inactivité.
+  localStorage.setItem(SESSION_ACTIVITY_KEY, String(now));
+}
+
+enforceForumSession();
+
+// ------------------------------------------------------------
 // 3. UTILISATEUR CONNECTÉ
 // ------------------------------------------------------------
 
