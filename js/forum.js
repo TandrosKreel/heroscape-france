@@ -5,41 +5,69 @@
 
 
 // ------------------------------------------------------------
-// 1. CATÉGORIES
-// Le dernier nombre correspond à l'ID dans Supabase.
+// 1. CATÉGORIES — chargées dynamiquement depuis Supabase
 // ------------------------------------------------------------
 
-const cats = [
-  ["presentation", "👋", "Présentation", "Qui es-tu ? Depuis combien de temps tu joues à Heroscape ?", 10],
-  ["tribune", "🎲", "La Tribune Ludique", "Discussions, animations, concours, jeux créatifs autour du jeu Heroscape", 11],
-  ["news", "📰", "Les News d'Heroscape", "Les dernières nouvelles et actualités autour d'Heroscape", 9],
-  ["strategies-regles", "📖", "Stratégies, Règles, et Questions", "Ici, on parle stratégie Heroscapienne. Pose toutes tes questions également !", 12],
-  ["scenarios", "⚔️", "Scénarios et Parties", "Scénarios, comptes-rendus et idées de parties", 3],
-  ["tournois", "🏆", "Tournois et Rencontres", "Tout ce qui est tournoi, ou pour rencontrer des joueurs, c'est par ici !", 7],
-  ["maps", "🗺️", "Maps", "Partage des créations/ressources maps ici. Concours de maps également", 13],
-  ["customs", "🛠️", "Customs et Règles Maisons", "Partage tes customs ! Concours de figurines aussi", 8],
-  ["traductions", "🇫🇷", "Traductions", "Tout le travail de traduction française", 6],
-  ["achat-vente", "💰", "Achat et Vente de Matos", "C'est par ici qu'on peut trouver des pépites", 14],
-  ["inventaire", "📦", "Le Grand Inventaire de nos collections", "Crée un sujet à ton nom pour exposer ta collection", 15]
-];
+let cats = [];
+let categoriesPromise = null;
 
+async function loadCategories(force = false) {
+  if (!force && cats.length) return cats;
+  if (!force && categoriesPromise) return categoriesPromise;
 
-// ------------------------------------------------------------
-// 2. OUTILS
-// ------------------------------------------------------------
+  categoriesPromise = (async () => {
+    const supabase = getSupabase();
+    if (!supabase) return [];
 
-function catName(slug) {
-  const cat = cats.find(c => c[0] === slug);
+    const { data, error } = await supabase
+      .from("categories")
+      .select("id, slug, name, description, icon, display_order")
+      .order("display_order", { ascending: true })
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.error("Erreur chargement catégories :", error);
+      return [];
+    }
+
+    cats = (data || []).map(cat => [
+      cat.slug,
+      cat.icon || "💬",
+      cat.name,
+      cat.description || "",
+      cat.id
+    ]);
+
+    return cats;
+  })();
+
+  const result = await categoriesPromise;
+  categoriesPromise = null;
+  return result;
+}
+
+async function getCategoryBySlug(slug) {
+  await loadCategories();
+  return cats.find(c => c[0] === slug) || null;
+}
+
+async function getCategoryById(id) {
+  await loadCategories();
+  return cats.find(c => c[4] === Number(id)) || null;
+}
+
+async function catName(slug) {
+  const cat = await getCategoryBySlug(slug);
   return cat ? cat[2] : slug;
 }
 
-function catId(slug) {
-  const cat = cats.find(c => c[0] === slug);
+async function catId(slug) {
+  const cat = await getCategoryBySlug(slug);
   return cat ? cat[4] : null;
 }
 
-function catSlug(id) {
-  const cat = cats.find(c => c[4] === Number(id));
+async function catSlug(id) {
+  const cat = await getCategoryById(id);
   return cat ? cat[0] : null;
 }
 
@@ -240,7 +268,7 @@ async function getTopics(category = null) {
     .order("updated_at", { ascending: false });
 
   if (category) {
-    const categoryId = catId(category);
+    const categoryId = await catId(category);
 
     if (!categoryId) {
       console.error("Catégorie inconnue :", category);
@@ -260,7 +288,7 @@ async function getTopics(category = null) {
   // Compatibilité avec l'ancienne interface du site.
   return (data || []).map(thread => ({
     ...thread,
-    cat: catSlug(thread.category_id),
+    cat: (await catSlug(thread.category_id)),
     author: thread.profiles?.username || "Membre"
   }));
 }
@@ -329,7 +357,7 @@ async function addTopic(category, title, author, body) {
     return null;
   }
 
-  const categoryId = catId(category);
+  const categoryId = await catId(category);
 
   if (!categoryId) {
     console.error("Catégorie inconnue :", category);
@@ -494,17 +522,21 @@ async function logout() {
 const categoriesBox = document.getElementById("categories");
 
 if (categoriesBox) {
-  categoriesBox.innerHTML = cats.map(c => `
-    <a
-      class="card forumrow"
-      href="categorie.html?cat=${encodeURIComponent(c[0])}"
-    >
-      <div>
-        <h3>${c[1]} ${esc(c[2])}</h3>
-        <div class="count">${esc(c[3])}</div>
-      </div>
-    </a>
-  `).join("");
+  (async () => {
+    categoriesBox.innerHTML = '<div class="empty">Chargement des catégories…</div>';
+    const loadedCats = await loadCategories();
+    categoriesBox.innerHTML = loadedCats.length ? loadedCats.map(c => `
+      <a
+        class="card forumrow"
+        href="categorie.html?cat=${encodeURIComponent(c[0])}"
+      >
+        <div>
+          <h3>${c[1]} ${esc(c[2])}</h3>
+          <div class="count">${esc(c[3])}</div>
+        </div>
+      </a>
+    `).join("") : '<div class="empty">Aucune catégorie disponible.</div>';
+  })();
 }
 
 
