@@ -286,11 +286,15 @@ async function getTopics(category = null) {
   }
 
   // Compatibilité avec l'ancienne interface du site.
-  return (data || []).map(thread => ({
-    ...thread,
-    cat: (await catSlug(thread.category_id)),
-    author: thread.profiles?.username || "Membre"
-  }));
+  const result = [];
+  for (const thread of (data || [])) {
+    result.push({
+      ...thread,
+      cat: await catSlug(thread.category_id),
+      author: thread.profiles?.username || "Membre"
+    });
+  }
+  return result;
 }
 
 
