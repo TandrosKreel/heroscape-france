@@ -1,8 +1,8 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages privés — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261004-3"></head><body>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Messages privés — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261005-1"></head><body>
 <header><div class="container"><div class="brand home-brand">
       <img class="heroscape-main-logo" src="Logo%20Heroscape%20_%20bataille%20%C3%A9ternelle.png" alt="Heroscape">
       <div class="tag">Forum & archives francophones</div>
-    </div><nav><a href="index.html">Forum</a><a href="membres.html">Membres</a><a href="profil.html">Mon profil</a></nav></div></header>
+    </div><nav><a href="index.html">Forum</a><a href="cartes-armee.html">Cartes Armées</a><a href="regles.html">Règles</a><a href="liens-utiles.html">Liens utiles</a><a href="membres.html">Membres</a></nav></div></header>
 <main class="container">
 <section class="hero"><h2>✉ Messages privés</h2><p>Messages reçus et envoyés. Capacité maximale : 20 messages par boîte.</p></section>
 <section id="compose" class="card" hidden><h3 id="compose-title">Nouveau message</h3><textarea id="pm-content" rows="6" maxlength="5000" placeholder="Écris ton message…" style="width:100%;box-sizing:border-box"></textarea><p><button class="btn" id="send-pm" type="button">Envoyer</button> <a href="membres.html">Annuler</a></p><p id="pm-status"></p></section>
@@ -10,7 +10,7 @@
 <section class="pm-tabs"><button class="btn active" id="tab-received" type="button">Reçus</button><button class="btn" id="tab-sent" type="button">Envoyés</button></section>
 <div id="private-messages" class="card"><p>Chargement…</p></div>
 </main><footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js?v=20261002-4"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js?v=20261005-1"></script>
 <script>
 (async()=>{
  const sb=window.supabaseClient,box=document.getElementById("private-messages"),counter=document.getElementById("pm-counter"),warning=document.getElementById("pm-warning");
