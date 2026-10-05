@@ -13,6 +13,11 @@
 <script>
 (async()=>{
  const box=document.getElementById("members-list");
+ const user=await getCurrentUser();
+ if(!user){
+   box.innerHTML='<div class="card"><h3>🔒 Liste réservée aux membres</h3><p>La liste des membres du forum est accessible uniquement aux membres connectés.</p><p><a class="btn" href="connexion.html">Connexion / Créer un compte</a></p></div>';
+   return;
+ }
  const currentProfile=await getCurrentProfile();
  const isAdmin=currentProfile?.role==="admin";
  const [{data:profiles,error:pe},{data:posts,error:po}]=await Promise.all([
