@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connexion - Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=20261005-2">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
@@ -72,7 +72,7 @@
         <button type="submit">Se connecter</button>
       </form>
 
-      <p id="login-message"></p>
+      <p class="count">Sécurité : la connexion expire après 24 h sans visite ou actualisation du forum. Une connexion sur un nouvel appareil ou navigateur déconnecte automatiquement les autres sessions du même compte.</p>\n\n      <p id="login-message"></p>
     </section>
 
     <section class="card">
@@ -269,6 +269,13 @@
       element.style.color = success ? "green" : "crimson";
     }
 
+    const sessionReason = new URLSearchParams(window.location.search).get("reason");
+    if (sessionReason === "inactive") {
+      showMessage(loginMessage, "Ta session a expiré après 24 h d’inactivité. Reconnecte-toi pour continuer.");
+    } else if (sessionReason === "other-device") {
+      showMessage(loginMessage, "Ce compte a été connecté sur un autre appareil ou navigateur. Cette ancienne session a été déconnectée.");
+    }
+
     handleEmailConfirmationReturn();
     loadProfileEditor();
 
@@ -301,6 +308,24 @@
         );
 
         return;
+      }
+
+      // Enregistre cette connexion comme l'unique session active du compte.
+      try {
+        const session = data.session;
+        if (session?.access_token) {
+          const payload = JSON.parse(atob(session.access_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+          const sessionId = payload.session_id;
+          if (sessionId) {
+            const { error: sessionError } = await window.supabaseClient.rpc("register_forum_session", {
+              p_session_id: sessionId
+            });
+            if (sessionError) console.error("Enregistrement session :", sessionError);
+          }
+          localStorage.setItem("heroscape_last_activity", String(Date.now()));
+        }
+      } catch (sessionError) {
+        console.error("Sécurité session :", sessionError);
       }
 
       showMessage(
