@@ -263,6 +263,21 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
 
 async function renderSubject() {
 
+  const user = await getCurrentUser();
+
+  if (!user) {
+    document.title = "Accès réservé aux membres — Heroscape France";
+    subjectBox.innerHTML = `
+      <section class="card">
+        <h2>🔒 Discussion réservée aux membres</h2>
+        <p>Le contenu des sujets et les discussions du forum sont réservés aux membres connectés.</p>
+        <p>Pour consulter ce sujet, inscris-toi au forum ou connecte-toi. Nous t'encourageons également à participer de temps en temps aux discussions afin de faire vivre la communauté Heroscape France.</p>
+        <p><a class="btn" href="connexion.html">Connexion / Créer un compte</a></p>
+      </section>
+    `;
+    return;
+  }
+
   const thread =
     await getThread();
 
@@ -351,10 +366,6 @@ async function renderSubject() {
       </div>
     `;
   }
-
-
-  const user =
-    await getCurrentUser();
 
 
   let replyFormHtml = "";
