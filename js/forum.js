@@ -10,15 +10,17 @@
 // ------------------------------------------------------------
 
 const cats = [
-  ["general", "💬", "Général", "Discussions générales autour d'Heroscape", 1],
+  ["presentation", "👋", "Présentation", "Qui es-tu ? Depuis combien de temps tu joues à Heroscape ?", 10],
+  ["tribune", "🎲", "La Tribune Ludique", "Discussions, animations, concours, jeux créatifs autour du jeu Heroscape", 11],
   ["news", "📰", "Les News d'Heroscape", "Les dernières nouvelles et actualités autour d'Heroscape", 9],
-  ["regles", "📖", "Règles et questions", "Questions de règles, précisions et aides de jeu", 2],
-  ["scenarios", "⚔️", "Scénarios et parties", "Scénarios, comptes-rendus et idées de parties", 3],
-  ["cartes", "🗺️", "Cartes et VirtualScape", "Maps, créations de cartes et fichiers VirtualScape", 4],
-  ["figurines", "🧙", "Figurines et armées", "Figurines, extensions, armées et stratégies", 5],
-  ["traductions", "FR", "Traductions et ressources VF", "Traductions, aides et ressources francophones", 6],
-  ["tournois", "🏆", "Tournois et rencontres", "Tournois, rencontres et organisation de parties", 7],
-  ["customs", "🛠️", "Customs et créations", "Créations de figurines, cartes et règles maison", 8]
+  ["strategies-regles", "📖", "Stratégies, Règles, et Questions", "Ici, on parle stratégie Heroscapienne. Pose toutes tes questions également !", 12],
+  ["scenarios", "⚔️", "Scénarios et Parties", "Scénarios, comptes-rendus et idées de parties", 3],
+  ["tournois", "🏆", "Tournois et Rencontres", "Tout ce qui est tournoi, ou pour rencontrer des joueurs, c'est par ici !", 7],
+  ["maps", "🗺️", "Maps", "Partage des créations/ressources maps ici. Concours de maps également", 13],
+  ["customs", "🛠️", "Customs et Règles Maisons", "Partage tes customs ! Concours de figurines aussi", 8],
+  ["traductions", "🇫🇷", "Traductions", "Tout le travail de traduction française", 6],
+  ["achat-vente", "💰", "Achat et Vente de Matos", "C'est par ici qu'on peut trouver des pépites", 14],
+  ["inventaire", "📦", "Le Grand Inventaire de nos collections", "Crée un sujet à ton nom pour exposer ta collection", 15]
 ];
 
 
