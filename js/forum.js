@@ -130,13 +130,29 @@ async function getCurrentUser() {
     return null;
   }
 
+  // getSession() permet de détecter proprement un visiteur anonyme
+  // sans provoquer l'erreur normale "Auth session missing!" de getUser().
   const {
-    data: { user },
+    data: { session },
     error
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getSession();
 
   if (error) {
-    console.error("Erreur utilisateur Supabase :", error);
+    console.error("Erreur session Supabase :", error);
+    return null;
+  }
+
+  if (!session) {
+    return null;
+  }
+
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    console.error("Erreur utilisateur Supabase :", userError);
     return null;
   }
 
