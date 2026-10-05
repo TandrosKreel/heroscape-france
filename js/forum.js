@@ -105,7 +105,9 @@ async function enforceForumSession() {
     // Si la fonction n'est pas encore installée, le forum reste utilisable.
     if (!error && valid === false) {
       localStorage.removeItem(SESSION_ACTIVITY_KEY);
-      await supabase.auth.signOut();
+      // Déconnexion locale uniquement : une déconnexion globale invaliderait
+      // aussi la nouvelle session qui doit rester active sur l'autre appareil.
+      await supabase.auth.signOut({ scope: "local" });
       window.location.replace("connexion.html?reason=other-device");
       return;
     }
