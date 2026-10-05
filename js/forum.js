@@ -92,7 +92,7 @@ async function enforceForumSession() {
   if (lastActivity && now - lastActivity > SESSION_INACTIVITY_MS) {
     localStorage.removeItem(SESSION_ACTIVITY_KEY);
     await supabase.auth.signOut();
-    window.location.replace("connexion.html?reason=inactive");
+    window.location.replace("connexion.html?v=20261005-3&reason=inactive");
     return;
   }
 
@@ -108,7 +108,7 @@ async function enforceForumSession() {
       // Déconnexion locale uniquement : une déconnexion globale invaliderait
       // aussi la nouvelle session qui doit rester active sur l'autre appareil.
       await supabase.auth.signOut({ scope: "local" });
-      window.location.replace("connexion.html?reason=other-device");
+      window.location.replace("connexion.html?v=20261005-3&reason=other-device");
       return;
     }
   }
