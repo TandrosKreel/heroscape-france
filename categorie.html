@@ -131,24 +131,27 @@
 
 <script src="js/supabase-config.js"></script>
 
-<script src="js/forum.js?v=20261005-4"></script>
+<script src="js/forum.js?v=20261005-5"></script>
 
 
 <script>
 
 const params = new URLSearchParams(location.search);
 
-const cat = params.get("cat") || "general";
+const cat = params.get("cat") || "";
 
-const meta =
-  cats.find(c => c[0] === cat) || cats[0];
-
-
-document.getElementById("title").textContent =
-  meta[1] + " " + meta[2];
-
-document.getElementById("desc").textContent =
-  meta[3];
+async function renderCategoryHeader() {
+  const meta = await getCategoryBySlug(cat);
+  if (!meta) {
+    document.getElementById("title").textContent = "Catégorie introuvable";
+    document.getElementById("desc").textContent = "";
+    return false;
+  }
+  document.getElementById("title").textContent = meta[1] + " " + meta[2];
+  document.getElementById("desc").textContent = meta[3];
+  document.title = meta[2] + " — Heroscape France";
+  return true;
+}
 
 
 const topicsBox =
@@ -436,7 +439,15 @@ searchInput.addEventListener(
 
 renderMember();
 
-render();
+(async () => {
+  const validCategory = await renderCategoryHeader();
+  if (validCategory) {
+    render();
+  } else {
+    topicsBox.innerHTML = '<div class="empty">Cette catégorie n’existe pas.</div>';
+    newTopicButton.hidden = true;
+  }
+})();
 
 </script>
 
