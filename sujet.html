@@ -67,7 +67,7 @@
 
 <script src="js/supabase-config.js"></script>
 
-<script src="js/forum.js?v=20261005-4"></script>
+<script src="js/forum.js?v=20261005-5"></script>
 
 
 <script>
@@ -295,19 +295,16 @@ async function renderSubject() {
     thread.title + " — Heroscape France";
 
 
-  const slug =
-    catSlug(thread.category_id);
-
+  const slug = await catSlug(thread.category_id);
 
   if (slug) {
-
     backLink.href =
       "categorie.html?cat=" +
       encodeURIComponent(slug);
 
     backLink.textContent =
       "← Retour à " +
-      catName(slug);
+      await catName(slug);
   }
 
 
