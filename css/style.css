@@ -809,3 +809,60 @@ header nav a{
 #categories .category-read-die .read-die{
   margin:0!important;
 }
+
+
+/* Catégories v4 — icône latérale centrée, contenu centré, activité en 3e ligne */
+#categories .forumrow{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  padding:14px 14px 14px 54px!important;
+  min-height:126px!important;
+}
+#categories .category-icon{
+  position:absolute!important;
+  left:14px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:28px!important;
+  height:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:22px!important;
+  line-height:1!important;
+}
+#categories .category-content{
+  width:100%!important;
+  min-width:0!important;
+  text-align:center!important;
+}
+#categories .category-content h3{
+  margin:0!important;
+  text-align:center!important;
+  line-height:1.22!important;
+}
+#categories .category-content .count{
+  margin:7px 0 0!important;
+  padding:0!important;
+  text-align:center!important;
+  width:100%!important;
+}
+#categories .category-last-activity{
+  margin-top:10px!important;
+  min-height:38px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  width:100%!important;
+  text-align:left!important;
+}
+#categories .category-last-activity .read-die{
+  flex:0 0 38px!important;
+}
+#categories .category-activity-text{
+  font-size:12px!important;
+  line-height:1.25!important;
+  white-space:normal!important;
+}
