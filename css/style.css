@@ -1553,7 +1553,7 @@ img.read-die,
 }
 
 
-/* Dés v25 — tailles ajustées partout, sans autre changement */
+/* Dés v26 — ajustement fin demandé, sans autre changement */
 img.read-die{
   width:30px!important;
   height:30px!important;
@@ -1563,11 +1563,11 @@ img.read-die{
   max-height:30px!important;
   object-fit:contain!important;
 }
-/* Le dé non lu est à peine plus petit ; les deux autres sont agrandis. */
+/* Non lu un peu plus petit ; lu et posté par vous un peu plus grands. */
 img.read-die[src*="De%20rouge%20post"],
 img.read-die[src*="De%20bleu%20lu"]{
-  transform:scale(1.14)!important;
+  transform:scale(1.20)!important;
 }
 img.read-die[src*="De%20bleu%20non%20lu"]{
-  transform:scale(.97)!important;
+  transform:scale(.93)!important;
 }
