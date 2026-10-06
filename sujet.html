@@ -294,7 +294,8 @@ async function renderSubject() {
   document.title =
     thread.title + " — Heroscape France";
 
-  markThreadRead(id, thread.updated_at || thread.created_at);
+  // Le sujet n'est marqué lu qu'après récupération de ses messages,
+  // afin d'enregistrer exactement la date du dernier message réellement affiché.
 
 
   const slug = await catSlug(thread.category_id);
@@ -313,6 +314,8 @@ async function renderSubject() {
   const currentProfile = await getCurrentProfile();
   const isAdmin = currentProfile?.role === "admin";
   const posts = await getReplies(id);
+  const latestPost = posts.length ? posts[posts.length - 1] : null;
+  markThreadRead(id, latestPost?.created_at || thread.updated_at || thread.created_at);
   const messageCounts = await getMessageCounts();
   const signatures = await getSignatures(posts.map(post => post.user_id));
   const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
