@@ -1553,21 +1553,23 @@ img.read-die,
 }
 
 
-/* Dés v27 — différence de taille renforcée, sans autre changement */
-img.read-die{
-  width:30px!important;
-  height:30px!important;
-  min-width:30px!important;
-  min-height:30px!important;
-  max-width:30px!important;
-  max-height:30px!important;
+/* Dés v28 — tailles réelles forcées pour éviter les overrides précédents */
+body img.read-die[src*="De%20rouge%20post"],
+body img.read-die[src*="De%20bleu%20lu"]{
+  width:41px!important;
+  height:41px!important;
+  min-width:41px!important;
+  min-height:41px!important;
+  max-width:41px!important;
+  max-height:41px!important;
   object-fit:contain!important;
 }
-/* Lu et posté par vous nettement plus grands ; non lu nettement plus petit. */
-img.read-die[src*="De%20rouge%20post"],
-img.read-die[src*="De%20bleu%20lu"]{
-  transform:scale(1.35)!important;
-}
-img.read-die[src*="De%20bleu%20non%20lu"]{
-  transform:scale(.85)!important;
+body img.read-die[src*="De%20bleu%20non%20lu"]{
+  width:26px!important;
+  height:26px!important;
+  min-width:26px!important;
+  min-height:26px!important;
+  max-width:26px!important;
+  max-height:26px!important;
+  object-fit:contain!important;
 }
