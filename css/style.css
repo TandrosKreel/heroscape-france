@@ -1287,3 +1287,15 @@ header nav a{
   font-weight:600!important;
   color:inherit!important;
 }
+
+
+/* Catégories v13 — encadrés légèrement plus compacts, contenu inchangé */
+#categories .card.forumrow{
+  padding-top:14px!important;
+  padding-bottom:12px!important;
+}
+#categories .card.forumrow .category-last-activity{
+  margin-top:8px!important;
+  padding-top:5px!important;
+  min-height:34px!important;
+}
