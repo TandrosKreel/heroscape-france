@@ -735,3 +735,29 @@ header nav a{
   align-items:center!important;
   height:38px!important;
 }
+
+
+/* Action globale de lecture, sous l'encadré du compte */
+.account-panel .mark-all-read{
+  position:absolute!important;
+  right:0!important;
+  top:calc(100% + 5px)!important;
+  width:max-content!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#f2bd3f!important;
+  font:italic 13px/1.3 inherit!important;
+  cursor:pointer!important;
+  white-space:nowrap!important;
+}
+.account-panel .mark-all-read:hover{
+  text-decoration:underline!important;
+}
+.account-panel .mark-all-read:disabled{
+  opacity:.8!important;
+  cursor:default!important;
+  text-decoration:none!important;
+}
