@@ -1524,3 +1524,19 @@ header nav a{
   color:inherit!important;
   font-weight:600!important;
 }
+
+
+/* Dés v22 — taille unique partout : lu, non lu et posté par vous */
+img.read-die,
+.topic-status img.read-die,
+.category-last-activity img.read-die,
+.latest-post-row img.read-die,
+.latest-post-meta img.read-die{
+  width:30px!important;
+  height:30px!important;
+  min-width:30px!important;
+  min-height:30px!important;
+  max-width:30px!important;
+  max-height:30px!important;
+  object-fit:contain!important;
+}
