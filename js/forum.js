@@ -581,18 +581,13 @@ if (categoriesBox) {
     categoriesBox.innerHTML = '<div class="empty">Chargement des catégories…</div>';
     const loadedCats = await loadCategories();
     categoriesBox.innerHTML = loadedCats.length ? loadedCats.map(c => `
-      <a
-        class="card forumrow"
-        href="categorie.html?cat=${encodeURIComponent(c[0])}"
-      >
+      <a class="card forumrow" href="categorie.html?cat=${encodeURIComponent(c[0])}">
+        <span class="category-icon" aria-hidden="true">${c[1]}</span>
         <div class="category-content">
-          <div class="category-heading">
-            <span class="category-icon" aria-hidden="true">${c[1]}</span>
-            <h3>${esc(c[2])}</h3>
-          </div>
+          <h3>${esc(c[2])}</h3>
           <div class="count">${esc(c[3])}</div>
+          <div class="category-last-activity" data-category-activity="${esc(c[0])}"></div>
         </div>
-        <span class="category-read-die" data-category-slug="${esc(c[0])}"></span>
       </a>
     `).join("") : '<div class="empty">Aucune catégorie disponible.</div>';
 
@@ -601,17 +596,38 @@ if (categoriesBox) {
       const { data: threads } = await getSupabase()
         .from("threads")
         .select("id,category_id,user_id,created_at,updated_at");
-      const lastAuthors = await getThreadLastAuthors((threads || []).map(t => t.id));
+      const threadIds = (threads || []).map(t => t.id);
+      const lastAuthors = await getThreadLastAuthors(threadIds);
+      const { data: latestPosts } = threadIds.length ? await getSupabase()
+        .from("posts")
+        .select("thread_id,user_id,created_at,profiles(username)")
+        .in("thread_id", threadIds)
+        .order("created_at", { ascending: false }) : { data: [] };
+
+      const latestPostByThread = {};
+      for (const post of (latestPosts || [])) {
+        if (!latestPostByThread[post.thread_id]) latestPostByThread[post.thread_id] = post;
+      }
+
       for (const cat of loadedCats) {
         const catThreads = (threads || []).filter(t => Number(t.category_id) === Number(cat[4]));
-        const hasUnread = catThreads.some(t =>
-          isThreadUnread(t.id, t.updated_at || t.created_at)
-        );
+        const hasUnread = catThreads.some(t => isThreadUnread(t.id, t.updated_at || t.created_at));
         const latestThread = [...catThreads].sort((a,b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))[0];
-        const latestAuthor = latestThread ? (lastAuthors[latestThread.id] || latestThread.user_id) : null;
-        const ownLastPost = !!latestThread && latestAuthor === user.id && !hasUnread;
-        const slot = categoriesBox.querySelector('[data-category-slug="' + CSS.escape(cat[0]) + '"]');
-        if (slot) slot.innerHTML = readDiceHtml(hasUnread, "", ownLastPost);
+        const slot = categoriesBox.querySelector('[data-category-activity="' + CSS.escape(cat[0]) + '"]');
+        if (!slot || !latestThread) continue;
+
+        const latestPost = latestPostByThread[latestThread.id];
+        const latestAuthor = latestPost?.user_id || lastAuthors[latestThread.id] || latestThread.user_id;
+        const ownLastPost = latestAuthor === user.id && !hasUnread;
+        const authorName = latestPost?.profiles?.username || (latestAuthor === user.id ? "vous" : "Membre");
+        const activityDate = latestPost?.created_at || latestThread.updated_at || latestThread.created_at;
+        const formattedDate = new Intl.DateTimeFormat("fr-FR", {
+          day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit"
+        }).format(new Date(activityDate));
+
+        slot.innerHTML =
+          readDiceHtml(hasUnread, "category-activity-die", ownLastPost) +
+          '<span class="category-activity-text">Posté par <strong>' + esc(authorName) + '</strong> à ' + esc(formattedDate) + '</span>';
       }
     }
   })();
