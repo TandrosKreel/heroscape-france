@@ -1063,3 +1063,101 @@ header nav a{
 .account-panel .mark-all-read{
   top:calc(100% + 18px)!important;
 }
+
+
+/* Catégories v9 — mise en page finale compacte et sans chevauchement */
+#categories{
+  align-items:start!important;
+  gap:14px!important;
+}
+#categories .card.forumrow{
+  position:relative!important;
+  box-sizing:border-box!important;
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:18px 18px 16px!important;
+  overflow:hidden!important;
+}
+#categories .card.forumrow .category-content{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+}
+#categories .card.forumrow .category-content h3{
+  box-sizing:border-box!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0 44px!important;
+  text-align:center!important;
+  line-height:1.22!important;
+  white-space:normal!important;
+}
+#categories .card.forumrow .category-content .count{
+  box-sizing:border-box!important;
+  width:100%!important;
+  margin:10px 0 0!important;
+  padding:0 20px!important;
+  text-align:center!important;
+  line-height:1.45!important;
+}
+#categories .card.forumrow .category-icon{
+  position:absolute!important;
+  left:18px!important;
+  top:18px!important;
+  bottom:auto!important;
+  transform:none!important;
+  width:30px!important;
+  height:30px!important;
+  margin:0!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  z-index:2!important;
+}
+/* Ce titre occupe davantage la largeur : son icône descend sous le titre. */
+#categories .card.forumrow.category-strategies-regles .category-icon{
+  left:18px!important;
+  top:58px!important;
+}
+#categories .card.forumrow .category-last-activity{
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:flex!important;
+  width:100%!important;
+  min-height:38px!important;
+  margin:12px 0 0!important;
+  padding:0 18px 0 48px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+}
+#categories .card.forumrow .category-last-activity:empty{
+  display:none!important;
+}
+#categories .card.forumrow .category-last-activity .read-die{
+  position:absolute!important;
+  left:6px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  margin:0!important;
+}
+#categories .card.forumrow .category-activity-text{
+  display:block!important;
+  width:auto!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+  white-space:normal!important;
+}
+/* Les cartes d'une même rangée ne sont plus artificiellement étirées. */
+#categories .card.forumrow{align-self:start!important}
