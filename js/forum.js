@@ -581,7 +581,7 @@ if (categoriesBox) {
     categoriesBox.innerHTML = '<div class="empty">Chargement des catégories…</div>';
     const loadedCats = await loadCategories();
     categoriesBox.innerHTML = loadedCats.length ? loadedCats.map(c => `
-      <a class="card forumrow" href="categorie.html?cat=${encodeURIComponent(c[0])}">
+      <a class="card forumrow category-${esc(c[0])}" href="categorie.html?cat=${encodeURIComponent(c[0])}">
         <span class="category-icon" aria-hidden="true">${c[1]}</span>
         <div class="category-content">
           <h3>${esc(c[2])}</h3>
