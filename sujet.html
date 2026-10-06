@@ -217,7 +217,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
     : `<div class="post-avatar post-avatar-default" aria-hidden="true">${esc((post.author || "M").charAt(0).toUpperCase())}</div>`;
 
   return `
-    <article class="forum-post">
+    <article class="forum-post" id="post-${post.id}">
 
       <div class="post-author">
         ${avatar}
