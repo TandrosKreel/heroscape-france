@@ -94,10 +94,7 @@ function isThreadUnread(threadId, updatedAt) {
   const updatedMs = new Date(updatedAt).getTime();
   const seenMs = new Date(seen).getTime();
   if (!Number.isFinite(updatedMs) || !Number.isFinite(seenMs)) return true;
-
-  // Tolérance uniquement aux écarts de quelques millisecondes liés à l'écriture/lecture
-  // du même message. Tout message réellement postérieur redevient non lu.
-  return updatedMs > seenMs + 1000;
+  return updatedMs > seenMs;
 }
 
 function readDiceHtml(unread, extraClass = "", ownLastPost = false) {
@@ -539,11 +536,12 @@ async function addReply(topicId, author, body) {
     return null;
   }
 
-  // Met à jour la date d'activité du sujet.
+  // Met à jour la date d'activité avec la date réelle du message enregistrée par Supabase.
+  // Ainsi tous les comptes comparent exactement la même horloge serveur.
   const { error: updateError } = await supabase
     .from("threads")
     .update({
-      updated_at: new Date().toISOString()
+      updated_at: data.created_at
     })
     .eq("id", Number(topicId));
 
@@ -555,7 +553,7 @@ async function addReply(topicId, author, body) {
   }
 
   // Le message que l'utilisateur vient lui-même de publier ne doit pas rendre le sujet non lu.
-  markThreadRead(Number(topicId), new Date().toISOString());
+  markThreadRead(Number(topicId), data.created_at);
 
   return {
     ...data,
