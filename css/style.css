@@ -1245,3 +1245,45 @@ header nav a{
   color:inherit!important;
   font-weight:600!important;
 }
+
+
+/* Catégories v12 — dé restauré à gauche et activité sur une seule ligne */
+#categories .card.forumrow .category-last-activity{
+  box-sizing:border-box!important;
+  position:relative!important;
+  min-height:38px!important;
+  padding:8px 8px 0 48px!important;
+}
+#categories .card.forumrow .category-last-link{
+  position:static!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#categories .card.forumrow .category-last-link .read-die{
+  position:absolute!important;
+  left:18px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  margin:4px 0 0!important;
+}
+#categories .card.forumrow .category-activity-text{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  color:#d7dde5!important;
+  opacity:.82!important;
+  font-size:10px!important;
+  font-weight:400!important;
+  line-height:1!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+#categories .card.forumrow .category-activity-text strong{
+  font-weight:600!important;
+  color:inherit!important;
+}
