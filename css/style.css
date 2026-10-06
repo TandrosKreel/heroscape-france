@@ -1540,3 +1540,14 @@ img.read-die,
   max-height:30px!important;
   object-fit:contain!important;
 }
+
+
+/* Catégories v23 — deux micro-ajustements ciblés */
+#categories .card.forumrow.category-scenarios .category-last-activity{
+  position:relative!important;
+  top:-3px!important;
+}
+#categories .card.forumrow.category-inventaire .category-content .count{
+  position:relative!important;
+  top:3px!important;
+}
