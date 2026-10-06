@@ -131,7 +131,7 @@
 
 <script src="js/supabase-config.js"></script>
 
-<script src="js/forum.js?v=20261006-2"></script>
+<script src="js/forum.js?v=20261006-3"></script>
 
 
 <script>
@@ -304,9 +304,9 @@ async function render() {
         </div>
 
         <div class="topic-status">${readDiceHtml(
-          (lastAuthors[topic.id] || topic.user_id) !== currentUser?.id && isThreadUnread(topic.id, topic.updated_at || topic.created_at),
+          isThreadUnread(topic.id, topic.updated_at || topic.created_at),
           "",
-          (lastAuthors[topic.id] || topic.user_id) === currentUser?.id
+          !isThreadUnread(topic.id, topic.updated_at || topic.created_at) && (lastAuthors[topic.id] || topic.user_id) === currentUser?.id
         )}<span class="topic-arrow" aria-hidden="true">›</span></div>
 
       </a>
