@@ -64,7 +64,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
-<script src="js/forum.js?v=20261006-41"></script>
+<script src="js/forum.js?v=20261006-42"></script>
 
 <script>
 async function renderLatestTopics() {
@@ -88,6 +88,11 @@ async function renderLatestTopics() {
   const currentUser = await getCurrentUser();
   await loadThreadReadStates(posts.map(post => post.thread_id));
 
+  const latestPostByThread = {};
+  for (const post of posts) {
+    if (!latestPostByThread[post.thread_id]) latestPostByThread[post.thread_id] = post;
+  }
+
   const latestRows = [];
   for (const post of posts) {
     const name = post.profiles?.username || "Membre";
@@ -104,11 +109,13 @@ async function renderLatestTopics() {
       avatar +
       '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(categoryName) + '</b> - <b>' + esc(title) + '</b></span></span>' +
       '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
-      readDiceHtml(
-        post.user_id !== currentUser?.id && isThreadUnread(post.thread_id, post.created_at),
-        "latest-read-die",
-        post.user_id === currentUser?.id
-      ) + '</span>' +
+      (() => {
+        const latestPost = latestPostByThread[post.thread_id];
+        const isLatestPost = latestPost?.id === post.id;
+        const unread = isThreadUnread(post.thread_id, latestPost?.created_at || post.created_at);
+        const ownLastPost = isLatestPost && latestPost?.user_id === currentUser?.id && !unread;
+        return readDiceHtml(unread, "latest-read-die", ownLastPost);
+      })() + '</span>' +
     '</a>');
   }
   box.innerHTML = latestRows.join("");
