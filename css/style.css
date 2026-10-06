@@ -1161,3 +1161,31 @@ header nav a{
 }
 /* Les cartes d'une même rangée ne sont plus artificiellement étirées. */
 #categories .card.forumrow{align-self:start!important}
+
+
+/* Catégories v10 — hauteurs uniformes par rangée + correction Stratégies */
+#categories{
+  align-items:stretch!important;
+}
+#categories .card.forumrow{
+  height:100%!important;
+  align-self:stretch!important;
+}
+/* L'icône Stratégies se place dans la marge gauche, au niveau du descriptif. */
+#categories .card.forumrow.category-strategies-regles .category-icon{
+  left:18px!important;
+  top:72px!important;
+}
+/* La ligne d'activité reste naturellement vers le bas quand une carte est plus haute. */
+#categories .card.forumrow .category-content{
+  height:100%!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+#categories .card.forumrow .category-last-activity{
+  margin-top:auto!important;
+  padding-top:12px!important;
+}
+#categories .card.forumrow .category-last-activity:empty{
+  display:none!important;
+}
