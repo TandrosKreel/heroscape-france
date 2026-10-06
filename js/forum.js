@@ -566,6 +566,19 @@ if (categoriesBox) {
         <span class="category-read-die" data-category-slug="${esc(c[0])}"></span>
       </a>
     `).join("") : '<div class="empty">Aucune catégorie disponible.</div>';
+
+    const user = await getCurrentUser();
+    if (user && loadedCats.length) {
+      const { data: threads } = await getSupabase()
+        .from("threads")
+        .select("id,category_id,created_at,updated_at");
+      for (const cat of loadedCats) {
+        const catThreads = (threads || []).filter(t => Number(t.category_id) === Number(cat[4]));
+        const unread = catThreads.some(t => isThreadUnread(t.id, t.updated_at || t.created_at));
+        const slot = categoriesBox.querySelector('[data-category-slug="' + CSS.escape(cat[0]) + '"]');
+        if (slot) slot.innerHTML = readDiceHtml(unread);
+      }
+    }
   })();
 }
 
