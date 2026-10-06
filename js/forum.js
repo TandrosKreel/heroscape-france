@@ -90,10 +90,36 @@ function isThreadUnread(threadId, updatedAt) {
   return new Date(updatedAt).getTime() > new Date(seen).getTime();
 }
 
-function readDiceHtml(unread, extraClass = "") {
-  const src = unread ? "De%20bleu%20non%20lu.png" : "De%20bleu%20lu.png";
-  const label = unread ? "Non lu" : "Lu";
+function readDiceHtml(unread, extraClass = "", ownLastPost = false) {
+  const src = ownLastPost
+    ? "De%20rouge%20post.png"
+    : (unread ? "De%20bleu%20non%20lu.png" : "De%20bleu%20lu.png");
+  const label = ownLastPost ? "Dernier message publié par vous" : (unread ? "Non lu" : "Lu");
   return '<img class="read-die ' + extraClass + '" src="' + src + '" alt="' + label + '" title="' + label + '">';
+}
+
+async function getThreadLastAuthors(threadIds) {
+  const ids = [...new Set((threadIds || []).map(Number).filter(Boolean))];
+  if (!ids.length) return {};
+  const supabase = getSupabase();
+  if (!supabase) return {};
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select("thread_id,user_id,created_at")
+    .in("thread_id", ids)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Erreur dernier auteur des sujets :", error);
+    return {};
+  }
+
+  const result = {};
+  for (const post of (data || [])) {
+    if (!(post.thread_id in result)) result[post.thread_id] = post.user_id;
+  }
+  return result;
 }
 
 function esc(value) {
@@ -571,12 +597,19 @@ if (categoriesBox) {
     if (user && loadedCats.length) {
       const { data: threads } = await getSupabase()
         .from("threads")
-        .select("id,category_id,created_at,updated_at");
+        .select("id,category_id,user_id,created_at,updated_at");
+      const lastAuthors = await getThreadLastAuthors((threads || []).map(t => t.id));
       for (const cat of loadedCats) {
         const catThreads = (threads || []).filter(t => Number(t.category_id) === Number(cat[4]));
-        const unread = catThreads.some(t => isThreadUnread(t.id, t.updated_at || t.created_at));
+        const hasUnreadOther = catThreads.some(t => {
+          const lastAuthor = lastAuthors[t.id] || t.user_id;
+          return lastAuthor !== user.id && isThreadUnread(t.id, t.updated_at || t.created_at);
+        });
+        const latestThread = [...catThreads].sort((a,b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))[0];
+        const latestAuthor = latestThread ? (lastAuthors[latestThread.id] || latestThread.user_id) : null;
+        const ownLastPost = !!latestThread && latestAuthor === user.id && !hasUnreadOther;
         const slot = categoriesBox.querySelector('[data-category-slug="' + CSS.escape(cat[0]) + '"]');
-        if (slot) slot.innerHTML = readDiceHtml(unread);
+        if (slot) slot.innerHTML = readDiceHtml(hasUnreadOther, "", ownLastPost);
       }
     }
   })();
