@@ -1018,3 +1018,20 @@ header nav a{
 #categories .category-inventaire .category-icon{left:38px!important;bottom:70px!important}
 
 /* Quand une carte n'a pas encore d'activité, l'icône occupe naturellement l'espace libre sous le descriptif. */
+
+
+/* Catégories v7 — icônes à gauche, alignées sur le titre */
+#categories .card.forumrow .category-icon{
+  left:38px!important;
+  top:25px!important;
+  bottom:auto!important;
+  transform:none!important;
+  width:30px!important;
+  height:30px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+#categories .category-strategies-regles .category-icon{
+  top:78px!important;
+}
