@@ -998,3 +998,23 @@ header nav a{
   max-width:75%!important;
   text-align:left!important;
 }
+
+
+/* Placement visuel individuel des icônes selon l'espace libre de chaque carte */
+#categories .card.forumrow .category-icon{
+  top:auto!important;
+  transform:none!important;
+}
+#categories .category-presentation .category-icon{left:38px!important;bottom:76px!important}
+#categories .category-tribune .category-icon{left:38px!important;bottom:76px!important}
+#categories .category-news .category-icon{left:38px!important;bottom:76px!important}
+#categories .category-strategies-regles .category-icon{left:38px!important;bottom:72px!important}
+#categories .category-scenarios .category-icon{left:38px!important;bottom:72px!important}
+#categories .category-tournois .category-icon{left:38px!important;bottom:72px!important}
+#categories .category-maps .category-icon{left:38px!important;bottom:70px!important}
+#categories .category-customs .category-icon{left:38px!important;bottom:70px!important}
+#categories .category-traductions .category-icon{left:38px!important;bottom:70px!important}
+#categories .category-achat-vente .category-icon{left:38px!important;bottom:70px!important}
+#categories .category-inventaire .category-icon{left:38px!important;bottom:70px!important}
+
+/* Quand une carte n'a pas encore d'activité, l'icône occupe naturellement l'espace libre sous le descriptif. */
