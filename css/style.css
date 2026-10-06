@@ -688,3 +688,50 @@ header nav a{
 @media(max-width:600px){
   #categories{grid-template-columns:1fr!important}
 }
+
+
+/* Catégories v2 : titre structuré, description sous le titre, dé aligné au titre */
+#categories .forumrow{
+  grid-template-columns:minmax(0,1fr) 38px!important;
+  column-gap:24px!important;
+  align-items:start!important;
+  padding:16px 18px!important;
+}
+#categories .category-content{
+  min-width:0!important;
+}
+#categories .category-heading{
+  display:grid!important;
+  grid-template-columns:28px minmax(0,1fr)!important;
+  column-gap:10px!important;
+  align-items:center!important;
+}
+#categories .category-icon{
+  width:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:22px!important;
+  line-height:1!important;
+  align-self:center!important;
+}
+#categories .category-heading h3{
+  margin:0!important;
+  min-width:0!important;
+  line-height:1.25!important;
+}
+#categories .category-content .count{
+  margin:8px 0 0 38px!important;
+  width:auto!important;
+  max-width:none!important;
+  line-height:1.45!important;
+}
+#categories .category-read-die{
+  margin:0!important;
+  padding:0!important;
+  align-self:start!important;
+  justify-self:end!important;
+  display:flex!important;
+  align-items:center!important;
+  height:38px!important;
+}
