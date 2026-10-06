@@ -1189,3 +1189,59 @@ header nav a{
 #categories .card.forumrow .category-last-activity:empty{
   display:none!important;
 }
+
+
+/* Catégories v11 — zones cliquables séparées et ligne d'activité compacte */
+#categories .card.forumrow{
+  cursor:default!important;
+}
+#categories .category-nav-link{
+  text-decoration:none!important;
+}
+#categories .category-title-link{
+  display:block!important;
+  color:inherit!important;
+}
+#categories .category-title-link h3{
+  cursor:pointer!important;
+}
+#categories .category-icon.category-nav-link{
+  cursor:pointer!important;
+}
+#categories .category-last-activity{
+  padding-top:8px!important;
+  min-height:32px!important;
+}
+#categories .category-last-link{
+  position:relative!important;
+  display:flex!important;
+  width:100%!important;
+  min-width:0!important;
+  align-items:center!important;
+  justify-content:center!important;
+  color:#d7dde5!important;
+  text-decoration:none!important;
+  font-weight:400!important;
+}
+#categories .category-last-link:hover .category-activity-text{
+  text-decoration:underline!important;
+}
+#categories .category-last-link .read-die{
+  position:absolute!important;
+  left:6px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+}
+#categories .category-activity-text{
+  max-width:none!important;
+  font-size:11px!important;
+  font-weight:400!important;
+  color:#d7dde5!important;
+  opacity:.88!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+#categories .category-activity-text strong{
+  color:inherit!important;
+  font-weight:600!important;
+}
