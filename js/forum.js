@@ -657,41 +657,40 @@ async function renderGlobalAccount() {
   const avatar = profile.avatar_url
     ? '<img class="account-avatar" src="' + esc(profile.avatar_url) + '" alt="">'
     : '<span class="account-avatar account-avatar-default">' + esc((profile.username || "M").charAt(0).toUpperCase()) + '</span>';
+  const pageName = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+  const isForumHome = pageName === "" || pageName === "index.html";
+  const isCategoryPage = pageName === "categorie.html";
+  const readActionLabel = isForumHome
+    ? "Marquer tous les messages comme lus"
+    : (isCategoryPage ? "Marquer tous ces sujets comme lus" : "");
+
   account.innerHTML =
     '<a class="account-user" href="profil.html" title="Mon profil">' + avatar + '<strong>' + esc(profile.username) + '</strong></a>' +
     '<a class="account-icon account-message-icon" href="messages.html" title="Messages privés" aria-label="Messages privés">✉<span class="message-badge" data-message-badge hidden></span></a>' +
     '<a class="account-icon" href="notifications.html" title="Notifications" aria-label="Notifications">🔔</a>' +
     '<button class="account-logout" type="button" data-global-logout>Se déconnecter</button>' +
-    '<button class="mark-all-read" type="button" data-mark-all-read>Marquer tous les messages comme lus</button>';
+    (readActionLabel ? '<button class="mark-all-read" type="button" data-mark-all-read>' + readActionLabel + '</button>' : '');
   account.querySelector("[data-global-logout]")?.addEventListener("click", logout);
   account.querySelector("[data-mark-all-read]")?.addEventListener("click", async () => {
     const button = account.querySelector("[data-mark-all-read]");
     if (button) button.disabled = true;
 
-    const topics = await getTopics();
-    const lastAuthors = await getThreadLastAuthors(topics.map(topic => topic.id));
+    let topics = [];
+    if (isForumHome) {
+      topics = await getTopics();
+    } else if (isCategoryPage) {
+      const slug = new URLSearchParams(location.search).get("cat");
+      topics = slug ? await getTopics(slug) : [];
+    }
+
     for (const topic of topics) {
       markThreadRead(topic.id, topic.updated_at || topic.created_at);
     }
 
-    document.querySelectorAll("[data-category-slug]").forEach(slot => {
-      const slug = slot.getAttribute("data-category-slug");
-      const cat = cats.find(item => item[0] === slug);
-      const catTopics = cat ? topics.filter(topic => Number(topic.category_id) === Number(cat[4])) : [];
-      const latest = [...catTopics].sort((a,b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))[0];
-      const ownLastPost = !!latest && (lastAuthors[latest.id] || latest.user_id) === profile.id;
-      slot.innerHTML = readDiceHtml(false, "", ownLastPost);
-    });
-
     if (button) {
-      button.textContent = "Tous les messages sont lus";
-      setTimeout(() => {
-        button.textContent = "Marquer tous les messages comme lus";
-        button.disabled = false;
-      }, 1800);
+      button.textContent = isCategoryPage ? "Tous ces sujets sont lus" : "Tous les messages sont lus";
     }
-
-    window.dispatchEvent(new CustomEvent("forum-all-read"));
+    setTimeout(() => location.reload(), 450);
   });
   const { count: unreadCount, error: unreadError } = await window.supabaseClient
     .from("private_messages")
