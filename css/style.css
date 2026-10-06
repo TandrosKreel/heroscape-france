@@ -1299,3 +1299,38 @@ header nav a{
   padding-top:5px!important;
   min-height:34px!important;
 }
+
+
+/* Catégories v14 — derniers ajustements fins par carte */
+
+/* Customs : le titre tient sur une seule ligne, donc la carte peut rester plus compacte. */
+#categories .card.forumrow.category-customs .category-content h3{
+  padding-left:38px!important;
+  padding-right:18px!important;
+  white-space:nowrap!important;
+  font-size:21px!important;
+}
+
+/* Stratégies : livre dans la marge gauche, sous le titre et sans chevaucher le descriptif. */
+#categories .card.forumrow.category-strategies-regles .category-icon{
+  left:24px!important;
+  top:96px!important;
+}
+
+/* Scénarios : on utilise davantage l'espace vertical disponible. */
+#categories .card.forumrow.category-scenarios .category-content .count{
+  margin-top:18px!important;
+}
+#categories .card.forumrow.category-scenarios .category-last-activity{
+  padding-top:13px!important;
+}
+
+/* Descriptifs à descendre légèrement pour mieux équilibrer leur carte. */
+#categories .card.forumrow.category-presentation .category-content .count,
+#categories .card.forumrow.category-tribune .category-content .count,
+#categories .card.forumrow.category-news .category-content .count,
+#categories .card.forumrow.category-tournois .category-content .count,
+#categories .card.forumrow.category-traductions .category-content .count,
+#categories .card.forumrow.category-achat-vente .category-content .count{
+  margin-top:15px!important;
+}
