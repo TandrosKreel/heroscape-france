@@ -1554,14 +1554,22 @@ img.read-die,
 
 
 /* Dés v28 — tailles réelles forcées pour éviter les overrides précédents */
-body img.read-die[src*="De%20rouge%20post"],
-body img.read-die[src*="De%20bleu%20lu"]{
+body img.read-die[src*="De%20rouge%20post"]{
   width:41px!important;
   height:41px!important;
   min-width:41px!important;
   min-height:41px!important;
   max-width:41px!important;
   max-height:41px!important;
+  object-fit:contain!important;
+}
+body img.read-die[src*="De%20bleu%20lu"]{
+  width:43px!important;
+  height:43px!important;
+  min-width:43px!important;
+  min-height:43px!important;
+  max-width:43px!important;
+  max-height:43px!important;
   object-fit:contain!important;
 }
 body img.read-die[src*="De%20bleu%20non%20lu"]{
