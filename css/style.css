@@ -1035,3 +1035,25 @@ header nav a{
 #categories .category-strategies-regles .category-icon{
   top:78px!important;
 }
+
+
+/* Catégories v8 — icônes dans une vraie marge gauche, sans chevaucher les textes */
+#categories .card.forumrow .category-icon{
+  left:22px!important;
+  top:22px!important;
+  bottom:auto!important;
+  transform:none!important;
+  width:30px!important;
+  height:30px!important;
+  z-index:1!important;
+}
+#categories .category-strategies-regles .category-icon{
+  left:22px!important;
+  top:74px!important;
+}
+/* Le contenu reste centré sur la largeur totale de la carte. */
+#categories .card.forumrow .category-content{
+  width:100%!important;
+  padding:0!important;
+  margin:0!important;
+}
