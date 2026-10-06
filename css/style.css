@@ -1432,3 +1432,25 @@ header nav a{
   top:82px!important;
   transform:translateY(-50%)!important;
 }
+
+
+/* Catégories v19 — trois corrections ciblées */
+
+/* Stratégies : livre à côté du titre, comme les autres icônes de catégorie. */
+#categories .card.forumrow.category-strategies-regles .category-icon{
+  left:22px!important;
+  top:18px!important;
+  transform:none!important;
+}
+
+/* Maps : descriptif légèrement plus bas. */
+#categories .card.forumrow.category-maps .category-content .count{
+  position:relative!important;
+  top:5px!important;
+}
+
+/* Customs : descriptif très légèrement plus bas. */
+#categories .card.forumrow.category-customs .category-content .count{
+  position:relative!important;
+  top:3px!important;
+}
