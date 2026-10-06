@@ -601,15 +601,14 @@ if (categoriesBox) {
       const lastAuthors = await getThreadLastAuthors((threads || []).map(t => t.id));
       for (const cat of loadedCats) {
         const catThreads = (threads || []).filter(t => Number(t.category_id) === Number(cat[4]));
-        const hasUnreadOther = catThreads.some(t => {
-          const lastAuthor = lastAuthors[t.id] || t.user_id;
-          return lastAuthor !== user.id && isThreadUnread(t.id, t.updated_at || t.created_at);
-        });
+        const hasUnread = catThreads.some(t =>
+          isThreadUnread(t.id, t.updated_at || t.created_at)
+        );
         const latestThread = [...catThreads].sort((a,b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))[0];
         const latestAuthor = latestThread ? (lastAuthors[latestThread.id] || latestThread.user_id) : null;
-        const ownLastPost = !!latestThread && latestAuthor === user.id && !hasUnreadOther;
+        const ownLastPost = !!latestThread && latestAuthor === user.id && !hasUnread;
         const slot = categoriesBox.querySelector('[data-category-slug="' + CSS.escape(cat[0]) + '"]');
-        if (slot) slot.innerHTML = readDiceHtml(hasUnreadOther, "", ownLastPost);
+        if (slot) slot.innerHTML = readDiceHtml(hasUnread, "", ownLastPost);
       }
     }
   })();
