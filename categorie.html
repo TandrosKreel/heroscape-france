@@ -131,7 +131,7 @@
 
 <script src="js/supabase-config.js"></script>
 
-<script src="js/forum.js?v=20261005-6"></script>
+<script src="js/forum.js?v=20261006-1"></script>
 
 
 <script>
@@ -300,7 +300,7 @@ async function render() {
 
         </div>
 
-        <div class="topic-arrow" aria-hidden="true">›</div>
+        <div class="topic-status">${readDiceHtml(isThreadUnread(topic.id, topic.updated_at || topic.created_at))}<span class="topic-arrow" aria-hidden="true">›</span></div>
 
       </a>
 
