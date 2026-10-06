@@ -1553,7 +1553,7 @@ img.read-die,
 }
 
 
-/* Dés v26 — ajustement fin demandé, sans autre changement */
+/* Dés v27 — différence de taille renforcée, sans autre changement */
 img.read-die{
   width:30px!important;
   height:30px!important;
@@ -1563,11 +1563,11 @@ img.read-die{
   max-height:30px!important;
   object-fit:contain!important;
 }
-/* Non lu un peu plus petit ; lu et posté par vous un peu plus grands. */
+/* Lu et posté par vous nettement plus grands ; non lu nettement plus petit. */
 img.read-die[src*="De%20rouge%20post"],
 img.read-die[src*="De%20bleu%20lu"]{
-  transform:scale(1.20)!important;
+  transform:scale(1.35)!important;
 }
 img.read-die[src*="De%20bleu%20non%20lu"]{
-  transform:scale(.93)!important;
+  transform:scale(.85)!important;
 }
