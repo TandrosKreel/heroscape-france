@@ -96,7 +96,11 @@ async function loadThreadReadStates(threadIds) {
 }
 
 async function markThreadRead(threadId, lastPostCreatedAt) {
-  if (!threadReadUserId || !threadId || !lastPostCreatedAt) return false;
+  if (!threadId || !lastPostCreatedAt) return false;
+
+  const user = await getCurrentUser();
+  if (!user) return false;
+  threadReadUserId = user.id;
 
   const { error } = await getSupabase()
     .from("thread_reads")
