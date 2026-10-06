@@ -64,7 +64,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
-<script src="js/forum.js?v=20261006-29"></script>
+<script src="js/forum.js?v=20261006-30"></script>
 
 <script>
 async function renderLatestTopics() {
@@ -87,26 +87,30 @@ async function renderLatestTopics() {
 
   const currentUser = await getCurrentUser();
 
-  box.innerHTML = posts.map(post => {
+  const latestRows = [];
+  for (const post of posts) {
     const name = post.profiles?.username || "Membre";
     const title = post.threads?.title || "Sujet";
+    const category = await getCategoryById(post.threads?.category_id);
+    const categoryName = category?.[2] || "Catégorie";
     const avatar = post.profiles?.avatar_url
       ? '<img class="latest-avatar" src="' + esc(post.profiles.avatar_url) + '" alt="">'
       : '<span class="latest-avatar latest-avatar-default">' + esc(name.charAt(0).toUpperCase()) + '</span>';
     const date = post.created_at
       ? new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(post.created_at))
       : "";
-    return '<a class="latest-post-row" style="display:grid;grid-template-columns:30px minmax(0,1fr) 145px;width:100%;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid #39444f" href="sujet.html?id=' + post.thread_id + '">' +
+    latestRows.push('<a class="latest-post-row" style="display:grid;grid-template-columns:30px minmax(0,1fr) 145px;width:100%;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid #39444f" href="sujet.html?id=' + post.thread_id + '">' +
       avatar +
-      '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(title) + '</b></span></span>' +
+      '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(categoryName) + '</b> - <b>' + esc(title) + '</b></span></span>' +
       '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
       readDiceHtml(
         post.user_id !== currentUser?.id && isThreadUnread(post.thread_id, post.threads?.updated_at || post.created_at),
         "latest-read-die",
         post.user_id === currentUser?.id
       ) + '</span>' +
-    '</a>';
-  }).join("");
+    '</a>');
+  }
+  box.innerHTML = latestRows.join("");
 }
 
 renderLatestTopics();
