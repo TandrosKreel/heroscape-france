@@ -71,6 +71,31 @@ async function catSlug(id) {
   return cat ? cat[0] : null;
 }
 
+const THREAD_READ_PREFIX = "heroscape_thread_read_";
+
+function threadReadKey(threadId) {
+  return THREAD_READ_PREFIX + String(threadId);
+}
+
+function markThreadRead(threadId, updatedAt = null) {
+  if (!threadId) return;
+  localStorage.setItem(threadReadKey(threadId), updatedAt || new Date().toISOString());
+}
+
+function isThreadUnread(threadId, updatedAt) {
+  if (!threadId) return false;
+  const seen = localStorage.getItem(threadReadKey(threadId));
+  if (!seen) return true;
+  if (!updatedAt) return false;
+  return new Date(updatedAt).getTime() > new Date(seen).getTime();
+}
+
+function readDiceHtml(unread, extraClass = "") {
+  const src = unread ? "De%20bleu%20non%20lu.png" : "De%20bleu%20lu.png";
+  const label = unread ? "Non lu" : "Lu";
+  return '<img class="read-die ' + extraClass + '" src="' + src + '" alt="' + label + '" title="' + label + '">';
+}
+
 function esc(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -538,6 +563,7 @@ if (categoriesBox) {
           <h3>${c[1]} ${esc(c[2])}</h3>
           <div class="count">${esc(c[3])}</div>
         </div>
+        <span class="category-read-die" data-category-slug="${esc(c[0])}"></span>
       </a>
     `).join("") : '<div class="empty">Aucune catégorie disponible.</div>';
   })();
