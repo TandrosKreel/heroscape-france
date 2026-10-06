@@ -1424,3 +1424,11 @@ header nav a{
 #categories .card.forumrow.category-inventaire .category-content{
   row-gap:5px!important;
 }
+
+
+/* Catégories v18 — correction finale icône Stratégies uniquement */
+#categories .card.forumrow.category-strategies-regles .category-icon{
+  left:22px!important;
+  top:82px!important;
+  transform:translateY(-50%)!important;
+}
