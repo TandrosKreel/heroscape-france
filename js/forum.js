@@ -72,9 +72,12 @@ async function catSlug(id) {
 }
 
 const THREAD_READ_PREFIX = "heroscape_thread_read_";
+let threadReadUserId = null;
 
 function threadReadKey(threadId) {
-  return THREAD_READ_PREFIX + String(threadId);
+  /* L'état lu/non-lu doit être propre à chaque compte, même sur le même navigateur. */
+  const owner = threadReadUserId || "anonymous";
+  return THREAD_READ_PREFIX + owner + "_" + String(threadId);
 }
 
 function markThreadRead(threadId, updatedAt = null) {
@@ -237,6 +240,7 @@ async function getCurrentUser() {
     return null;
   }
 
+  threadReadUserId = user?.id || null;
   return user;
 }
 
