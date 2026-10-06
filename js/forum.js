@@ -581,14 +581,14 @@ if (categoriesBox) {
     categoriesBox.innerHTML = '<div class="empty">Chargement des catégories…</div>';
     const loadedCats = await loadCategories();
     categoriesBox.innerHTML = loadedCats.length ? loadedCats.map(c => `
-      <a class="card forumrow category-${esc(c[0])}" href="categorie.html?cat=${encodeURIComponent(c[0])}">
-        <span class="category-icon" aria-hidden="true">${c[1]}</span>
+      <div class="card forumrow category-${esc(c[0])}">
+        <a class="category-icon category-nav-link" href="categorie.html?cat=${encodeURIComponent(c[0])}" aria-label="Ouvrir la catégorie ${esc(c[2])}">${c[1]}</a>
         <div class="category-content">
-          <h3>${esc(c[2])}</h3>
+          <a class="category-title-link category-nav-link" href="categorie.html?cat=${encodeURIComponent(c[0])}"><h3>${esc(c[2])}</h3></a>
           <div class="count">${esc(c[3])}</div>
           <div class="category-last-activity" data-category-activity="${esc(c[0])}"></div>
         </div>
-      </a>
+      </div>
     `).join("") : '<div class="empty">Aucune catégorie disponible.</div>';
 
     const user = await getCurrentUser();
@@ -600,7 +600,7 @@ if (categoriesBox) {
       const lastAuthors = await getThreadLastAuthors(threadIds);
       const { data: latestPosts } = threadIds.length ? await getSupabase()
         .from("posts")
-        .select("thread_id,user_id,created_at,profiles(username)")
+        .select("id,thread_id,user_id,created_at,profiles(username)")
         .in("thread_id", threadIds)
         .order("created_at", { ascending: false }) : { data: [] };
 
@@ -625,9 +625,11 @@ if (categoriesBox) {
           day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit"
         }).format(new Date(activityDate));
 
+        const lastMessageUrl = "sujet.html?id=" + encodeURIComponent(latestThread.id) + (latestPost?.id ? "#post-" + encodeURIComponent(latestPost.id) : "#last-message");
         slot.innerHTML =
+          '<a class="category-last-link" href="' + lastMessageUrl + '" title="Aller au dernier message">' +
           readDiceHtml(hasUnread, "category-activity-die", ownLastPost) +
-          '<span class="category-activity-text">Posté par <strong>' + esc(authorName) + '</strong> à ' + esc(formattedDate) + '</span>';
+          '<span class="category-activity-text">Posté par <strong>' + esc(authorName) + '</strong> à ' + esc(formattedDate) + '</span></a>';
       }
     }
   })();
