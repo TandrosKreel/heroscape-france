@@ -640,3 +640,51 @@ header nav a{
 .latest-post-row .latest-read-die{
   justify-self:end;
 }
+
+
+/* Forum compact : rapproche le texte des dés */
+#categories{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px 16px!important;
+}
+#categories .forumrow{
+  min-height:0!important;
+  padding:18px 16px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 38px!important;
+  column-gap:12px!important;
+  align-items:center!important;
+}
+#categories .forumrow>div{
+  min-width:0!important;
+}
+#categories .forumrow h3{
+  margin:0 0 8px!important;
+  line-height:1.25!important;
+}
+#categories .forumrow .count{
+  margin:0!important;
+  line-height:1.45!important;
+}
+#categories .category-read-die{
+  margin:0!important;
+  align-self:center!important;
+  justify-self:end!important;
+}
+.topic{
+  padding:14px 16px!important;
+  gap:12px!important;
+}
+.topic-main{
+  min-width:0!important;
+}
+.topic-status{
+  margin-left:8px!important;
+  gap:6px!important;
+}
+@media(max-width:900px){
+  #categories{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:600px){
+  #categories{grid-template-columns:1fr!important}
+}
