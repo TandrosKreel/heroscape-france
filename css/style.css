@@ -866,3 +866,9 @@ header nav a{
   line-height:1.25!important;
   white-space:normal!important;
 }
+
+
+/* Ajustement vertical du lien "Marquer tous les messages comme lus" */
+.account-panel .mark-all-read{
+  top:calc(100% + 11px)!important;
+}
