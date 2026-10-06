@@ -67,7 +67,7 @@
 
 <script src="js/supabase-config.js"></script>
 
-<script src="js/forum.js?v=20261005-6"></script>
+<script src="js/forum.js?v=20261006-1"></script>
 
 
 <script>
@@ -293,6 +293,8 @@ async function renderSubject() {
 
   document.title =
     thread.title + " — Heroscape France";
+
+  markThreadRead(id, thread.updated_at || thread.created_at);
 
 
   const slug = await catSlug(thread.category_id);
