@@ -585,8 +585,11 @@ if (categoriesBox) {
         class="card forumrow"
         href="categorie.html?cat=${encodeURIComponent(c[0])}"
       >
-        <div>
-          <h3>${c[1]} ${esc(c[2])}</h3>
+        <div class="category-content">
+          <div class="category-heading">
+            <span class="category-icon" aria-hidden="true">${c[1]}</span>
+            <h3>${esc(c[2])}</h3>
+          </div>
           <div class="count">${esc(c[3])}</div>
         </div>
         <span class="category-read-die" data-category-slug="${esc(c[0])}"></span>
