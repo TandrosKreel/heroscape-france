@@ -1391,3 +1391,36 @@ header nav a{
   align-self:flex-end!important;
   padding-bottom:1px!important;
 }
+
+
+/* Catégories v17 — ajustements ciblés demandés */
+
+/* Texte lié au dé légèrement plus bas, sans déplacer le dé. */
+#categories .card.forumrow .category-activity-text{
+  position:relative!important;
+  top:4px!important;
+}
+
+/* Stratégies : plus d'air et livre placé à gauche dans l'espace du descriptif. */
+#categories .card.forumrow.category-strategies-regles .category-content .count{
+  padding-left:34px!important;
+  padding-right:18px!important;
+  line-height:1.55!important;
+}
+#categories .card.forumrow.category-strategies-regles .category-icon{
+  left:22px!important;
+  top:88px!important;
+  transform:none!important;
+}
+
+/* Maps, Customs et Inventaire : davantage d'espace entre titre, descriptif et activité. */
+#categories .card.forumrow.category-maps .category-content .count,
+#categories .card.forumrow.category-customs .category-content .count,
+#categories .card.forumrow.category-inventaire .category-content .count{
+  line-height:1.55!important;
+}
+#categories .card.forumrow.category-maps .category-content,
+#categories .card.forumrow.category-customs .category-content,
+#categories .card.forumrow.category-inventaire .category-content{
+  row-gap:5px!important;
+}
