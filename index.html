@@ -64,28 +64,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
-<script src="js/forum.js?v=20261006-17"></script>
+<script src="js/forum.js?v=20261006-20"></script>
 
 <script>
-async function renderAccount() {
-  const account = document.getElementById("account");
-  const profile = await getCurrentProfile();
-  if (!profile) {
-    account.innerHTML = '<a class="btn compact-login" href="connexion.html">Connexion</a>';
-    return;
-  }
-  const avatar = profile.avatar_url
-    ? '<img class="account-avatar" src="' + esc(profile.avatar_url) + '" alt="">'
-    : '<span class="account-avatar account-avatar-default">' + esc((profile.username || "M").charAt(0).toUpperCase()) + '</span>';
-  account.innerHTML =
-    '<a class="account-user" href="profil.html" title="Mon profil">' + avatar + '<strong>' + esc(profile.username) + '</strong></a>' +
-    '<a class="account-icon" href="messages.html" title="Messages privés" aria-label="Messages privés">✉</a>' +
-    '<a class="account-icon" href="notifications.html" title="Notifications" aria-label="Notifications">🔔</a>' +
-    '<a class="account-icon" href="profil.html" title="Paramètres du profil" aria-label="Paramètres">⚙</a>' +
-    '<button class="account-logout" type="button" id="header-logout">Se déconnecter</button>';
-  document.getElementById("header-logout").addEventListener("click", logout);
-}
-
 async function renderLatestTopics() {
   const box = document.getElementById("latest-topics");
   const { data: posts, error } = await window.supabaseClient
@@ -128,7 +109,6 @@ async function renderLatestTopics() {
   }).join("");
 }
 
-renderAccount();
 renderLatestTopics();
 </script>
 
