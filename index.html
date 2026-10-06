@@ -64,7 +64,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
-<script src="js/forum.js?v=20261006-1"></script>
+<script src="js/forum.js?v=20261006-2"></script>
 
 <script>
 async function renderAccount() {
@@ -104,6 +104,8 @@ async function renderLatestTopics() {
     return;
   }
 
+  const currentUser = await getCurrentUser();
+
   box.innerHTML = posts.map(post => {
     const name = post.profiles?.username || "Membre";
     const title = post.threads?.title || "Sujet";
@@ -117,7 +119,11 @@ async function renderLatestTopics() {
       avatar +
       '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(title) + '</b></span></span>' +
       '<time>' + esc(date) + '</time>' +
-      readDiceHtml(isThreadUnread(post.thread_id, post.threads?.updated_at || post.created_at), "latest-read-die") +
+      readDiceHtml(
+        post.user_id !== currentUser?.id && isThreadUnread(post.thread_id, post.threads?.updated_at || post.created_at),
+        "latest-read-die",
+        post.user_id === currentUser?.id
+      ) +
     '</a>';
   }).join("");
 }
