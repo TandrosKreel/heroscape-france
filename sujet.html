@@ -67,7 +67,7 @@
 
 <script src="js/supabase-config.js"></script>
 
-<script src="js/forum.js?v=20261006-39"></script>
+<script src="js/forum.js?v=20261006-40"></script>
 
 
 <script>
@@ -315,7 +315,7 @@ async function renderSubject() {
   const isAdmin = currentProfile?.role === "admin";
   const posts = await getReplies(id);
   const latestPost = posts.length ? posts[posts.length - 1] : null;
-  markThreadRead(id, latestPost?.created_at || thread.updated_at || thread.created_at);
+  await markThreadRead(id, latestPost?.created_at || thread.updated_at || thread.created_at);
   const messageCounts = await getMessageCounts();
   const signatures = await getSignatures(posts.map(post => post.user_id));
   const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
