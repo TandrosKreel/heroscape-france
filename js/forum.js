@@ -705,8 +705,24 @@ async function renderGlobalAccount() {
       topics = slug ? await getTopics(slug) : [];
     }
 
+    const topicIds = topics.map(topic => topic.id);
+    const latestPostsByThread = {};
+    if (topicIds.length) {
+      const { data: latestPosts } = await getSupabase()
+        .from("posts")
+        .select("thread_id,created_at")
+        .in("thread_id", topicIds)
+        .order("created_at", { ascending: false });
+      for (const post of (latestPosts || [])) {
+        if (!latestPostsByThread[post.thread_id]) latestPostsByThread[post.thread_id] = post;
+      }
+    }
+
     for (const topic of topics) {
-      markThreadRead(topic.id, topic.updated_at || topic.created_at);
+      markThreadRead(
+        topic.id,
+        latestPostsByThread[topic.id]?.created_at || topic.updated_at || topic.created_at
+      );
     }
 
     if (button) {
