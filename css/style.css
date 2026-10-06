@@ -608,3 +608,35 @@ header nav a{
   min-width:34px!important;
   min-height:34px!important;
 }
+
+
+/* Dés de lecture Heroscape : mêmes dimensions, aucun fond */
+.read-die{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  max-width:38px!important;
+  max-height:38px!important;
+  object-fit:contain!important;
+  display:block!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+}
+.topic-status{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+}
+.category-read-die{
+  margin-left:auto;
+  flex:0 0 38px;
+}
+.latest-post-row .latest-read-die{
+  justify-self:end;
+}
