@@ -1373,3 +1373,21 @@ header nav a{
   top:50%!important;
   transform:translateY(-50%)!important;
 }
+
+
+/* Catégories v16 — corrections ciblées uniquement */
+/* Stratégies : livre à gauche du descriptif, sans chevauchement. */
+#categories .card.forumrow.category-strategies-regles .category-icon{
+  left:24px!important;
+  top:94px!important;
+  transform:none!important;
+}
+
+/* Texte d'activité aligné sur le bas du dé. */
+#categories .card.forumrow .category-last-link{
+  align-items:flex-end!important;
+}
+#categories .card.forumrow .category-activity-text{
+  align-self:flex-end!important;
+  padding-bottom:1px!important;
+}
