@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Heroscape France — Forum & Archives</title>
-  <link rel="stylesheet" href="css/style.css?v=20261006-27">
+  <link rel="stylesheet" href="css/style.css?v=20261006-28">
 </head>
 
 <body>
@@ -99,12 +99,12 @@ async function renderLatestTopics() {
     return '<a class="latest-post-row" style="display:grid;grid-template-columns:30px minmax(0,1fr) 145px;width:100%;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid #39444f" href="sujet.html?id=' + post.thread_id + '">' +
       avatar +
       '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(title) + '</b></span></span>' +
-      '<time>' + esc(date) + '</time>' +
+      '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
       readDiceHtml(
         post.user_id !== currentUser?.id && isThreadUnread(post.thread_id, post.threads?.updated_at || post.created_at),
         "latest-read-die",
         post.user_id === currentUser?.id
-      ) +
+      ) + '</span>' +
     '</a>';
   }).join("");
 }
