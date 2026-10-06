@@ -64,7 +64,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
-<script src="js/forum.js?v=20261005-6"></script>
+<script src="js/forum.js?v=20261006-1"></script>
 
 <script>
 async function renderAccount() {
@@ -90,7 +90,7 @@ async function renderLatestTopics() {
   const box = document.getElementById("latest-topics");
   const { data: posts, error } = await window.supabaseClient
     .from("posts")
-    .select("id,thread_id,user_id,created_at,profiles(username,avatar_url),threads(title)")
+    .select("id,thread_id,user_id,created_at,profiles(username,avatar_url),threads(title,updated_at,category_id)")
     .order("created_at", { ascending: false })
     .limit(5);
 
@@ -117,6 +117,7 @@ async function renderLatestTopics() {
       avatar +
       '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(title) + '</b></span></span>' +
       '<time>' + esc(date) + '</time>' +
+      readDiceHtml(isThreadUnread(post.thread_id, post.threads?.updated_at || post.created_at), "latest-read-die") +
     '</a>';
   }).join("");
 }
