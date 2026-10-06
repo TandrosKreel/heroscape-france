@@ -1504,3 +1504,23 @@ header nav a{
   max-height:30px!important;
   object-fit:contain!important;
 }
+
+
+/* Sujets v2 — informations du dernier message à côté du dé */
+.topic-status{
+  display:flex!important;
+  align-items:center!important;
+  gap:9px!important;
+}
+.topic-status .topic-last-post{
+  font-size:11px!important;
+  line-height:1.2!important;
+  font-weight:400!important;
+  color:#d7dde5!important;
+  opacity:.86!important;
+  white-space:nowrap!important;
+}
+.topic-status .topic-last-post strong{
+  color:inherit!important;
+  font-weight:600!important;
+}
