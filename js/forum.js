@@ -638,7 +638,13 @@ if (categoriesBox) {
           t.id,
           latestPostByThread[t.id]?.created_at || t.updated_at || t.created_at
         ));
-        const latestThread = [...catThreads].sort((a,b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))[0];
+        // Le sujet affiché comme dernière activité doit être choisi à partir du
+        // dernier message réel, pas de threads.updated_at qui peut être décalé.
+        const latestThread = [...catThreads].sort((a, b) => {
+          const aDate = latestPostByThread[a.id]?.created_at || a.created_at;
+          const bDate = latestPostByThread[b.id]?.created_at || b.created_at;
+          return new Date(bDate) - new Date(aDate);
+        })[0];
         const slot = categoriesBox.querySelector('[data-category-activity="' + CSS.escape(cat[0]) + '"]');
         if (!slot || !latestThread) continue;
 
