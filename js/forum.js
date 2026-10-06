@@ -481,6 +481,9 @@ async function addTopic(category, title, author, body) {
     return null;
   }
 
+  // Un sujet que l'utilisateur vient lui-même de publier est déjà lu pour lui.
+  markThreadRead(thread.id, new Date().toISOString());
+
   return {
     ...thread,
     cat: category
@@ -543,6 +546,9 @@ async function addReply(topicId, author, body) {
       updateError
     );
   }
+
+  // Le message que l'utilisateur vient lui-même de publier ne doit pas rendre le sujet non lu.
+  markThreadRead(Number(topicId), new Date().toISOString());
 
   return {
     ...data,
