@@ -90,7 +90,14 @@ function isThreadUnread(threadId, updatedAt) {
   const seen = localStorage.getItem(threadReadKey(threadId));
   if (!seen) return true;
   if (!updatedAt) return false;
-  return new Date(updatedAt).getTime() > new Date(seen).getTime();
+
+  const updatedMs = new Date(updatedAt).getTime();
+  const seenMs = new Date(seen).getTime();
+  if (!Number.isFinite(updatedMs) || !Number.isFinite(seenMs)) return true;
+
+  // Tolérance uniquement aux écarts de quelques millisecondes liés à l'écriture/lecture
+  // du même message. Tout message réellement postérieur redevient non lu.
+  return updatedMs > seenMs + 1000;
 }
 
 function readDiceHtml(unread, extraClass = "", ownLastPost = false) {
