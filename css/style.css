@@ -1334,3 +1334,42 @@ header nav a{
 #categories .card.forumrow.category-achat-vente .category-content .count{
   margin-top:15px!important;
 }
+
+
+/* Catégories v15 — alignement vertical strict par rangée
+   Chaque carte remplit la hauteur de sa rangée :
+   titre en haut, activité alignée en bas, description centrée entre les deux. */
+#categories .card.forumrow{
+  height:100%!important;
+}
+#categories .card.forumrow .category-content{
+  height:100%!important;
+  display:grid!important;
+  grid-template-rows:auto minmax(0,1fr) auto!important;
+}
+#categories .card.forumrow .category-title-link{
+  grid-row:1!important;
+}
+#categories .card.forumrow .category-content .count{
+  grid-row:2!important;
+  align-self:center!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+#categories .card.forumrow .category-last-activity{
+  grid-row:3!important;
+  align-self:end!important;
+  margin-top:0!important;
+}
+
+/* Customs : même titre sur une ligne, légèrement plus petit. */
+#categories .card.forumrow.category-customs .category-content h3{
+  font-size:19px!important;
+}
+
+/* Stratégies : livre replacé proprement dans la marge gauche de la zone centrale. */
+#categories .card.forumrow.category-strategies-regles .category-icon{
+  left:24px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+}
