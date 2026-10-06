@@ -1465,3 +1465,30 @@ header nav a{
   text-align:center!important;
   align-self:center!important;
 }
+
+
+/* Derniers messages v2 — ligne compacte, dé à côté de la date */
+#latest-topics .latest-post-row{
+  grid-template-columns:30px minmax(0,1fr) auto!important;
+  min-height:0!important;
+  padding:8px 8px!important;
+  gap:12px!important;
+}
+#latest-topics .latest-post-meta{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:10px!important;
+  white-space:nowrap!important;
+}
+#latest-topics .latest-post-meta .latest-read-die{
+  position:static!important;
+  width:30px!important;
+  height:30px!important;
+  min-width:30px!important;
+  min-height:30px!important;
+  max-width:30px!important;
+  max-height:30px!important;
+  margin:0!important;
+  transform:none!important;
+}
