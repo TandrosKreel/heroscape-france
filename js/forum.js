@@ -626,7 +626,10 @@ if (categoriesBox) {
 
       for (const cat of loadedCats) {
         const catThreads = (threads || []).filter(t => Number(t.category_id) === Number(cat[4]));
-        const hasUnread = catThreads.some(t => isThreadUnread(t.id, t.updated_at || t.created_at));
+        const hasUnread = catThreads.some(t => isThreadUnread(
+          t.id,
+          latestPostByThread[t.id]?.created_at || t.updated_at || t.created_at
+        ));
         const latestThread = [...catThreads].sort((a,b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))[0];
         const slot = categoriesBox.querySelector('[data-category-activity="' + CSS.escape(cat[0]) + '"]');
         if (!slot || !latestThread) continue;
