@@ -71,7 +71,9 @@ async function catSlug(id) {
   return cat ? cat[0] : null;
 }
 
-const THREAD_READ_PREFIX = "heroscape_thread_read_";
+// v2 : nouveau namespace pour ignorer une seule fois les anciens états de lecture
+// enregistrés par les versions précédentes du mécanisme.
+const THREAD_READ_PREFIX = "heroscape_thread_read_v2_";
 let threadReadUserId = null;
 
 function threadReadKey(threadId) {
