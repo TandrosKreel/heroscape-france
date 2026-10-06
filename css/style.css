@@ -1057,3 +1057,9 @@ header nav a{
   padding:0!important;
   margin:0!important;
 }
+
+
+/* Ajustement supplémentaire : lien "Marquer tous les messages comme lus" plus bas */
+.account-panel .mark-all-read{
+  top:calc(100% + 18px)!important;
+}
