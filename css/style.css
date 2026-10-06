@@ -1492,3 +1492,15 @@ header nav a{
   margin:0!important;
   transform:none!important;
 }
+
+
+/* Catégories v21 — harmonise visuellement le dé bleu non lu avec les autres dés */
+#categories .category-last-activity img.read-die[src*="De%20bleu%20non%20lu"]{
+  width:30px!important;
+  height:30px!important;
+  min-width:30px!important;
+  min-height:30px!important;
+  max-width:30px!important;
+  max-height:30px!important;
+  object-fit:contain!important;
+}
