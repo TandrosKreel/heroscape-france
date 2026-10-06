@@ -74,6 +74,7 @@ async function catSlug(id) {
 // v2 : nouveau namespace pour ignorer une seule fois les anciens états de lecture
 // enregistrés par les versions précédentes du mécanisme.
 const THREAD_READ_PREFIX = "heroscape_thread_read_v2_";
+const THREAD_READ_EPSILON_MS = 2000;
 let threadReadUserId = null;
 
 function threadReadKey(threadId) {
@@ -84,7 +85,12 @@ function threadReadKey(threadId) {
 
 function markThreadRead(threadId, updatedAt = null) {
   if (!threadId) return;
-  localStorage.setItem(threadReadKey(threadId), updatedAt || new Date().toISOString());
+  const activityMs = updatedAt ? new Date(updatedAt).getTime() : NaN;
+  const nowMs = Date.now();
+  // Enregistre au minimum l'instant du clic/ouverture. Ainsi un message déjà présent
+  // ne peut pas rester non lu à cause d'un léger décalage d'horloge avec Supabase.
+  const seenMs = Number.isFinite(activityMs) ? Math.max(activityMs, nowMs) : nowMs;
+  localStorage.setItem(threadReadKey(threadId), new Date(seenMs).toISOString());
 }
 
 function isThreadUnread(threadId, updatedAt) {
@@ -96,7 +102,7 @@ function isThreadUnread(threadId, updatedAt) {
   const updatedMs = new Date(updatedAt).getTime();
   const seenMs = new Date(seen).getTime();
   if (!Number.isFinite(updatedMs) || !Number.isFinite(seenMs)) return true;
-  return updatedMs > seenMs;
+  return updatedMs > seenMs + THREAD_READ_EPSILON_MS;
 }
 
 function readDiceHtml(unread, extraClass = "", ownLastPost = false) {
