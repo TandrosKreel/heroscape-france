@@ -7,7 +7,7 @@
 
   <title>Catégorie — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261006-20">
+  <link rel="stylesheet" href="css/style.css?v=20261006-32">
 </head>
 
 <body>
@@ -280,6 +280,15 @@ async function render() {
 
   const currentUser = await getCurrentUser();
   const lastAuthors = await getThreadLastAuthors(arr.map(topic => topic.id));
+  const { data: latestPosts } = await window.supabaseClient
+    .from("posts")
+    .select("thread_id,user_id,created_at,profiles(username)")
+    .in("thread_id", arr.map(topic => topic.id))
+    .order("created_at", { ascending: false });
+  const lastPosts = {};
+  for (const post of (latestPosts || [])) {
+    if (!lastPosts[post.thread_id]) lastPosts[post.thread_id] = post;
+  }
 
   topicsBox.innerHTML =
     arr.map(topic => `
@@ -307,7 +316,7 @@ async function render() {
           isThreadUnread(topic.id, topic.updated_at || topic.created_at),
           "",
           !isThreadUnread(topic.id, topic.updated_at || topic.created_at) && (lastAuthors[topic.id] || topic.user_id) === currentUser?.id
-        )}<span class="topic-arrow" aria-hidden="true">›</span></div>
+        )}<span class="topic-last-post">Posté par <strong>${esc(lastPosts[topic.id]?.profiles?.username || topic.author || "Membre")}</strong> à ${formatTopicDate(lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at)}</span><span class="topic-arrow" aria-hidden="true">›</span></div>
 
       </a>
 
