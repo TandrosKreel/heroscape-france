@@ -71,26 +71,53 @@ async function catSlug(id) {
   return cat ? cat[0] : null;
 }
 
-// v2 : nouveau namespace pour ignorer une seule fois les anciens états de lecture
-// enregistrés par les versions précédentes du mécanisme.
-const THREAD_READ_PREFIX = "heroscape_thread_read_v2_";
+// État de lecture synchronisé dans Supabase pour être identique sur tous les appareils.
 let threadReadUserId = null;
+let threadReadStates = {};
 
-function threadReadKey(threadId) {
-  /* L'état lu/non-lu doit être propre à chaque compte, même sur le même navigateur. */
-  const owner = threadReadUserId || "anonymous";
-  return THREAD_READ_PREFIX + owner + "_" + String(threadId);
+async function loadThreadReadStates(threadIds) {
+  const ids = [...new Set((threadIds || []).map(Number).filter(Boolean))];
+  threadReadStates = {};
+  if (!threadReadUserId || !ids.length) return threadReadStates;
+
+  const { data, error } = await getSupabase()
+    .from("thread_reads")
+    .select("thread_id,last_read_at")
+    .eq("user_id", threadReadUserId)
+    .in("thread_id", ids);
+
+  if (error) {
+    console.error("Erreur chargement états de lecture :", error);
+    return threadReadStates;
+  }
+
+  for (const row of (data || [])) threadReadStates[row.thread_id] = row.last_read_at;
+  return threadReadStates;
 }
 
-function markThreadRead(threadId, lastPostCreatedAt) {
-  if (!threadId || !lastPostCreatedAt) return;
-  // Source de vérité unique : date Supabase du dernier message réellement lu.
-  localStorage.setItem(threadReadKey(threadId), lastPostCreatedAt);
+async function markThreadRead(threadId, lastPostCreatedAt) {
+  if (!threadReadUserId || !threadId || !lastPostCreatedAt) return false;
+
+  const { error } = await getSupabase()
+    .from("thread_reads")
+    .upsert({
+      user_id: threadReadUserId,
+      thread_id: Number(threadId),
+      last_read_at: lastPostCreatedAt
+    }, { onConflict: "user_id,thread_id" });
+
+  if (error) {
+    console.error("Erreur enregistrement lecture du sujet :", error);
+    return false;
+  }
+
+  threadReadStates[Number(threadId)] = lastPostCreatedAt;
+  return true;
 }
 
 function isThreadUnread(threadId, updatedAt) {
   if (!threadId) return false;
-  const seen = localStorage.getItem(threadReadKey(threadId));
+  const seen = threadReadStates[Number(threadId)];
   if (!seen) return true;
   if (!updatedAt) return false;
 
@@ -491,7 +518,7 @@ async function addTopic(category, title, author, body) {
   }
 
   // Un sujet que l'utilisateur vient lui-même de publier est déjà lu pour lui.
-  markThreadRead(thread.id, firstPost.created_at);
+  await markThreadRead(thread.id, firstPost.created_at);
 
   return {
     ...thread,
@@ -558,7 +585,7 @@ async function addReply(topicId, author, body) {
   }
 
   // Le message que l'utilisateur vient lui-même de publier ne doit pas rendre le sujet non lu.
-  markThreadRead(Number(topicId), data.created_at);
+  await markThreadRead(Number(topicId), data.created_at);
 
   return {
     ...data,
@@ -617,6 +644,7 @@ if (categoriesBox) {
         .from("threads")
         .select("id,category_id,user_id,created_at,updated_at");
       const threadIds = (threads || []).map(t => t.id);
+      await loadThreadReadStates(threadIds);
       const lastAuthors = await getThreadLastAuthors(threadIds);
       const { data: latestPosts } = threadIds.length ? await getSupabase()
         .from("posts")
@@ -728,7 +756,7 @@ async function renderGlobalAccount() {
     }
 
     for (const topic of topics) {
-      markThreadRead(
+      await markThreadRead(
         topic.id,
         latestPostsByThread[topic.id]?.created_at || topic.updated_at || topic.created_at
       );
