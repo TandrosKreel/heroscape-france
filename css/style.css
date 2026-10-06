@@ -1553,7 +1553,7 @@ img.read-die,
 }
 
 
-/* Dés v24 — égalisation optique stricte partout, sans autre changement */
+/* Dés v25 — tailles ajustées partout, sans autre changement */
 img.read-die{
   width:30px!important;
   height:30px!important;
@@ -1563,12 +1563,11 @@ img.read-die{
   max-height:30px!important;
   object-fit:contain!important;
 }
-/* Les fichiers PNG n'ont pas exactement la même emprise visuelle :
-   légère compensation pour obtenir la même taille perçue. */
+/* Le dé non lu est à peine plus petit ; les deux autres sont agrandis. */
 img.read-die[src*="De%20rouge%20post"],
 img.read-die[src*="De%20bleu%20lu"]{
-  transform:scale(1.06)!important;
+  transform:scale(1.14)!important;
 }
 img.read-die[src*="De%20bleu%20non%20lu"]{
-  transform:scale(.94)!important;
+  transform:scale(.97)!important;
 }
