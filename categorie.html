@@ -313,9 +313,9 @@ async function render() {
         </div>
 
         <div class="topic-status">${readDiceHtml(
-          isThreadUnread(topic.id, topic.updated_at || topic.created_at),
+          isThreadUnread(topic.id, lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at),
           "",
-          !isThreadUnread(topic.id, topic.updated_at || topic.created_at) && (lastAuthors[topic.id] || topic.user_id) === currentUser?.id
+          !isThreadUnread(topic.id, lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at) && (lastAuthors[topic.id] || topic.user_id) === currentUser?.id
         )}<span class="topic-last-post">Posté par <strong>${esc(lastPosts[topic.id]?.profiles?.username || topic.author || "Membre")}</strong> à ${formatTopicDate(lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at)}</span><span class="topic-arrow" aria-hidden="true">›</span></div>
 
       </a>
