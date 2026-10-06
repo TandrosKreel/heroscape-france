@@ -86,6 +86,7 @@ async function renderLatestTopics() {
   }
 
   const currentUser = await getCurrentUser();
+  await loadThreadReadStates(posts.map(post => post.thread_id));
 
   const latestRows = [];
   for (const post of posts) {
@@ -104,7 +105,7 @@ async function renderLatestTopics() {
       '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(categoryName) + '</b> - <b>' + esc(title) + '</b></span></span>' +
       '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
       readDiceHtml(
-        post.user_id !== currentUser?.id && isThreadUnread(post.thread_id, post.threads?.updated_at || post.created_at),
+        post.user_id !== currentUser?.id && isThreadUnread(post.thread_id, post.created_at),
         "latest-read-die",
         post.user_id === currentUser?.id
       ) + '</span>' +
