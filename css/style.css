@@ -1649,3 +1649,32 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     white-space:nowrap !important;
   }
 }
+
+
+/* Mobile v2 — bouton entièrement visible et sujet sur sa propre ligne */
+@media(max-width:700px){
+  #account.account-panel{
+    padding-left:0 !important;
+    padding-right:16px !important;
+  }
+  #account.account-panel .mark-all-read{
+    display:block !important;
+    width:auto !important;
+    max-width:calc(100% - 16px) !important;
+    margin-left:0 !important;
+    margin-right:16px !important;
+    padding-left:8px !important;
+    padding-right:8px !important;
+    white-space:normal !important;
+    overflow:visible !important;
+  }
+
+  #latest-topics .latest-subject-separator{
+    display:none !important;
+  }
+  #latest-topics .latest-subject{
+    display:block !important;
+    margin-top:4px !important;
+    line-height:1.35 !important;
+  }
+}
