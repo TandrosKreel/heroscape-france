@@ -69,6 +69,11 @@
 <script>
 async function renderLatestTopics() {
   const box = document.getElementById("latest-topics");
+  const currentUser = await getCurrentUser();
+  if (!currentUser) {
+    box.innerHTML = '<div class="empty">Il faut être connecté pour voir les derniers messages.</div>';
+    return;
+  }
   const { data: posts, error } = await window.supabaseClient
     .from("posts")
     .select("id,thread_id,user_id,created_at,profiles(username,avatar_url),threads(title,updated_at,category_id)")
@@ -85,7 +90,6 @@ async function renderLatestTopics() {
     return;
   }
 
-  const currentUser = await getCurrentUser();
   await loadThreadReadStates(posts.map(post => post.thread_id));
 
   const latestPostByThread = {};
