@@ -73,23 +73,48 @@ async function renderLatestTopics() {
   const guestNotice = currentUser
     ? ""
     : '<div class="latest-guest-notice">Pour pouvoir consulter les derniers messages, et aussi pour participer aux discussions, il faut se créer un compte membre.</div>';
-  const { data: posts, error } = await window.supabaseClient
-    .from("posts")
-    .select("id,thread_id,user_id,created_at,profiles(username,avatar_url),threads(title,updated_at,category_id)")
-    .order("created_at", { ascending: false })
-    .limit(5);
+
+  let posts = [];
+  let error = null;
+
+  if (currentUser) {
+    const result = await window.supabaseClient
+      .from("posts")
+      .select("id,thread_id,user_id,created_at,profiles(username,avatar_url),threads(title,updated_at,category_id)")
+      .order("created_at", { ascending: false })
+      .limit(5);
+    posts = result.data || [];
+    error = result.error;
+  } else {
+    const result = await window.supabaseClient.rpc("get_public_latest_forum_posts");
+    error = result.error;
+    posts = (result.data || []).map(row => ({
+      id: row.post_id,
+      thread_id: row.thread_id,
+      user_id: null,
+      created_at: row.created_at,
+      profiles: null,
+      threads: {
+        title: row.thread_title,
+        updated_at: row.created_at,
+        category_id: row.category_id
+      }
+    }));
+  }
 
   if (error) {
     console.error("Erreur derniers messages :", error);
-    box.innerHTML = '<div class="empty">Impossible de charger les derniers messages.</div>';
+    box.innerHTML = guestNotice + '<div class="empty">Impossible de charger les derniers messages.</div>';
     return;
   }
-  if (!posts?.length) {
-    box.innerHTML = '<div class="empty">Aucun message pour le moment.</div>';
+  if (!posts.length) {
+    box.innerHTML = guestNotice + '<div class="empty">Aucun message pour le moment.</div>';
     return;
   }
 
-  await loadThreadReadStates(posts.map(post => post.thread_id));
+  if (currentUser) {
+    await loadThreadReadStates(posts.map(post => post.thread_id));
+  }
 
   const latestPostByThread = {};
   for (const post of posts) {
@@ -98,11 +123,11 @@ async function renderLatestTopics() {
 
   const latestRows = [];
   for (const post of posts) {
-    const name = post.profiles?.username || "Membre";
+    const name = currentUser ? (post.profiles?.username || "Membre") : "Membre";
     const title = post.threads?.title || "Sujet";
     const category = await getCategoryById(post.threads?.category_id);
     const categoryName = category?.[2] || "Catégorie";
-    const avatar = post.profiles?.avatar_url
+    const avatar = currentUser && post.profiles?.avatar_url
       ? '<img class="latest-avatar" src="' + esc(post.profiles.avatar_url) + '" alt="">'
       : '<span class="latest-avatar latest-avatar-default">' + esc(name.charAt(0).toUpperCase()) + '</span>';
     const date = post.created_at
@@ -113,9 +138,9 @@ async function renderLatestTopics() {
       '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(categoryName) + '</b><span class="latest-subject-separator"> - </span><b class="latest-subject">' + esc(title) + '</b></span></span>' +
       '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
       (() => {
+        if (!currentUser) return "";
         const latestPost = latestPostByThread[post.thread_id];
         const isLatestPost = latestPost?.id === post.id;
-        if (!currentUser) return "";
         const unread = isThreadUnread(post.thread_id, latestPost?.created_at || post.created_at);
         const ownLastPost = isLatestPost && latestPost?.user_id === currentUser?.id && !unread;
         return readDiceHtml(unread, "latest-read-die", ownLastPost);
