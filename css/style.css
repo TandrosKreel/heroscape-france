@@ -1694,3 +1694,13 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     line-height:1.35 !important;
   }
 }
+
+
+/* Mobile v4 — libellé devant le titre du sujet dans Derniers messages */
+@media(max-width:700px){
+  #latest-topics .latest-subject::before{
+    content:"Sujet : ";
+    font-weight:400;
+    color:var(--muted);
+  }
+}
