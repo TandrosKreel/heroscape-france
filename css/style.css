@@ -1678,3 +1678,19 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     line-height:1.35 !important;
   }
 }
+
+
+/* Mobile v3 — supprime la ligne résiduelle du séparateur dans Derniers messages */
+@media(max-width:700px){
+  #latest-topics .latest-post-text > span{
+    display:contents !important;
+  }
+  #latest-topics .latest-post-text > span > .latest-subject-separator{
+    display:none !important;
+  }
+  #latest-topics .latest-post-text > span > .latest-subject{
+    display:block !important;
+    margin-top:4px !important;
+    line-height:1.35 !important;
+  }
+}
