@@ -107,7 +107,7 @@ async function renderLatestTopics() {
       : "";
     latestRows.push('<a class="latest-post-row" style="display:grid;grid-template-columns:30px minmax(0,1fr) 145px;width:100%;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid #39444f" href="sujet.html?id=' + post.thread_id + '">' +
       avatar +
-      '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(categoryName) + '</b> - <b>' + esc(title) + '</b></span></span>' +
+      '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(categoryName) + '</b><span class="latest-subject-separator"> - </span><b class="latest-subject">' + esc(title) + '</b></span></span>' +
       '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
       (() => {
         const latestPost = latestPostByThread[post.thread_id];
