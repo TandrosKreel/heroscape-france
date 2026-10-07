@@ -1581,3 +1581,71 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
   max-height:26px!important;
   object-fit:contain!important;
 }
+
+
+/* Mobile v1 — corrections ciblées sans modifier l'affichage ordinateur */
+@media(max-width:700px){
+  html,body{
+    max-width:100%;
+    overflow-x:hidden;
+  }
+
+  #account.account-panel{
+    box-sizing:border-box;
+    width:100%;
+    max-width:100%;
+    padding-right:8px;
+  }
+  #account.account-panel .mark-all-read{
+    box-sizing:border-box;
+    max-width:calc(100% - 8px);
+    margin-right:8px;
+    white-space:normal;
+  }
+
+  .latest-section{
+    box-sizing:border-box;
+    width:100%;
+    max-width:100%;
+  }
+  #latest-topics .latest-post-row{
+    box-sizing:border-box;
+    grid-template-columns:30px minmax(0,1fr) !important;
+    min-height:82px !important;
+    padding:14px 8px 12px !important;
+    align-items:start !important;
+    gap:10px !important;
+  }
+  #latest-topics .latest-avatar{
+    margin-top:4px !important;
+  }
+  #latest-topics .latest-post-text{
+    display:block !important;
+    min-width:0 !important;
+    padding-top:4px !important;
+    padding-right:2px !important;
+  }
+  #latest-topics .latest-post-text span{
+    display:block !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+    white-space:normal !important;
+    line-height:1.35 !important;
+  }
+  #latest-topics .latest-post-meta{
+    grid-column:2 !important;
+    display:flex !important;
+    width:100% !important;
+    min-width:0 !important;
+    justify-content:space-between !important;
+    align-items:center !important;
+    gap:8px !important;
+    white-space:normal !important;
+    margin-top:4px !important;
+  }
+  #latest-topics .latest-post-meta time{
+    grid-column:auto !important;
+    text-align:left !important;
+    white-space:nowrap !important;
+  }
+}
