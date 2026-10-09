@@ -35,11 +35,9 @@ window.HEROSCAPE_SMILEYS = {
   "narius_256_rofl": "images/smileys/narius_256_rofl.gif",
   "narius_257_rolling": "images/smileys/narius_257_rolling.gif",
   "narius_282_drinkingcheers": "images/smileys/narius_282_drinkingcheers.gif",
-  "narius_323_cheers": "images/smileys/narius_323_cheers.gif",
   "narius_338_hearteyes": "images/smileys/narius_338_hearteyes.gif",
   "narius_346_kisscheek": "images/smileys/narius_346_kisscheek.gif",
   "narius_378_blue": "images/smileys/narius_378_blue.gif",
   "narius_418_plus1": "images/smileys/narius_418_+1.gif",
-  "narius_441_lol": "images/smileys/narius_441_lol.gif",
   "narius_447_thankyoublue": "images/smileys/narius_447_thankyoublue.gif"
 };
