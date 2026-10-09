@@ -119,6 +119,14 @@ async function renderLatestTopics() {
   // Une ligne = un message : son dé dépend de sa propre date,
   // pas de la date du message le plus récent du même sujet.
   const postPageCountCache = new Map();
+  const latestPostIds = new Set();
+  const seenThreads = new Set();
+  for (const post of posts) {
+    if (!seenThreads.has(post.thread_id)) {
+      seenThreads.add(post.thread_id);
+      latestPostIds.add(post.id);
+    }
+  }
   const latestRows = [];
   for (const post of posts) {
     const name = currentUser ? (post.profiles?.username || "Membre") : "Membre";
@@ -152,7 +160,7 @@ async function renderLatestTopics() {
       (() => {
         if (!currentUser) return "";
         const unread = isThreadUnread(post.thread_id, post.created_at);
-        const ownLastPost = post.user_id === currentUser?.id && !unread;
+        const ownLastPost = latestPostIds.has(post.id) && post.user_id === currentUser?.id && !unread;
         return readDiceHtml(unread, "latest-read-die", ownLastPost);
       })() + '</span>' +
     '</a>');
