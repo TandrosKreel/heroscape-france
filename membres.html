@@ -9,7 +9,7 @@
 <main class="container"><section class="hero"><h2>👥 Membres du forum</h2><p>Les membres sont classés selon leur nombre total de messages publiés.</p></section>
 <section id="members-list" class="members-list"><div class="empty">Chargement des membres…</div></section></main>
 <footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js?v=20261010-webp"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js?v=20261010-counts"></script>
 <script>
 (async()=>{
  const box=document.getElementById("members-list");
@@ -20,12 +20,11 @@
  }
  const currentProfile=await getCurrentProfile();
  const isAdmin=currentProfile?.role==="admin";
- const [{data:profiles,error:pe},{data:posts,error:po}]=await Promise.all([
+ const [{data:profiles,error:pe},counts]=await Promise.all([
    window.supabaseClient.from("profiles").select("id,username,avatar_url,role,created_at"),
-   window.supabaseClient.from("posts").select("user_id")
+   getMessageCounts()
  ]);
- if(pe||po){console.error(pe||po);box.innerHTML='<div class="empty">Impossible de charger la liste des membres.</div>';return;}
- const counts={}; (posts||[]).forEach(p=>counts[p.user_id]=(counts[p.user_id]||0)+1);
+ if(pe){console.error(pe);box.innerHTML='<div class="empty">Impossible de charger la liste des membres.</div>';return;}
  const members=(profiles||[]).map(p=>({...p,message_count:counts[p.id]||0}))
    .sort((a,b)=>b.message_count-a.message_count||String(a.username).localeCompare(String(b.username),"fr"));
  if(!members.length){box.innerHTML='<div class="empty">Aucun membre pour le moment.</div>';return;}
