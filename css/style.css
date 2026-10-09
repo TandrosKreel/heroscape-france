@@ -2018,3 +2018,8 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 /* Ajustements de lisibilité des publications */
 .forum-post .admin-post-actions .admin-delete-post{padding:3px 5px!important;font-size:9px!important;line-height:1.1!important;font-weight:500!important;border-radius:4px!important;min-height:0!important;min-width:0!important;width:auto!important;max-width:max-content!important}
 .forum-post .forum-message-head{margin-bottom:20px!important}
+
+/* Actions des publications : suppression ancrée en bas à droite sur toutes les pages */
+.forum-post .post-content{display:flex;flex-direction:column;min-width:0;align-self:stretch}
+.forum-post .post-content>.admin-post-actions{margin-top:auto!important;padding-top:12px!important;display:flex!important;justify-content:flex-end!important;align-items:flex-end!important;width:100%}
+.forum-post .post-content>.admin-post-actions .admin-delete-post{flex:0 0 auto!important;align-self:flex-end!important}
