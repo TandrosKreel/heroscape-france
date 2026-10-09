@@ -1988,3 +1988,12 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     grid-template-columns:repeat(8,minmax(38px,1fr))!important;
   }
 }
+
+/* Citations du forum — lisibles, compactes et adaptées aux mobiles */
+.forum-message-body{white-space:pre-wrap;overflow-wrap:anywhere;min-width:0}
+.forum-quote{margin:12px 0;padding:12px 15px;border-left:3px solid #c99b42;border-radius:0 9px 9px 0;background:rgba(144,163,183,.09);white-space:pre-wrap;overflow-wrap:anywhere}
+.forum-quote>strong{display:block;margin-bottom:7px;color:#e6bc66;font-size:.92em}
+.forum-quote>div{color:inherit}
+.forum-post-tools{display:flex;justify-content:flex-end;margin-top:12px}
+.forum-quote-action{font-size:12px;padding:5px 11px}
+#insert-quote{margin-right:7px}
