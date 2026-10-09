@@ -686,7 +686,14 @@ if (categoriesBox) {
           day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit"
         }).format(new Date(activityDate));
 
-        const lastMessageUrl = "sujet.html?id=" + encodeURIComponent(latestThread.id) + (latestPost?.id ? "#post-" + encodeURIComponent(latestPost.id) : "#last-message");
+        const { count: latestThreadPostCount } = await getSupabase()
+          .from("posts")
+          .select("id", { count: "exact", head: true })
+          .eq("thread_id", latestThread.id);
+        const latestThreadLastPage = Math.max(1, Math.ceil((latestThreadPostCount || 1) / 25));
+        const lastMessageUrl = "sujet.html?id=" + encodeURIComponent(latestThread.id) +
+          "&page=" + latestThreadLastPage +
+          (latestPost?.id ? "#post-" + encodeURIComponent(latestPost.id) : "#last-message");
         slot.innerHTML =
           '<a class="category-last-link" href="' + lastMessageUrl + '" title="Aller au dernier message">' +
           readDiceHtml(hasUnread, "category-activity-die", ownLastPost) +
