@@ -1797,3 +1797,56 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     font-size:9px;
   }
 }
+
+
+/* Pages sujets v2 — une seule ligne, centrée avec le dé et le dernier message */
+#topics .topic{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+}
+#topics .topic-side{
+  margin-left:auto!important;
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  align-self:center!important;
+  gap:12px!important;
+  height:auto!important;
+}
+#topics .topic-side .topic-page-links{
+  display:inline-flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  align-self:center!important;
+  width:auto!important;
+  margin:0!important;
+  gap:4px!important;
+  white-space:nowrap!important;
+}
+#topics .topic-side .topic-pages-label{
+  display:inline!important;
+  height:auto!important;
+  margin:0 1px 0 0!important;
+  font-size:8px!important;
+  line-height:1!important;
+  vertical-align:middle!important;
+}
+#topics .topic-side .topic-status{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  align-self:center!important;
+  margin:0!important;
+  gap:6px!important;
+}
+@media(max-width:600px){
+  #topics .topic{
+    grid-template-columns:minmax(0,1fr) auto!important;
+  }
+  #topics .topic-side{
+    gap:7px!important;
+  }
+}
