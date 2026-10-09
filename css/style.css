@@ -1850,3 +1850,21 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     gap:7px!important;
   }
 }
+
+/* Fenêtre moderne de smileys dans les réponses */
+.smileys-toolbar{position:relative;margin-top:10px}
+.smileys-picker[hidden]{display:none!important}
+.smileys-picker{
+  position:absolute;z-index:50;left:0;bottom:calc(100% + 8px);
+  width:min(340px,calc(100vw - 48px));max-height:300px;
+  overflow:hidden;border:1px solid var(--line);
+  border-radius:12px;background:var(--panel);
+  box-shadow:0 14px 38px rgba(0,0,0,.5);
+}
+.smileys-picker-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px}
+.smileys-picker-head button{background:transparent;border:0;color:var(--text);font-size:24px;line-height:1;cursor:pointer}
+.smileys-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;padding:10px;max-height:245px;overflow-y:auto}
+.smiley-choice{display:flex;align-items:center;justify-content:center;min-height:37px;padding:4px;background:transparent;border:1px solid transparent;border-radius:7px;cursor:pointer}
+.smiley-choice:hover,.smiley-choice:focus-visible{background:var(--panel2);border-color:var(--gold)}
+.smiley-choice img{width:auto;height:auto;max-width:28px;max-height:28px;object-fit:contain}
+.forum-inline-smiley{display:inline-block;width:auto;height:auto;max-width:36px;max-height:36px;vertical-align:middle}
