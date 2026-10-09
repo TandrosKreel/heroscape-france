@@ -1745,3 +1745,35 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 @media(max-width:600px){
   .topic-page-links{width:100%;margin:3px 0 0}
 }
+
+
+/* Pages d'un sujet — placées juste avant le dé de statut */
+.topic-side{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:0 0 auto;
+}
+.topic-side .topic-page-links{
+  margin:0;
+  flex-wrap:nowrap;
+}
+.topic-pages-label{
+  margin-right:2px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:400;
+}
+.topic-side .topic-status{
+  margin-left:0!important;
+}
+@media(max-width:600px){
+  .topic-side{
+    gap:7px;
+  }
+  .topic-side .topic-page-links{
+    width:auto;
+    margin:0;
+  }
+}
