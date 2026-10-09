@@ -1997,3 +1997,16 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .forum-post-tools{display:flex;justify-content:flex-end;margin-top:12px}
 .forum-quote-action{font-size:12px;padding:5px 11px}
 #insert-quote{margin-right:7px}
+
+/* Éditeur des messages : outils compacts et mise en forme bornée */
+.forum-message-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.forum-message-head .count{flex:1}
+.forum-message-body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5}
+.forum-message-body .forum-quote{margin:6px 0 8px}
+.forum-message-body .forum-quote+span{display:inline}
+.forum-format-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin:12px 0 8px;padding:8px;border:1px solid var(--line);border-radius:8px;background:#151c23}
+.forum-format-toolbar button,.forum-format-toolbar select{min-width:34px;min-height:34px;margin:0;padding:5px 9px;border:1px solid var(--line);border-radius:6px;background:#27313c;color:var(--text);font:inherit;font-size:13px;cursor:pointer}
+.forum-format-toolbar button:hover,.forum-format-toolbar select:hover{border-color:var(--gold)}
+.forum-format-toolbar select{min-width:95px;max-width:145px}
+.forum-size-1{font-size:.75em}.forum-size-2{font-size:.875em}.forum-size-3{font-size:1em}.forum-size-4{font-size:1.2em}.forum-size-5{font-size:1.45em}
+.forum-message-body a{color:#e9c36c;text-decoration:underline;overflow-wrap:anywhere}
