@@ -133,7 +133,17 @@ async function renderLatestTopics() {
     const date = post.created_at
       ? new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(post.created_at))
       : "";
-    latestRows.push('<a class="latest-post-row" style="display:grid;grid-template-columns:30px minmax(0,1fr) 145px;width:100%;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid #39444f" href="sujet.html?id=' + post.thread_id + '">' +
+    let lastPage = 1;
+    if (currentUser) {
+      const { count } = await window.supabaseClient
+        .from("posts")
+        .select("id", { count: "exact", head: true })
+        .eq("thread_id", post.thread_id);
+      lastPage = Math.max(1, Math.ceil((count || 1) / 25));
+    }
+    const latestUrl = "sujet.html?id=" + encodeURIComponent(post.thread_id) +
+      (currentUser ? "&page=" + lastPage + "#post-" + encodeURIComponent(post.id) : "");
+    latestRows.push('<a class="latest-post-row" style="display:grid;grid-template-columns:30px minmax(0,1fr) 145px;width:100%;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid #39444f" href="' + latestUrl + '">' +
       avatar +
       '<span class="latest-post-text"><strong>' + esc(name) + '</strong><span>a posté dans <b>' + esc(categoryName) + '</b><span class="latest-subject-separator"> - </span><b class="latest-subject">' + esc(title) + '</b></span></span>' +
       '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
