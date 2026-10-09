@@ -312,10 +312,18 @@ async function getCurrentProfile() {
 async function getMessageCounts() {
   const supabase = getSupabase();
   if (!supabase) return {};
-  const { data, error } = await supabase.from("posts").select("user_id");
-  if (error) { console.error("Erreur comptage messages :", error); return {}; }
+  // Une seule ligne par membre, calculée dans PostgreSQL.
+  const { data, error } = await supabase.rpc("forum_message_counts");
+  if (!error && Array.isArray(data)) {
+    const counts = {};
+    data.forEach(row => { counts[row.user_id] = Number(row.message_count) || 0; });
+    return counts;
+  }
+  // Compatibilité tant que la fonction SQL n'a pas été installée.
+  const { data: posts, error: fallbackError } = await supabase.from("posts").select("user_id");
+  if (fallbackError) { console.error("Erreur comptage messages :", fallbackError); return {}; }
   const counts = {};
-  (data || []).forEach(post => { counts[post.user_id] = (counts[post.user_id] || 0) + 1; });
+  (posts || []).forEach(post => { counts[post.user_id] = (counts[post.user_id] || 0) + 1; });
   return counts;
 }
 
