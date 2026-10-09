@@ -133,8 +133,8 @@ function isThreadUnread(threadId, updatedAt) {
 
 function readDiceHtml(unread, extraClass = "", ownLastPost = false) {
   const src = ownLastPost
-    ? "De%20rouge%20post.png"
-    : (unread ? "De%20bleu%20non%20lu.png" : "De%20bleu%20lu.png");
+    ? "De%20rouge%20post%20optimise.webp"
+    : (unread ? "De%20bleu%20non%20lu%20optimise.webp" : "De%20bleu%20lu%20optimise.webp");
   const label = ownLastPost ? "Dernier message publié par vous" : (unread ? "Non lu" : "Lu");
   return '<img class="read-die ' + extraClass + '" src="' + src + '" alt="' + label + '" title="' + label + '">';
 }
