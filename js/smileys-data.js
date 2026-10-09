@@ -39,7 +39,6 @@ window.HEROSCAPE_SMILEYS = {
   "narius_338_hearteyes": "images/smileys/narius_338_hearteyes.gif",
   "narius_346_kisscheek": "images/smileys/narius_346_kisscheek.gif",
   "narius_378_blue": "images/smileys/narius_378_blue.gif",
-  "narius_395_signhere": "images/smileys/narius_395_signhere.gif",
   "narius_418_plus1": "images/smileys/narius_418_+1.gif",
   "narius_441_lol": "images/smileys/narius_441_lol.gif",
   "narius_447_thankyoublue": "images/smileys/narius_447_thankyoublue.gif"
