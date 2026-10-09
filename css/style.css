@@ -1747,33 +1747,53 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 }
 
 
-/* Pages d'un sujet — placées juste avant le dé de statut */
+/* Pages d'un sujet — bloc centré verticalement juste à gauche du dernier message */
 .topic-side{
   margin-left:auto;
-  display:flex;
+  display:grid;
+  grid-template-columns:auto auto;
   align-items:center;
-  gap:10px;
+  column-gap:14px;
   flex:0 0 auto;
+  align-self:stretch;
 }
 .topic-side .topic-page-links{
-  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:4px;
+  width:auto;
+  margin:0!important;
   flex-wrap:nowrap;
+  align-self:center;
 }
 .topic-pages-label{
-  margin-right:2px;
+  display:inline-flex;
+  align-items:center;
+  height:22px;
+  margin-right:1px;
   color:var(--muted);
-  font-size:11px;
+  font-size:9px;
   font-weight:400;
+  line-height:1;
 }
 .topic-side .topic-status{
-  margin-left:0!important;
+  margin:0!important;
+  align-self:center;
+  display:flex;
+  align-items:center;
+  gap:6px!important;
 }
 @media(max-width:600px){
   .topic-side{
-    gap:7px;
+    column-gap:8px;
+    align-self:stretch;
   }
   .topic-side .topic-page-links{
     width:auto;
-    margin:0;
+    margin:0!important;
+  }
+  .topic-pages-label{
+    font-size:9px;
   }
 }
