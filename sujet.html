@@ -112,12 +112,16 @@ function setupSmileysPicker() {
   const grid = document.getElementById("smileys-grid");
   const textarea = document.getElementById("reply-body");
   if (!toggle || !picker || !close || !grid || !textarea) return;
-  const names = Object.keys(SMILEYS);
-  grid.innerHTML = names.length
-    ? names.map(key => '<button class="smiley-choice" type="button" data-smiley="' + key +
-        '" title="' + key.replace(/_/g, " ") + '"><img src="' + SMILEYS[key] + '" alt="' + key + '"></button>').join("")
-    : '<p>Les fichiers des smileys ne sont pas encore disponibles.</p>';
+  let gridInitialized = false;
   toggle.addEventListener("click", () => {
+    if (!gridInitialized) {
+      const names = Object.keys(SMILEYS);
+      grid.innerHTML = names.length
+        ? names.map(key => '<button class="smiley-choice" type="button" data-smiley="' + key +
+            '" title="' + key.replace(/_/g, " ") + '"><img src="' + SMILEYS[key] + '" alt="' + key + '" loading="lazy" decoding="async"></button>').join("")
+        : '<p>Les fichiers des smileys ne sont pas encore disponibles.</p>';
+      gridInitialized = true;
+    }
     picker.hidden = !picker.hidden;
     toggle.setAttribute("aria-expanded", String(!picker.hidden));
   });
