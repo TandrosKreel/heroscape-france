@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261009-48">
+  <link rel="stylesheet" href="css/style.css?v=20261010-quotes">
 </head>
 
 <body>
@@ -587,10 +587,10 @@ async function renderSubject() {
     setupSmileysPicker();
     const editor = document.getElementById("reply-body");
     function insertQuote(author, content) {
-      const safeAuthor = String(author || "").replace(/[\\[\\]\\r\\n]/g, "").slice(0, 80);
-      const quotedText = String(content || "").replace(/\\[\\/quote\\]/gi, "[/ citation ]");
-      const quote = "[quote" + (safeAuthor ? "=" + safeAuthor : "") + "]\\n" +
-        quotedText + "\\n[/quote]\\n";
+      const safeAuthor = String(author || "").replace(/[\[\]\r\n]/g, "").slice(0, 80);
+      const quotedText = String(content || "").replace(/\[\/quote\]/gi, "[/ citation ]");
+      const quote = "[quote" + (safeAuthor ? "=" + safeAuthor : "") + "]\n" +
+        quotedText + "\n[/quote]\n";
       editor.focus();
       const selection = window.getSelection();
       let range = selection && selection.rangeCount ? selection.getRangeAt(0) : null;
