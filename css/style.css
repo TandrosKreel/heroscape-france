@@ -1892,3 +1892,45 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     bottom:calc(100% + 8px)!important;
   }
 }
+
+/* Smileys v3 — panneau horizontal sous la zone de texte, à droite du bouton */
+.smileys-toolbar{
+  position:relative!important;
+  width:max-content!important;
+  max-width:100%!important;
+}
+.smileys-picker{
+  left:calc(100% + 12px)!important;
+  top:0!important;
+  bottom:auto!important;
+  width:620px!important;
+  max-width:calc(100vw - 390px)!important;
+  max-height:none!important;
+  border-radius:10px!important;
+}
+.smileys-picker-head{
+  padding:7px 10px!important;
+}
+.smileys-grid{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:5px!important;
+  padding:8px 10px!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
+.smiley-choice{
+  flex:0 0 34px!important;
+  min-height:34px!important;
+}
+@media(max-width:760px){
+  .smileys-picker{
+    left:0!important;
+    top:calc(100% + 8px)!important;
+    bottom:auto!important;
+    width:min(620px,calc(100vw - 48px))!important;
+    max-width:calc(100vw - 48px)!important;
+  }
+}
