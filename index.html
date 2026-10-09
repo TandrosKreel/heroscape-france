@@ -159,8 +159,11 @@ async function renderLatestTopics() {
       '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
       (() => {
         if (!currentUser) return "";
-        const unread = isThreadUnread(post.thread_id, post.created_at);
-        const ownLastPost = latestPostIds.has(post.id) && post.user_id === currentUser?.id && !unread;
+        // Un message publié par le membre lui-même est déjà connu de lui.
+        // Le dé rouge est réservé à son dernier message dans ce sujet.
+        const isOwnPost = post.user_id === currentUser?.id;
+        const unread = !isOwnPost && isThreadUnread(post.thread_id, post.created_at);
+        const ownLastPost = latestPostIds.has(post.id) && isOwnPost;
         return readDiceHtml(unread, "latest-read-die", ownLastPost);
       })() + '</span>' +
     '</a>');
