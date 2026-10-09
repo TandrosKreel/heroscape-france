@@ -301,7 +301,7 @@ async function render() {
       ? Array.from({ length: totalPages }, (_, i) => i + 1)
       : [1, 2, 3, totalPages - 1, totalPages];
 
-    return '<span class="topic-page-links" aria-label="Pages du sujet">' +
+    return '<span class="topic-page-links" aria-label="Pages du sujet"><span class="topic-pages-label">Pages</span>' +
       pages.map(pageNumber =>
         '<a href="sujet.html?id=' + encodeURIComponent(topicId) + '&page=' + pageNumber +
         '" title="Aller à la page ' + pageNumber + '">' + pageNumber + '</a>'
@@ -324,7 +324,6 @@ async function render() {
           <div class="topic-title">
             ${topic.is_pinned ? '<span class="topic-pin">📌 Épinglé</span>' : ""}
             <a class="topic-title-link" href="sujet.html?id=${encodeURIComponent(topic.id)}"><strong>${esc(topic.title)}</strong></a>
-            ${topicPageLinks(topic.id)}
           </div>
 
           <div class="topic-meta">
@@ -334,11 +333,11 @@ async function render() {
 
         </div>
 
-        <a class="topic-status" href="${lastUrl}" title="Aller au dernier message">${readDiceHtml(
+        <div class="topic-side">${topicPageLinks(topic.id)}<a class="topic-status" href="${lastUrl}" title="Aller au dernier message">${readDiceHtml(
           isThreadUnread(topic.id, lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at),
           "",
           !isThreadUnread(topic.id, lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at) && (lastAuthors[topic.id] || topic.user_id) === currentUser?.id
-        )}<span class="topic-last-post">Posté par <strong>${esc(lastPosts[topic.id]?.profiles?.username || topic.author || "Membre")}</strong> à ${formatTopicDate(lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at)}</span><span class="topic-arrow" aria-hidden="true">›</span></a>
+        )}<span class="topic-last-post">Posté par <strong>${esc(lastPosts[topic.id]?.profiles?.username || topic.author || "Membre")}</strong> à ${formatTopicDate(lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at)}</span><span class="topic-arrow" aria-hidden="true">›</span></a></div>
 
       </div>
 
