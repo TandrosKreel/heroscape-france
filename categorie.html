@@ -287,23 +287,44 @@ async function render() {
     .in("thread_id", arr.map(topic => topic.id))
     .order("created_at", { ascending: false });
   const lastPosts = {};
+  const postCounts = {};
   for (const post of (latestPosts || [])) {
+    postCounts[post.thread_id] = (postCounts[post.thread_id] || 0) + 1;
     if (!lastPosts[post.thread_id]) lastPosts[post.thread_id] = post;
   }
 
-  topicsBox.innerHTML =
-    arr.map(topic => `
+  function topicPageLinks(topicId) {
+    const totalPages = Math.max(1, Math.ceil((postCounts[topicId] || 1) / 25));
+    if (totalPages <= 1) return "";
 
-      <a
-        class="topic"
-        href="sujet.html?id=${encodeURIComponent(topic.id)}"
-      >
+    const pages = totalPages <= 5
+      ? Array.from({ length: totalPages }, (_, i) => i + 1)
+      : [1, 2, 3, totalPages - 1, totalPages];
+
+    return '<span class="topic-page-links" aria-label="Pages du sujet">' +
+      pages.map(pageNumber =>
+        '<a href="sujet.html?id=' + encodeURIComponent(topicId) + '&page=' + pageNumber +
+        '" title="Aller à la page ' + pageNumber + '">' + pageNumber + '</a>'
+      ).join("") +
+      '</span>';
+  }
+
+  topicsBox.innerHTML =
+    arr.map(topic => {
+      const totalPages = Math.max(1, Math.ceil((postCounts[topic.id] || 1) / 25));
+      const lastUrl = "sujet.html?id=" + encodeURIComponent(topic.id) + "&page=" + totalPages +
+        (lastPosts[topic.id]?.id ? "#post-" + encodeURIComponent(lastPosts[topic.id].id) : "");
+
+      return `
+
+      <div class="topic">
 
         <div class="topic-main">
 
           <div class="topic-title">
             ${topic.is_pinned ? '<span class="topic-pin">📌 Épinglé</span>' : ""}
-            <strong>${esc(topic.title)}</strong>
+            <a class="topic-title-link" href="sujet.html?id=${encodeURIComponent(topic.id)}"><strong>${esc(topic.title)}</strong></a>
+            ${topicPageLinks(topic.id)}
           </div>
 
           <div class="topic-meta">
@@ -313,15 +334,16 @@ async function render() {
 
         </div>
 
-        <div class="topic-status">${readDiceHtml(
+        <a class="topic-status" href="${lastUrl}" title="Aller au dernier message">${readDiceHtml(
           isThreadUnread(topic.id, lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at),
           "",
           !isThreadUnread(topic.id, lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at) && (lastAuthors[topic.id] || topic.user_id) === currentUser?.id
-        )}<span class="topic-last-post">Posté par <strong>${esc(lastPosts[topic.id]?.profiles?.username || topic.author || "Membre")}</strong> à ${formatTopicDate(lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at)}</span><span class="topic-arrow" aria-hidden="true">›</span></div>
+        )}<span class="topic-last-post">Posté par <strong>${esc(lastPosts[topic.id]?.profiles?.username || topic.author || "Membre")}</strong> à ${formatTopicDate(lastPosts[topic.id]?.created_at || topic.updated_at || topic.created_at)}</span><span class="topic-arrow" aria-hidden="true">›</span></a>
 
-      </a>
+      </div>
 
-    `).join("");
+    `;
+    }).join("");
 }
 
 
