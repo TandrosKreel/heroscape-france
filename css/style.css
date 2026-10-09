@@ -2014,3 +2014,7 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 /* Bouton de suppression discret, sans modifier les autres boutons */
 .forum-post .admin-post-actions{margin-top:10px;display:flex;justify-content:flex-end}
 .forum-post .admin-post-actions .admin-delete-post{display:inline-flex;align-items:center;justify-content:center;width:auto;min-width:0;max-width:max-content;padding:5px 9px;font-size:11px;font-weight:600;line-height:1.25;border-radius:5px}
+
+/* Ajustements de lisibilité des publications */
+.forum-post .admin-post-actions .admin-delete-post{padding:3px 5px!important;font-size:9px!important;line-height:1.1!important;font-weight:500!important;border-radius:4px!important;min-height:0!important;min-width:0!important;width:auto!important;max-width:max-content!important}
+.forum-post .forum-message-head{margin-bottom:20px!important}
