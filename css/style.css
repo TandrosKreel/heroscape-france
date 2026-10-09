@@ -1868,3 +1868,27 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .smiley-choice:hover,.smiley-choice:focus-visible{background:var(--panel2);border-color:var(--gold)}
 .smiley-choice img{width:auto;height:auto;max-width:28px;max-height:28px;object-fit:contain}
 .forum-inline-smiley{display:inline-block;width:auto;height:auto;max-width:36px;max-height:36px;vertical-align:middle}
+
+/* Éditeur de réponse avec aperçu direct des smileys */
+.reply-rich-editor{
+  width:100%;box-sizing:border-box;min-height:218px;padding:12px;
+  border:1px solid var(--line);border-radius:6px;background:#0d141a;color:var(--text);
+  white-space:pre-wrap;overflow-wrap:anywhere;outline:none;
+}
+.reply-rich-editor:focus{border-color:var(--gold)}
+.reply-rich-editor:empty:before{content:attr(data-placeholder);color:#8b949e;pointer-events:none}
+.reply-editor-smiley{display:inline-block;max-width:32px;max-height:32px;width:auto;height:auto;vertical-align:middle;margin:0 2px}
+
+/* Le sélecteur s'ouvre à droite du bouton et ne recouvre plus la zone de saisie */
+.smileys-toolbar{position:relative;width:max-content;max-width:100%}
+.smileys-picker{
+  left:calc(100% + 10px)!important;
+  bottom:0!important;
+  top:auto!important;
+}
+@media(max-width:760px){
+  .smileys-picker{
+    left:0!important;
+    bottom:calc(100% + 8px)!important;
+  }
+}
