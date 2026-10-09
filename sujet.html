@@ -105,20 +105,44 @@ function renderSmileys(text) {
       : match
   );
 }
+function renderInlineMarkup(text) {
+  const colors = ["#ffffff","#cbd5e1","#111827","#facc15","#f97316","#ef4444","#ec4899","#a855f7","#6366f1","#3b82f6","#22c55e","#14b8a6"];
+  const fonts = ["Arial","Georgia","Trebuchet MS","Palatino Linotype","Verdana"];
+  let result = renderSmileys(text);
+  const styles = [
+    ["b", "strong"], ["i", "em"], ["s", "del"]
+  ];
+  for (const [tag, html] of styles) {
+    const re = new RegExp("\\[" + tag + "\\]([\\s\\S]*?)\\[\\/" + tag + "\\]", "gi");
+    result = result.replace(re, "<" + html + ">$1</" + html + ">");
+  }
+  result = result.replace(/\[size=([1-5])\]([\s\S]*?)\[\/size\]/gi,
+    (_, n, content) => '<span class="forum-size-' + n + '">' + content + '</span>');
+  result = result.replace(/\[color=(#[0-9a-f]{6})\]([\s\S]*?)\[\/color\]/gi,
+    (whole, color, content) => colors.includes(color.toLowerCase()) ?
+      '<span style="color:' + color + '">' + content + '</span>' : whole);
+  result = result.replace(/\[font=([1-5])\]([\s\S]*?)\[\/font\]/gi,
+    (_, n, content) => '<span style="font-family:' + fonts[Number(n)-1] + '">' + content + '</span>');
+  result = result.replace(/\[align=(left|center|right)\]([\s\S]*?)\[\/align\]/gi,
+    (_, alignment, content) => '<div style="text-align:' + alignment + '">' + content + '</div>');
+  result = result.replace(/\[url=(https?:\/\/[^\]\s]{1,500})\]([\s\S]*?)\[\/url\]/gi,
+    (_, url, label) => '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer nofollow">' + label + '</a>');
+  return result;
+}
 function renderForumMessage(text) {
   const source = String(text || "");
   const parts = [];
   const pattern = /\[quote(?:=([^\]\r\n]{1,80}))?\]([\s\S]*?)\[\/quote\]/gi;
   let cursor = 0, match;
   while ((match = pattern.exec(source)) !== null) {
-    parts.push('<span>' + renderSmileys(source.slice(cursor, match.index)) + '</span>');
+    parts.push('<span>' + renderInlineMarkup(source.slice(cursor, match.index).replace(/\n+$/, "")) + '</span>');
     const author = (match[1] || "").trim().replace(/^["']|["']$/g, "");
     parts.push('<blockquote class="forum-quote"><strong>' +
       (author ? esc(author) + ' a écrit :' : 'Citation :') +
-      '</strong><div>' + renderSmileys(match[2].trim()) + '</div></blockquote>');
+      '</strong><div>' + renderInlineMarkup(match[2].trim()) + '</div></blockquote>');
     cursor = pattern.lastIndex;
   }
-  parts.push('<span>' + renderSmileys(source.slice(cursor)) + '</span>');
+  parts.push('<span>' + renderInlineMarkup(source.slice(cursor).replace(/^\n+/, "")) + '</span>');
   return parts.join("");
 }
 
@@ -332,9 +356,9 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
         }
       </div>
 
-      <div class="forum-message-body">${renderForumMessage(post.body)}</div>
+      </div><button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button></div>\n      <div class="forum-message-body">${renderForumMessage(post.body)}</div>
 
-      ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}\n      <div class="forum-post-tools"><button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button></div>
+      ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}\n
       ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
 
       </div>
@@ -608,6 +632,44 @@ async function renderSubject() {
       selection.addRange(range);
       editor.scrollIntoView({ behavior: "smooth", block: "center" });
     }
+
+    function wrapSelection(open, close, placeholder = "texte") {
+      editor.focus();
+      const selection = window.getSelection();
+      let range = selection && selection.rangeCount ? selection.getRangeAt(0) : null;
+      if (!range || !editor.contains(range.commonAncestorContainer)) {
+        range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+      }
+      const selected = range.toString() || placeholder;
+      range.deleteContents();
+      const node = document.createTextNode(open + selected + close);
+      range.insertNode(node);
+      range.setStartAfter(node);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+    document.querySelectorAll("#forum-format-toolbar [data-format]").forEach(button => {
+      button.addEventListener("click", () => wrapSelection("[" + button.dataset.format + "]", "[/" + button.dataset.format + "]"));
+    });
+    for (const [id, tag] of [["forum-size","size"],["forum-font","font"],["forum-color","color"]]) {
+      document.getElementById(id)?.addEventListener("change", event => {
+        if (event.target.value) wrapSelection("[" + tag + "=" + event.target.value + "]", "[/" + tag + "]");
+        event.target.value = "";
+      });
+    }
+    document.querySelectorAll("#forum-format-toolbar [data-align]").forEach(button => {
+      button.addEventListener("click", () => wrapSelection("[align=" + button.dataset.align + "]", "[/align]"));
+    });
+    document.getElementById("forum-link")?.addEventListener("click", () => {
+      const url = prompt("Adresse du lien (https://...) :");
+      if (!url || !/^https?:\/\/\S+$/i.test(url) || url.length > 500) return;
+      const label = prompt("Texte à afficher pour le lien :", url);
+      if (label === null) return;
+      wrapSelection("[url=" + url + "]", "[/url]", label || url);
+    });
     document.getElementById("insert-quote")?.addEventListener("click", () => insertQuote("", ""));
     subjectBox.querySelectorAll("[data-quote-post]").forEach(button => {
       button.addEventListener("click", () => {
