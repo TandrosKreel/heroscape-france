@@ -1,0 +1,27 @@
+// Smileys historiques du forum Heroscape France
+window.HEROSCAPE_SMILEYS = {
+  "icon_arrow": "images/smileys/icon_arrow.gif",
+  "icon_cool": "images/smileys/icon_cool.gif",
+  "icon_cry": "images/smileys/icon_cry.gif",
+  "icon_e_biggrin": "images/smileys/icon_e_biggrin.gif",
+  "icon_e_confused": "images/smileys/icon_e_confused.gif",
+  "icon_e_geek": "images/smileys/icon_e_geek.gif",
+  "icon_e_sad": "images/smileys/icon_e_sad.gif",
+  "icon_e_smile": "images/smileys/icon_e_smile.gif",
+  "icon_e_surprised": "images/smileys/icon_e_surprised.gif",
+  "icon_e_ugeek": "images/smileys/icon_e_ugeek.gif",
+  "icon_e_wink": "images/smileys/icon_e_wink.gif",
+  "icon_eek": "images/smileys/icon_eek.gif",
+  "icon_evil": "images/smileys/icon_evil.gif",
+  "icon_exclaim": "images/smileys/icon_exclaim.gif",
+  "icon_idea": "images/smileys/icon_idea.gif",
+  "icon_lol": "images/smileys/icon_lol.gif",
+  "icon_mad": "images/smileys/icon_mad.gif",
+  "icon_mrgreen": "images/smileys/icon_mrgreen.gif",
+  "icon_neutral": "images/smileys/icon_neutral.gif",
+  "icon_question": "images/smileys/icon_question.gif",
+  "icon_razz": "images/smileys/icon_razz.gif",
+  "icon_redface": "images/smileys/icon_redface.gif",
+  "icon_rolleyes": "images/smileys/icon_rolleyes.gif",
+  "icon_twisted": "images/smileys/icon_twisted.gif"
+};
