@@ -343,20 +343,15 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
           : ""
       }
 
-      <div class="count">
-        Par
-        <strong>
-          ${esc(post.author || "Membre")}
-        </strong>
-
-        ${
-          post.created_at
-            ? " — " + esc(formatDate(post.created_at))
-            : ""
-        }
+      <div class="forum-message-head">
+        <div class="count">
+          Par <strong>${esc(post.author || "Membre")}</strong>
+          ${post.created_at ? " — " + esc(formatDate(post.created_at)) : ""}
+        </div>
+        <button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button>
       </div>
 
-      </div><button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button></div>\n      <div class="forum-message-body">${renderForumMessage(post.body)}</div>
+      <div class="forum-message-body">${renderForumMessage(post.body)}</div>
 
       ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}\n
       ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
