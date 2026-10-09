@@ -99,17 +99,16 @@ const backLink =
 // Smileys historiques : codes sûrs, convertis en images après échappement HTML.
 const SMILEYS = window.HEROSCAPE_SMILEYS || {};
 function renderSmileys(text) {
-  return esc(text).replace(/\\[smiley:([a-z0-9_]+)\\]/g, (match, key) =>
+  return esc(text).replace(/\[smiley:([a-z0-9_]+)\]/g, (match, key) =>
     Object.prototype.hasOwnProperty.call(SMILEYS, key)
       ? '<img class="forum-inline-smiley" src="' + SMILEYS[key] + '" alt="Smiley ' + key + '">'
       : match
   );
 }
-// Citations en texte brut : échappement HTML avant toute mise en forme.
 function renderForumMessage(text) {
   const source = String(text || "");
   const parts = [];
-  const pattern = /\\[quote(?:=([^\\]\\r\\n]{1,80}))?\\]([\\s\\S]*?)\\[\\/quote\\]/gi;
+  const pattern = /\[quote(?:=([^\]\r\n]{1,80}))?\]([\s\S]*?)\[\/quote\]/gi;
   let cursor = 0, match;
   while ((match = pattern.exec(source)) !== null) {
     parts.push('<span>' + renderSmileys(source.slice(cursor, match.index)) + '</span>');
@@ -333,7 +332,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
         }
       </div>
 
-      <p style="white-space:pre-wrap">${renderForumMessage(post.body)}</p>
+      <div class="forum-message-body">${renderForumMessage(post.body)}</div>
 
       ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}\n      <div class="forum-post-tools"><button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button></div>
       ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
