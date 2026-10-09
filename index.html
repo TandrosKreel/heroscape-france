@@ -116,11 +116,9 @@ async function renderLatestTopics() {
     await loadThreadReadStates(posts.map(post => post.thread_id));
   }
 
-  const latestPostByThread = {};
-  for (const post of posts) {
-    if (!latestPostByThread[post.thread_id]) latestPostByThread[post.thread_id] = post;
-  }
-
+  // Une ligne = un message : son dé dépend de sa propre date,
+  // pas de la date du message le plus récent du même sujet.
+  const postPageCountCache = new Map();
   const latestRows = [];
   for (const post of posts) {
     const name = currentUser ? (post.profiles?.username || "Membre") : "Membre";
@@ -135,11 +133,15 @@ async function renderLatestTopics() {
       : "";
     let lastPage = 1;
     if (currentUser) {
-      const { count } = await window.supabaseClient
-        .from("posts")
-        .select("id", { count: "exact", head: true })
-        .eq("thread_id", post.thread_id);
-      lastPage = Math.max(1, Math.ceil((count || 1) / 25));
+      if (!postPageCountCache.has(post.thread_id)) {
+        const { count, error: countError } = await window.supabaseClient
+          .from("posts")
+          .select("id", { count: "exact", head: true })
+          .eq("thread_id", post.thread_id);
+        if (countError) console.error("Erreur nombre de messages du sujet :", countError);
+        postPageCountCache.set(post.thread_id, Math.max(1, Math.ceil((count || 1) / 25)));
+      }
+      lastPage = postPageCountCache.get(post.thread_id);
     }
     const latestUrl = "sujet.html?id=" + encodeURIComponent(post.thread_id) +
       (currentUser ? "&page=" + lastPage + "#post-" + encodeURIComponent(post.id) : "");
@@ -149,10 +151,8 @@ async function renderLatestTopics() {
       '<span class="latest-post-meta"><time>' + esc(date) + '</time>' +
       (() => {
         if (!currentUser) return "";
-        const latestPost = latestPostByThread[post.thread_id];
-        const isLatestPost = latestPost?.id === post.id;
-        const unread = isThreadUnread(post.thread_id, latestPost?.created_at || post.created_at);
-        const ownLastPost = isLatestPost && latestPost?.user_id === currentUser?.id && !unread;
+        const unread = isThreadUnread(post.thread_id, post.created_at);
+        const ownLastPost = post.user_id === currentUser?.id && !unread;
         return readDiceHtml(unread, "latest-read-die", ownLastPost);
       })() + '</span>' +
     '</a>');
