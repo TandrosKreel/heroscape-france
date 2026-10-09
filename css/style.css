@@ -2023,3 +2023,7 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .forum-post .post-content{display:flex;flex-direction:column;min-width:0;align-self:stretch}
 .forum-post .post-content>.admin-post-actions{margin-top:auto!important;padding-top:12px!important;display:flex!important;justify-content:flex-end!important;align-items:flex-end!important;width:100%}
 .forum-post .post-content>.admin-post-actions .admin-delete-post{flex:0 0 auto!important;align-self:flex-end!important}
+
+/* Suppression : lien discret, sans encadré ni fond jaune */
+.forum-post .post-content>.admin-post-actions .admin-delete-post{background:transparent!important;border:0!important;box-shadow:none!important;color:var(--muted)!important;padding:2px 0!important;border-radius:0!important;text-decoration:none!important}
+.forum-post .post-content>.admin-post-actions .admin-delete-post:hover,.forum-post .post-content>.admin-post-actions .admin-delete-post:focus-visible{color:#f2a3a3!important;text-decoration:underline!important;background:transparent!important}
