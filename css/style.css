@@ -1934,3 +1934,39 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     max-width:calc(100vw - 48px)!important;
   }
 }
+
+/* Smileys v4 — grande palette vers la droite et le bas */
+.smileys-picker{
+  left:calc(100% + 12px)!important;
+  top:0!important;
+  bottom:auto!important;
+  width:min(820px,calc(100vw - 360px))!important;
+  max-width:none!important;
+  max-height:430px!important;
+  overflow:hidden!important;
+}
+.smileys-grid{
+  display:grid!important;
+  grid-template-columns:repeat(12,minmax(38px,1fr))!important;
+  align-items:center!important;
+  gap:5px!important;
+  padding:10px!important;
+  max-height:365px!important;
+  overflow-y:auto!important;
+}
+.smiley-choice{
+  min-height:42px!important;
+  padding:4px!important;
+}
+.smiley-choice img{
+  max-width:36px!important;
+  max-height:36px!important;
+}
+@media(max-width:900px){
+  .smileys-picker{
+    left:0!important;
+    top:calc(100% + 8px)!important;
+    width:min(720px,calc(100vw - 48px))!important;
+  }
+  .smileys-grid{grid-template-columns:repeat(8,minmax(38px,1fr))!important}
+}
