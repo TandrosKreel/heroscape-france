@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261010-delete-link">
+  <link rel="stylesheet" href="css/style.css?v=20261010-delete-text-2">
 </head>
 
 <body>
@@ -354,7 +354,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
       <div class="forum-message-body">${renderForumMessage(post.body)}</div>
 
       ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}\n
-      ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
+      ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" style="background:transparent!important;color:#aeb7c2!important;border:0!important;box-shadow:none!important;padding:2px 0!important;font-size:9px!important;font-weight:400!important;min-width:0!important;min-height:0!important;line-height:1.2!important" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
 
       </div>
     </article>
