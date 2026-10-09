@@ -99,12 +99,30 @@ const backLink =
 // Smileys historiques : codes sûrs, convertis en images après échappement HTML.
 const SMILEYS = window.HEROSCAPE_SMILEYS || {};
 function renderSmileys(text) {
-  return esc(text).replace(/\[smiley:([a-z0-9_]+)\]/g, (match, key) =>
+  return esc(text).replace(/\\[smiley:([a-z0-9_]+)\\]/g, (match, key) =>
     Object.prototype.hasOwnProperty.call(SMILEYS, key)
       ? '<img class="forum-inline-smiley" src="' + SMILEYS[key] + '" alt="Smiley ' + key + '">'
       : match
   );
 }
+// Citations en texte brut : échappement HTML avant toute mise en forme.
+function renderForumMessage(text) {
+  const source = String(text || "");
+  const parts = [];
+  const pattern = /\\[quote(?:=([^\\]\\r\\n]{1,80}))?\\]([\\s\\S]*?)\\[\\/quote\\]/gi;
+  let cursor = 0, match;
+  while ((match = pattern.exec(source)) !== null) {
+    parts.push('<span>' + renderSmileys(source.slice(cursor, match.index)) + '</span>');
+    const author = (match[1] || "").trim().replace(/^["']|["']$/g, "");
+    parts.push('<blockquote class="forum-quote"><strong>' +
+      (author ? esc(author) + ' a écrit :' : 'Citation :') +
+      '</strong><div>' + renderSmileys(match[2].trim()) + '</div></blockquote>');
+    cursor = pattern.lastIndex;
+  }
+  parts.push('<span>' + renderSmileys(source.slice(cursor)) + '</span>');
+  return parts.join("");
+}
+
 function setupSmileysPicker() {
   const toggle = document.getElementById("smileys-toggle");
   const picker = document.getElementById("smileys-picker");
@@ -315,9 +333,9 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
         }
       </div>
 
-      <p style="white-space:pre-wrap">${renderSmileys(post.body)}</p>
+      <p style="white-space:pre-wrap">${renderForumMessage(post.body)}</p>
 
-      ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}
+      ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}\n      <div class="forum-post-tools"><button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button></div>
       ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
 
       </div>
@@ -489,7 +507,7 @@ async function renderSubject() {
           data-placeholder="Écris ta réponse…"
         ></div>
 
-        <div class="smileys-toolbar">
+        <div class="smileys-toolbar">\n          <button class="btn" id="insert-quote" type="button">❝ Citation</button>
           <button class="btn" id="smileys-toggle" type="button" aria-expanded="false" aria-controls="smileys-picker">😊 Smileys</button>
           <div class="smileys-picker" id="smileys-picker" hidden>
             <div class="smileys-picker-head"><strong>Choisir un smiley</strong><button type="button" id="smileys-close" aria-label="Fermer les smileys">×</button></div>
@@ -568,6 +586,36 @@ async function renderSubject() {
   if (user && !thread.is_locked) {
 
     setupSmileysPicker();
+    const editor = document.getElementById("reply-body");
+    function insertQuote(author, content) {
+      const safeAuthor = String(author || "").replace(/[\\[\\]\\r\\n]/g, "").slice(0, 80);
+      const quotedText = String(content || "").replace(/\\[\\/quote\\]/gi, "[/ citation ]");
+      const quote = "[quote" + (safeAuthor ? "=" + safeAuthor : "") + "]\\n" +
+        quotedText + "\\n[/quote]\\n";
+      editor.focus();
+      const selection = window.getSelection();
+      let range = selection && selection.rangeCount ? selection.getRangeAt(0) : null;
+      if (!range || !editor.contains(range.commonAncestorContainer)) {
+        range = document.createRange();
+        range.selectNodeContents(editor);
+        range.collapse(false);
+      }
+      range.deleteContents();
+      const node = document.createTextNode(quote);
+      range.insertNode(node);
+      range.setStartAfter(node);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      editor.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    document.getElementById("insert-quote")?.addEventListener("click", () => insertQuote("", ""));
+    subjectBox.querySelectorAll("[data-quote-post]").forEach(button => {
+      button.addEventListener("click", () => {
+        const post = posts.find(item => String(item.id) === button.dataset.quotePost);
+        if (post) insertQuote(post.author, post.body);
+      });
+    });
 
     document
       .getElementById("reply-button")
