@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261009-43">
+  <link rel="stylesheet" href="css/style.css?v=20261009-44">
 </head>
 
 <body>
@@ -68,6 +68,7 @@
 <script src="js/supabase-config.js"></script>
 
 <script src="js/forum.js?v=20261009-43"></script>
+<script src="js/smileys-data.js?v=20261009-1"></script>
 
 
 <script>
@@ -94,6 +95,54 @@ const memberArea =
 const backLink =
   document.getElementById("back-link");
 
+
+// Smileys historiques : codes sûrs, convertis en images après échappement HTML.
+const SMILEYS = window.HEROSCAPE_SMILEYS || {};
+function renderSmileys(text) {
+  return esc(text).replace(/\[smiley:([a-z0-9_]+)\]/g, (match, key) =>
+    Object.prototype.hasOwnProperty.call(SMILEYS, key)
+      ? '<img class="forum-inline-smiley" src="' + SMILEYS[key] + '" alt="Smiley ' + key + '">'
+      : match
+  );
+}
+function setupSmileysPicker() {
+  const toggle = document.getElementById("smileys-toggle");
+  const picker = document.getElementById("smileys-picker");
+  const close = document.getElementById("smileys-close");
+  const grid = document.getElementById("smileys-grid");
+  const textarea = document.getElementById("reply-body");
+  if (!toggle || !picker || !close || !grid || !textarea) return;
+  const names = Object.keys(SMILEYS);
+  grid.innerHTML = names.length
+    ? names.map(key => '<button class="smiley-choice" type="button" data-smiley="' + key +
+        '" title="' + key.replace(/_/g, " ") + '"><img src="' + SMILEYS[key] + '" alt="' + key + '"></button>').join("")
+    : '<p>Les fichiers des smileys ne sont pas encore disponibles.</p>';
+  toggle.addEventListener("click", () => {
+    picker.hidden = !picker.hidden;
+    toggle.setAttribute("aria-expanded", String(!picker.hidden));
+  });
+  close.addEventListener("click", () => {
+    picker.hidden = true;
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.focus();
+  });
+  grid.addEventListener("click", event => {
+    const button = event.target.closest("[data-smiley]");
+    if (!button) return;
+    const token = "[smiley:" + button.dataset.smiley + "]";
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    textarea.setRangeText(token, start, end, "end");
+    textarea.focus();
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !picker.hidden) {
+      picker.hidden = true;
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.focus();
+    }
+  });
+}
 
 // ============================================================
 // DATE
@@ -246,7 +295,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
         }
       </div>
 
-      <p style="white-space:pre-wrap">${esc(post.body)}</p>
+      <p style="white-space:pre-wrap">${renderSmileys(post.body)}</p>
 
       ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}
       ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
@@ -419,6 +468,14 @@ async function renderSubject() {
           style="width:100%;box-sizing:border-box"
         ></textarea>
 
+        <div class="smileys-toolbar">
+          <button class="btn" id="smileys-toggle" type="button" aria-expanded="false" aria-controls="smileys-picker">😊 Smileys</button>
+          <div class="smileys-picker" id="smileys-picker" hidden>
+            <div class="smileys-picker-head"><strong>Choisir un smiley</strong><button type="button" id="smileys-close" aria-label="Fermer les smileys">×</button></div>
+            <div class="smileys-grid" id="smileys-grid"></div>
+          </div>
+        </div>
+
         <p>
           <button
             class="btn"
@@ -488,6 +545,8 @@ async function renderSubject() {
   }
 
   if (user && !thread.is_locked) {
+
+    setupSmileysPicker();
 
     document
       .getElementById("reply-button")
