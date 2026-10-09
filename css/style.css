@@ -1970,3 +1970,21 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
   }
   .smileys-grid{grid-template-columns:repeat(8,minmax(38px,1fr))!important}
 }
+
+/* Smileys v5 — cadre ajusté aux 43 smileys restants */
+.smileys-picker{
+  width:min(660px,calc(100vw - 360px))!important;
+  max-height:330px!important;
+}
+.smileys-grid{
+  grid-template-columns:repeat(10,minmax(38px,1fr))!important;
+  max-height:270px!important;
+}
+@media(max-width:900px){
+  .smileys-picker{
+    width:min(620px,calc(100vw - 48px))!important;
+  }
+  .smileys-grid{
+    grid-template-columns:repeat(8,minmax(38px,1fr))!important;
+  }
+}
