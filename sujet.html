@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261009-44">
+  <link rel="stylesheet" href="css/style.css?v=20261009-45">
 </head>
 
 <body>
@@ -130,10 +130,26 @@ function setupSmileysPicker() {
     const button = event.target.closest("[data-smiley]");
     if (!button) return;
     const token = "[smiley:" + button.dataset.smiley + "]";
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    textarea.setRangeText(token, start, end, "end");
     textarea.focus();
+    const selection = window.getSelection();
+    let range = selection && selection.rangeCount ? selection.getRangeAt(0) : null;
+    if (!range || !textarea.contains(range.commonAncestorContainer)) {
+      range = document.createRange();
+      range.selectNodeContents(textarea);
+      range.collapse(false);
+    }
+    range.deleteContents();
+    const img = document.createElement("img");
+    img.className = "reply-editor-smiley";
+    img.src = SMILEYS[button.dataset.smiley];
+    img.alt = "Smiley " + button.dataset.smiley;
+    img.dataset.smiley = button.dataset.smiley;
+    img.contentEditable = "false";
+    range.insertNode(img);
+    range.setStartAfter(img);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
   });
   document.addEventListener("keydown", event => {
     if (event.key === "Escape" && !picker.hidden) {
@@ -460,13 +476,14 @@ async function renderSubject() {
 
         <h3>Répondre</h3>
 
-        <textarea
+        <div
           id="reply-body"
-          rows="7"
-          maxlength="20000"
-          placeholder="Écris ta réponse…"
-          style="width:100%;box-sizing:border-box"
-        ></textarea>
+          class="reply-rich-editor"
+          contenteditable="true"
+          role="textbox"
+          aria-multiline="true"
+          data-placeholder="Écris ta réponse…"
+        ></div>
 
         <div class="smileys-toolbar">
           <button class="btn" id="smileys-toggle" type="button" aria-expanded="false" aria-controls="smileys-picker">😊 Smileys</button>
@@ -580,8 +597,15 @@ async function publishReply() {
     );
 
 
-  const body =
-    replyBody.value.trim();
+  const clone = replyBody.cloneNode(true);
+  clone.querySelectorAll("img[data-smiley]").forEach(img => {
+    img.replaceWith(document.createTextNode("[smiley:" + img.dataset.smiley + "]"));
+  });
+  clone.querySelectorAll("br").forEach(br => br.replaceWith(document.createTextNode("\n")));
+  clone.querySelectorAll("div").forEach(div => {
+    if (div !== clone) div.insertAdjacentText("beforebegin", "\n");
+  });
+  const body = clone.textContent.trim();
 
 
   if (!body) {
