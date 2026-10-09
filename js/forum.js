@@ -77,13 +77,15 @@ let threadReadStates = {};
 
 async function loadThreadReadStates(threadIds) {
   const ids = [...new Set((threadIds || []).map(Number).filter(Boolean))];
-  threadReadStates = {};
+  // Plusieurs sections de l'accueil chargent les lectures en parallèle.
+  // Ne pas effacer les résultats d'une autre section pendant son chargement.
   if (!threadReadUserId || !ids.length) return threadReadStates;
+  const requestedUserId = threadReadUserId;
 
   const { data, error } = await getSupabase()
     .from("thread_reads")
     .select("thread_id,last_read_at")
-    .eq("user_id", threadReadUserId)
+    .eq("user_id", requestedUserId)
     .in("thread_id", ids);
 
   if (error) {
@@ -91,7 +93,13 @@ async function loadThreadReadStates(threadIds) {
     return threadReadStates;
   }
 
-  for (const row of (data || [])) threadReadStates[row.thread_id] = row.last_read_at;
+  if (requestedUserId !== threadReadUserId) return threadReadStates;
+  for (const row of (data || [])) {
+    const previous = threadReadStates[row.thread_id];
+    if (!previous || new Date(row.last_read_at).getTime() > new Date(previous).getTime()) {
+      threadReadStates[row.thread_id] = row.last_read_at;
+    }
+  }
   return threadReadStates;
 }
 
