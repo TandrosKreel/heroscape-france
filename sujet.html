@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261010-delete-text-2">
+  <link rel="stylesheet" href="css/style.css?v=20261010-editor-media">
 </head>
 
 <body>
@@ -129,6 +129,15 @@ function renderInlineMarkup(text) {
     (_, url, label) => '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer nofollow">' + label + '</a>');
   return result;
 }
+function renderMessageImages(html) {
+  // Uniquement les images du bucket public dédié, sous le chemin de l'utilisateur.
+  const base = window.supabaseClient?.storage.from("forum-images").getPublicUrl("placeholder").data.publicUrl;
+  if (!base) return html;
+  const prefix = base.slice(0, -("placeholder".length));
+  return html.replace(/\[image=([0-9a-f-]{36}\/[a-z0-9-]+\.webp)\]/gi, (_, path) =>
+    '<a class="forum-image-link" href="' + prefix + path + '" target="_blank" rel="noopener noreferrer">' +
+    '<img class="forum-post-image" src="' + prefix + path + '" alt="Photo jointe au message" loading="lazy"></a>');
+}
 function renderForumMessage(text) {
   const source = String(text || "");
   const parts = [];
@@ -143,7 +152,7 @@ function renderForumMessage(text) {
     cursor = pattern.lastIndex;
   }
   parts.push('<span>' + renderInlineMarkup(source.slice(cursor).replace(/^\n+/, "")) + '</span>');
-  return parts.join("");
+  return renderMessageImages(parts.join(""));
 }
 
 function setupSmileysPicker() {
@@ -727,6 +736,43 @@ async function renderSubject() {
     }
     document.querySelectorAll("#forum-format-toolbar [data-align]").forEach(button => {
       button.addEventListener("click", () => wrapSelection("[align=" + button.dataset.align + "]", "[/align]"));
+    });
+    document.getElementById("forum-upload-image")?.addEventListener("click", () =>
+      document.getElementById("forum-image-input")?.click());
+    document.getElementById("forum-image-input")?.addEventListener("change", async event => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const button = document.getElementById("forum-upload-image");
+      const status = document.getElementById("reply-message");
+      event.target.value = "";
+      if (!["image/jpeg","image/png","image/webp"].includes(file.type) || file.size > 8 * 1024 * 1024) {
+        status.textContent = "Choisis une image JPG, PNG ou WebP de moins de 8 Mo.";
+        return;
+      }
+      button.disabled = true;
+      status.textContent = "Préparation de la photo…";
+      try {
+        const bitmap = await createImageBitmap(file);
+        const scale = Math.min(1, 1400 / Math.max(bitmap.width, bitmap.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+        canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+        canvas.getContext("2d").drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+        bitmap.close();
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/webp", 0.78));
+        if (!blob || blob.size > 2 * 1024 * 1024) throw new Error("Image trop volumineuse après compression.");
+        const path = user.id + "/" + crypto.randomUUID() + ".webp";
+        status.textContent = "Envoi de la photo…";
+        const { error } = await window.supabaseClient.storage.from("forum-images")
+          .upload(path, blob, { contentType: "image/webp", upsert: false });
+        if (error) throw error;
+        wrapSelection("[image=" + path + "]", "", "");
+        refreshPreview();
+        status.textContent = "Photo insérée dans le message.";
+      } catch (error) {
+        console.error("Envoi photo :", error);
+        status.textContent = "Envoi impossible : vérifie que le bucket forum-images et ses autorisations sont configurés.";
+      } finally { button.disabled = false; }
     });
     document.getElementById("forum-link")?.addEventListener("click", () => {
       const url = prompt("Adresse du lien (https://...) :");
