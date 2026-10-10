@@ -320,7 +320,7 @@ async function getThread() {
 // UN MESSAGE
 // ============================================================
 
-function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0, signature = "", isAdmin = false) {
+function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0, signature = "", isAdmin = false, viewerId = null) {
 
   const avatar = post.avatar_url
     ? `<img class="post-avatar" src="${esc(post.avatar_url)}" alt="Avatar de ${esc(post.author || "Membre")}" loading="lazy">`
@@ -351,7 +351,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
         <button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button>
       </div>
 
-      <div class="forum-message-body">${renderForumMessage(post.body)}</div>
+      <div class="forum-message-body">${renderForumMessage(post.body)}</div>\n      ${post.updated_at && new Date(post.updated_at).getTime() > new Date(post.created_at).getTime() + 2000 ? `<div class="forum-edited-date">Modifié le ${esc(formatDate(post.updated_at))}</div>` : ""}\n      ${viewerId && viewerId === post.user_id ? `<div class="forum-edit-actions"><button type="button" class="forum-edit-post" data-edit-post="${post.id}">Éditer</button></div>` : ""}
 
       ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}\n
       ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" style="background:transparent!important;color:#aeb7c2!important;border:0!important;box-shadow:none!important;padding:2px 0!important;font-size:9px!important;font-weight:400!important;min-width:0!important;min-height:0!important;line-height:1.2!important" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
@@ -446,7 +446,7 @@ async function renderSubject() {
     const visibleReplies = currentPage === 1 ? pagePosts.slice(1) : pagePosts;
     repliesHtml = visibleReplies.length
       ? visibleReplies.map(post =>
-          messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "", isAdmin)
+          messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "", isAdmin, user.id)
         ).join("")
       : '<div class="empty">Aucune réponse sur cette page.</div>';
 
@@ -543,7 +543,7 @@ async function renderSubject() {
           </button>
         </p>
 
-        <p id="reply-message"></p>
+        <div class="forum-preview-panel" id="forum-preview-panel"><strong>Aperçu du message</strong><div id="forum-live-preview" class="forum-message-body"></div></div>\n        <p id="reply-message"></p>
 
       </div>
     `;
@@ -601,9 +601,79 @@ async function renderSubject() {
     });
   }
 
+  // Édition des propres messages. L'autorisation réelle est vérifiée par Supabase (RLS).
+  if (user) subjectBox.querySelectorAll("[data-edit-post]").forEach(button => {
+    button.addEventListener("click", async () => {
+      const post = posts.find(p => String(p.id) === button.dataset.editPost);
+      if (!post || post.user_id !== user.id) return;
+      const bodyBox = document.querySelector("#post-" + post.id + " .forum-message-body");
+      if (!bodyBox) return;
+      const existing = document.querySelector("#post-" + post.id + " .forum-edit-form");
+      if (existing) { existing.remove(); bodyBox.hidden = false; return; }
+      bodyBox.hidden = true;
+      const form = document.createElement("div");
+      form.className = "forum-edit-form";
+      const field = document.createElement("textarea");
+      field.value = post.body || "";
+      field.maxLength = 20000;
+      field.rows = 7;
+      const preview = document.createElement("div");
+      preview.className = "forum-message-body forum-edit-preview";
+      const status = document.createElement("span");
+      const save = document.createElement("button");
+      save.type = "button"; save.className = "btn"; save.textContent = "Enregistrer";
+      const cancel = document.createElement("button");
+      cancel.type = "button"; cancel.className = "btn secondary"; cancel.textContent = "Annuler";
+      const actions = document.createElement("div");
+      actions.className = "forum-edit-buttons";
+      actions.append(save, cancel, status);
+      form.append(field, preview, actions);
+      bodyBox.after(form);
+      const update = () => { preview.innerHTML = renderForumMessage(field.value); };
+      field.addEventListener("input", update); update();
+      cancel.addEventListener("click", () => { form.remove(); bodyBox.hidden = false; });
+      save.addEventListener("click", async () => {
+        const content = field.value.trim();
+        if (!content || content.length > 20000) { status.textContent = "Le message doit contenir entre 1 et 20 000 caractères."; return; }
+        save.disabled = true; status.textContent = "Enregistrement…";
+        const { data, error } = await window.supabaseClient.from("posts")
+          .update({ content, updated_at: new Date().toISOString() })
+          .eq("id", post.id).eq("user_id", user.id).select("id").maybeSingle();
+        if (error || !data) {
+          status.textContent = "Modification refusée. Vérifiez les autorisations Supabase.";
+          save.disabled = false; return;
+        }
+        location.reload();
+      });
+      field.focus();
+    });
+  });
+
   if (user && !thread.is_locked) {
 
     setupSmileysPicker();
+    const preview = document.getElementById("forum-live-preview");
+    const editorForPreview = document.getElementById("reply-body");
+    function editorText(node) {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll("img[data-smiley]").forEach(img =>
+        img.replaceWith(document.createTextNode("[smiley:" + img.dataset.smiley + "]")));
+      clone.querySelectorAll("br").forEach(br => br.replaceWith(document.createTextNode("\n")));
+      clone.querySelectorAll("div").forEach(div => {
+        if (div !== clone) div.insertAdjacentText("beforebegin", "\n");
+      });
+      return clone.textContent.trim();
+    }
+    function refreshPreview() {
+      preview.innerHTML = renderForumMessage(editorText(editorForPreview)) || '<span class="forum-preview-empty">Votre texte apparaîtra ici avec sa mise en forme.</span>';
+    }
+    editorForPreview.addEventListener("input", refreshPreview);
+    editorForPreview.addEventListener("keyup", refreshPreview);
+    document.getElementById("forum-format-toolbar")?.addEventListener("click", () => setTimeout(refreshPreview, 0));
+    document.getElementById("forum-format-toolbar")?.addEventListener("change", () => setTimeout(refreshPreview, 0));
+    document.getElementById("smileys-grid")?.addEventListener("click", () => setTimeout(refreshPreview, 0));
+    document.getElementById("insert-quote")?.addEventListener("click", () => setTimeout(refreshPreview, 0));
+    refreshPreview();
     const editor = document.getElementById("reply-body");
     function insertQuote(author, content) {
       const safeAuthor = String(author || "").replace(/[\[\]\r\n]/g, "").slice(0, 80);
@@ -669,7 +739,7 @@ async function renderSubject() {
     subjectBox.querySelectorAll("[data-quote-post]").forEach(button => {
       button.addEventListener("click", () => {
         const post = posts.find(item => String(item.id) === button.dataset.quotePost);
-        if (post) insertQuote(post.author, post.body);
+        if (post) { insertQuote(post.author, post.body); refreshPreview(); }
       });
     });
 
