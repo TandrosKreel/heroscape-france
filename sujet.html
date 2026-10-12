@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-selection-toggle8">
+  <link rel="stylesheet" href="css/style.css?v=20261012-quote-ui9">
 </head>
 
 <body>
@@ -823,8 +823,11 @@ async function renderSubject() {
       editToolbar.querySelector("[data-quote]").addEventListener("click", () => {
         const quote=document.createElement("blockquote");
         quote.className="forum-quote";quote.dataset.quoteAuthor="";
-        const heading=document.createElement("strong");heading.textContent="Citation :";
-        const body=document.createElement("div");body.textContent="Texte cité";
+        const author=prompt("Qui souhaitez-vous citer ? (facultatif)","");if(author===null)return;
+        quote.dataset.quoteAuthor=author.trim().slice(0,80);
+        const heading=document.createElement("strong");heading.textContent=quote.dataset.quoteAuthor?quote.dataset.quoteAuthor+" a écrit :":"Citation :";
+        const body=document.createElement("div");body.dataset.placeholder="Écrivez ici le texte à citer…";
+        quote.classList.add("forum-quote-draft");
         quote.append(heading,body);
         field.focus();
         const selection=window.getSelection();
@@ -993,8 +996,18 @@ async function renderSubject() {
       quote.dataset.quoteAuthor = String(author || "").replace(/[\[\]\r\n]/g,"").slice(0,80);
       const heading = document.createElement("strong");
       heading.textContent = quote.dataset.quoteAuthor ? quote.dataset.quoteAuthor + " a écrit :" : "Citation :";
-      const body = document.createElement("div"); body.textContent = String(content || "");
+      const body = document.createElement("div");
+      body.textContent = String(content || "");
+      if (!content) {
+        quote.classList.add("forum-quote-draft");
+        body.dataset.placeholder = "Écrivez ici le texte à citer…";
+        body.setAttribute("aria-label","Texte de la citation");
+      }
       quote.append(heading,body); insertVisual(quote);
+      if (!content) {
+        const range = document.createRange(); range.selectNodeContents(body); range.collapse(false);
+        editor.focus(); placeCaret(range);
+      }
       editor.scrollIntoView({behavior:"smooth",block:"center"});
     }
     document.querySelectorAll("#forum-format-toolbar [data-format]").forEach(button =>
@@ -1104,7 +1117,11 @@ async function renderSubject() {
       if (label === null) return;
       const link = document.createElement("a"); link.href = url; link.textContent = label || url; link.target = "_blank"; link.rel = "noopener noreferrer nofollow"; insertVisual(link);
     });
-    document.getElementById("insert-quote")?.addEventListener("click", () => insertQuote("", ""));
+    document.getElementById("insert-quote")?.addEventListener("click", () => {
+      const author = prompt("Qui souhaitez-vous citer ? (facultatif)", "");
+      if (author === null) return;
+      insertQuote(author.trim().slice(0,80), "");
+    });
     subjectBox.querySelectorAll("[data-quote-post]").forEach(button => {
       button.addEventListener("click", () => {
         const post = posts.find(item => String(item.id) === button.dataset.quotePost);
