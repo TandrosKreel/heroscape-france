@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-multiformat13">
+  <link rel="stylesheet" href="css/style.css?v=20261012-link-dialog14">
 </head>
 
 <body>
@@ -269,6 +269,25 @@ function setupForumFormatting(editor, toolbar) {
   refresh();
 }
 
+
+function openForumLinkDialog(insert,selected="") {
+  const overlay=document.createElement("div");overlay.className="forum-link-overlay";
+  const form=document.createElement("form");form.className="forum-link-dialog";
+  form.setAttribute("role","dialog");form.setAttribute("aria-modal","true");
+  form.innerHTML='<h3>Insérer un lien</h3><label>Adresse de la page web<input name="url" type="url" required maxlength="500" placeholder="https://www.heroscapers.com/"></label><label>Texte à afficher sur le forum<input name="label" type="text" maxlength="300" placeholder="ici"></label><p>Exemple : « Vous pouvez le trouver ici », où seul « ici » est cliquable.</p><div class="forum-link-actions"><button type="button" data-cancel>Annuler</button><button type="submit">Insérer le lien</button></div>';
+  form.elements.label.value=selected;
+  const close=()=>overlay.remove();
+  form.querySelector("[data-cancel]").addEventListener("click",close);
+  overlay.addEventListener("click",e=>{if(e.target===overlay)close();});
+  form.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();close();}});
+  form.addEventListener("submit",e=>{
+    e.preventDefault();
+    const url=form.elements.url.value.trim();
+    if(!url.startsWith("https://")&&!url.startsWith("http://")){form.elements.url.setCustomValidity("Adresse https:// requise");form.elements.url.reportValidity();return;}
+    insert(url,form.elements.label.value.trim()||url);close();
+  });
+  overlay.append(form);document.body.append(overlay);form.elements.url.focus();
+}
 
 function enhanceForumQuote(quote) {
   const header=quote.querySelector(":scope > strong");
@@ -893,12 +912,12 @@ async function renderSubject() {
       editToolbar.innerHTML = '<button type="button" data-format="b" title="Gras"><b>G</b></button><button type="button" data-format="i" title="Italique"><i>I</i></button><button type="button" data-format="s" title="Barré"><s>S</s></button><select data-size aria-label="Taille"><option value="1">Très petit</option><option value="2">Petit</option><option value="3" selected>Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select><select data-font aria-label="Police"><option value="1" selected>Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select><select data-color aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select><button type="button" data-align="left" title="Gauche">⇤</button><button type="button" data-align="center" title="Centre">↔</button><button type="button" data-align="right" title="Droite">⇥</button><button type="button" data-link>🔗 Lien</button><button type="button" data-quote>❝ Citation</button>';
       setupForumFormatting(field, editToolbar);
       editToolbar.querySelector("[data-link]").addEventListener("click", () => {
-        const url=prompt("Adresse du lien (https://...) :");
-        if(!url || !/^https?:\/\/\S+$/i.test(url)) return;
-        const label=prompt("Texte du lien :",url);
-        if(label===null)return;
-        field.focus();
-        document.execCommand("insertHTML",false,'<a href="'+esc(url)+'">'+esc(label||url)+'</a>');
+        const sel=window.getSelection();
+        const chosen=sel.rangeCount&&field.contains(sel.anchorNode)?sel.toString():"";
+        openForumLinkDialog((url,label)=>{
+          field.focus();
+          document.execCommand("insertHTML",false,'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer nofollow">'+esc(label)+'</a>');
+        },chosen);
       });
       editToolbar.querySelector("[data-quote]").addEventListener("click", () => {
         const quote=document.createElement("blockquote");
@@ -1217,11 +1236,12 @@ async function renderSubject() {
       } finally { button.disabled = false; }
     });
     document.getElementById("forum-link")?.addEventListener("click", () => {
-      const url = prompt("Adresse du lien (https://...) :");
-      if (!url || !/^https?:\/\/\S+$/i.test(url) || url.length > 500) return;
-      const label = prompt("Texte à afficher pour le lien :", url);
-      if (label === null) return;
-      const link = document.createElement("a"); link.href = url; link.textContent = label || url; link.target = "_blank"; link.rel = "noopener noreferrer nofollow"; insertVisual(link);
+      const range=selectionRange();
+      openForumLinkDialog((url,label)=>{
+        const link=document.createElement("a");link.href=url;link.textContent=label;
+        link.target="_blank";link.rel="noopener noreferrer nofollow";
+        insertVisual(link);
+      },range.collapsed?"":range.toString());
     });
     document.getElementById("insert-quote")?.addEventListener("click", () => {
       const author = prompt("Qui souhaitez-vous citer ? (facultatif)", "");
