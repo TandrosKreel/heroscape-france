@@ -107,7 +107,7 @@ function renderSmileys(text) {
 }
 function renderInlineMarkup(text) {
   const colors = ["#ffffff","#cbd5e1","#111827","#facc15","#f97316","#ef4444","#ec4899","#a855f7","#6366f1","#3b82f6","#22c55e","#14b8a6"];
-  const fonts = ["Arial","Georgia","Trebuchet MS","Palatino Linotype","Verdana"];
+  const fonts = ["Arial","Georgia","monospace","cursive","fantasy"];
   let result = renderSmileys(text);
   const styles = [
     ["b", "strong"], ["i", "em"], ["s", "del"]
@@ -780,7 +780,7 @@ async function renderSubject() {
 <button type="button" data-format="i" title="Italique"><em>I</em></button>
 <button type="button" data-format="s" title="Barré"><s>S</s></button>
 <select id="forum-size" aria-label="Taille"><option value="" disabled>Taille</option><option value="1">Très petit</option><option value="2">Petit</option><option value="3">Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select>
-<select id="forum-font" aria-label="Police"><option value="" disabled>Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select>
+<select id="forum-font" aria-label="Police"><option value="" disabled>Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Monospace</option><option value="4">Cursive</option><option value="5">Fantaisie</option></select>
 <select id="forum-color" aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris clair</option><option value="#111827">Noir</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select>
 <button type="button" data-align="left" title="Aligner à gauche" aria-label="Aligner à gauche">⇤</button><button type="button" data-align="center" title="Centrer" aria-label="Centrer">↔</button><button type="button" data-align="right" title="Aligner à droite" aria-label="Aligner à droite">⇥</button>
 <button type="button" id="forum-link">🔗 Lien</button>
@@ -909,7 +909,7 @@ async function renderSubject() {
       loadForumVisualContent(field, post.body || "");
       const editToolbar = document.createElement("div");
       editToolbar.className = "forum-format-toolbar";
-      editToolbar.innerHTML = '<button type="button" data-format="b" title="Gras"><b>G</b></button><button type="button" data-format="i" title="Italique"><i>I</i></button><button type="button" data-format="s" title="Barré"><s>S</s></button><select data-size aria-label="Taille"><option value="1">Très petit</option><option value="2">Petit</option><option value="3" selected>Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select><select data-font aria-label="Police"><option value="1" selected>Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select><select data-color aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select><button type="button" data-align="left" title="Gauche">⇤</button><button type="button" data-align="center" title="Centre">↔</button><button type="button" data-align="right" title="Droite">⇥</button><button type="button" data-link>🔗 Lien</button><button type="button" data-quote>❝ Citation</button>';
+      editToolbar.innerHTML = '<button type="button" data-format="b" title="Gras"><b>G</b></button><button type="button" data-format="i" title="Italique"><i>I</i></button><button type="button" data-format="s" title="Barré"><s>S</s></button><select data-size aria-label="Taille"><option value="1">Très petit</option><option value="2">Petit</option><option value="3" selected>Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select><select data-font aria-label="Police"><option value="1" selected>Arial</option><option value="2">Georgia</option><option value="3">Monospace</option><option value="4">Cursive</option><option value="5">Fantaisie</option></select><select data-color aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select><button type="button" data-align="left" title="Gauche">⇤</button><button type="button" data-align="center" title="Centre">↔</button><button type="button" data-align="right" title="Droite">⇥</button><button type="button" data-link>🔗 Lien</button><button type="button" data-quote>❝ Citation</button>';
       setupForumFormatting(field, editToolbar);
       editToolbar.querySelector("[data-link]").addEventListener("click", () => {
         const sel=window.getSelection();
@@ -1144,7 +1144,7 @@ async function renderSubject() {
         });
       }
       if (attrs["data-forum-size"]) node.style.fontSize = ({1:"11px",2:"13px",3:"16px",4:"21px",5:"27px"})[attrs["data-forum-size"]];
-      if (attrs["data-forum-font"]) node.style.fontFamily = ({1:"Arial",2:"Georgia",3:"Trebuchet MS",4:"Palatino Linotype",5:"Verdana"})[attrs["data-forum-font"]];
+      if (attrs["data-forum-font"]) node.style.fontFamily = ({1:"Arial",2:"Georgia",3:"monospace",4:"cursive",5:"fantasy"})[attrs["data-forum-font"]];
       if (attrs["data-forum-color"]) node.style.color = attrs["data-forum-color"];
       // Une sélection peut chevaucher plusieurs fragments déjà formatés.
       // Forcer la nouvelle valeur sur chaque descendant pour qu'aucune
@@ -1155,7 +1155,7 @@ async function renderSubject() {
           attribute === "data-forum-font" ? "font-family" : null;
         const cssValue = attribute === "data-forum-color" ? value :
           attribute === "data-forum-size" ? ({1:"11px",2:"13px",3:"16px",4:"21px",5:"27px"})[value] :
-          attribute === "data-forum-font" ? ({1:"Arial",2:"Georgia",3:"Trebuchet MS",4:"Palatino Linotype",5:"Verdana"})[value] : null;
+          attribute === "data-forum-font" ? ({1:"Arial",2:"Georgia",3:"monospace",4:"cursive",5:"fantasy"})[value] : null;
         if (property && cssValue) {
           node.style.setProperty(property,cssValue,"important");
           node.querySelectorAll("*").forEach(child=>{
