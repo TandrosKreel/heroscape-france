@@ -1193,8 +1193,25 @@ async function renderSubject() {
     }
     function insertVisual(node) {
       const range = selectionRange();
-      range.deleteContents(); range.insertNode(node);
-      range.setStartAfter(node); range.collapse(true);
+      range.deleteContents();
+      const block = node.matches("blockquote.forum-quote,img[data-forum-image]");
+      if (!block) {
+        range.insertNode(node);
+        range.setStartAfter(node); range.collapse(true);
+        editor.focus(); placeCaret(range);
+        return;
+      }
+      // Insérer les médias et citations comme éléments indépendants.
+      // Les deux paragraphes garantissent une zone de saisie au-dessus
+      // et au-dessous, même lorsque l'élément est placé en premier.
+      const before = document.createElement("div");
+      before.appendChild(document.createElement("br"));
+      const after = document.createElement("div");
+      after.appendChild(document.createElement("br"));
+      const fragment = document.createDocumentFragment();
+      fragment.append(before,node,after);
+      range.insertNode(fragment);
+      range.selectNodeContents(after); range.collapse(true);
       editor.focus(); placeCaret(range);
     }
     function styleSelection(tag, attrs = {}) {
@@ -1328,9 +1345,8 @@ async function renderSubject() {
         enhanceForumQuote(nested);
       });
       insertVisual(quote);
-      // Ajouter un paragraphe indépendant après la citation pour écrire sa réponse.
-      const afterQuote=document.createElement("div");afterQuote.appendChild(document.createElement("br"));
-      quote.after(afterQuote);
+      // insertVisual crée déjà une zone de saisie de chaque côté.
+      const afterQuote=quote.nextElementSibling;
       if (!content) {
         const range = document.createRange(); range.selectNodeContents(body); range.collapse(false);
         editor.focus(); placeCaret(range);
