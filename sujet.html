@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-selection-restore3">
+  <link rel="stylesheet" href="css/style.css?v=20261012-active-format4">
 </head>
 
 <body>
@@ -581,7 +581,7 @@ async function renderSubject() {
 <select id="forum-size" aria-label="Taille"><option value="" disabled>Taille</option><option value="1">Très petit</option><option value="2">Petit</option><option value="3">Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select>
 <select id="forum-font" aria-label="Police"><option value="" disabled>Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select>
 <select id="forum-color" aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris clair</option><option value="#111827">Noir</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select>
-<button type="button" data-align="left" title="Aligner à gauche" aria-label="Aligner à gauche">☰</button><button type="button" data-align="center" title="Centrer" aria-label="Centrer">≡</button><button type="button" data-align="right" title="Aligner à droite" aria-label="Aligner à droite">☷</button>
+<button type="button" data-align="left" title="Aligner à gauche" aria-label="Aligner à gauche">⇤</button><button type="button" data-align="center" title="Centrer" aria-label="Centrer">↔</button><button type="button" data-align="right" title="Aligner à droite" aria-label="Aligner à droite">⇥</button>
 <button type="button" id="forum-link">🔗 Lien</button>
 <button type="button" id="forum-upload-image">📷 Photo</button><input type="file" id="forum-image-input" accept="image/jpeg,image/png,image/webp" hidden>
 </div>
@@ -744,6 +744,7 @@ async function renderSubject() {
     function updateToolbar() {
       const sel = window.getSelection();
       if (!sel.rangeCount || !inEditor(sel.getRangeAt(0))) return;
+      const range = sel.getRangeAt(0);
       let node = sel.anchorNode;
       if (node?.nodeType === Node.TEXT_NODE) node = node.parentElement;
       const closest = attr => node?.closest?.("["+attr+"]")?.getAttribute(attr);
@@ -751,6 +752,12 @@ async function renderSubject() {
       fontSelect.value = closest("data-forum-font") || pendingStyle?.["data-forum-font"] || "1";
       const color = closest("data-forum-color") || pendingStyle?.["data-forum-color"];
       if (color) colorSelect.value = color;
+      for (const [format,selector] of [["b","strong,b"],["i","em,i"],["s","del,s,strike"]]) {
+        const button = toolbar.querySelector('[data-format="'+format+'"]');
+        const active = !!node?.closest?.(selector);
+        button.classList.toggle("is-active",active);
+        button.setAttribute("aria-pressed",String(active));
+      }
       const align = node?.closest?.("[data-forum-align]")?.dataset.forumAlign || editor.dataset.forumAlign || "left";
       toolbar.querySelectorAll("[data-align]").forEach(b => {
         const active = b.dataset.align === align;
@@ -819,6 +826,24 @@ async function renderSubject() {
         });
       }
     }
+    // Après une sélection formatée, une frappe remplace la sélection.
+    // Pour continuer à écrire normalement à la fin du passage, la flèche droite
+    // sort du style et replace le curseur hors du segment mis en forme.
+    editor.addEventListener("keydown", event => {
+      if (event.key !== "ArrowRight") return;
+      const sel = window.getSelection();
+      if (!sel.rangeCount || sel.isCollapsed) return;
+      const range = sel.getRangeAt(0);
+      if (!inEditor(range)) return;
+      const ancestor = range.commonAncestorContainer;
+      const styled = ancestor.nodeType === Node.ELEMENT_NODE ? ancestor :
+        ancestor.parentElement;
+      if (!styled || styled === editor) return;
+      const next = document.createRange();
+      next.setStartAfter(styled); next.collapse(true);
+      event.preventDefault();
+      placeCaret(next);
+    });
     function insertQuote(author, content) {
       const quote = document.createElement("blockquote"); quote.className = "forum-quote";
       quote.dataset.quoteAuthor = String(author || "").replace(/[\[\]\r\n]/g,"").slice(0,80);
