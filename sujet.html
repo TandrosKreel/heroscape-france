@@ -156,7 +156,8 @@ function renderMessageImages(html) {
     '<img class="forum-post-image" src="' + prefix + path + '" alt="Photo jointe au message" loading="lazy"></a>');
 }
 function renderForumMessage(text) {
-  const source=String(text||"");
+  // Harmoniser également les messages publiés avant cette correction.
+  const source=String(text||"").replace(/(\[image=[0-9a-f-]{36}\/[a-z0-9-]+\.webp\])\n{2}(?=\S)/gi, "$1\n");
   const root={author:null,parts:[]},stack=[root];
   const tokens=/\[quote(?:=([^\]\r\n]{1,80}))?\]|\[\/quote\]/gi;
   let cursor=0,match;
@@ -448,6 +449,9 @@ function serializeForumEditor(editor) {
     return result;
   };
   let text = walkChildren(editor).trim();
+  // Le paragraphe vide créé automatiquement après une image ne doit pas
+  // ajouter une ligne blanche supplémentaire dans le message publié.
+  text = text.replace(/(\[image=[0-9a-f-]{36}\/[a-z0-9-]+\.webp\])\n{2}(?=\S)/gi, "$1\n");
   // Android peut afficher un retour à la ligne entre deux fragments
   // contenteditable sans créer de BR/DIV dans le DOM. innerText conserve
   // ces séparations visuelles : les reporter dans le BBCode sans toucher
