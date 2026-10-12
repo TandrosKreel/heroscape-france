@@ -127,6 +127,23 @@ function renderInlineMarkup(text) {
     (_, alignment, content) => '<div style="text-align:' + alignment + '">' + content + '</div>');
   result = result.replace(/\[url=(https?:\/\/[^\]\s]{1,500})\]([\s\S]*?)\[\/url\]/gi,
     (_, url, label) => '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer nofollow">' + label + '</a>');
+  // Les anciens messages peuvent contenir des balises imbriquées : effectuer
+  // plusieurs passes pour convertir les styles internes avant les styles externes.
+  for (let pass = 0; pass < 12; pass++) {
+    const previous = result;
+    result = result.replace(/\\[(b|i|s)\\]((?:(?!\\[(?:b|i|s)\\]).)*?)\\[\\/\\1\\]/gis,
+      (_,tag,body) => '<' + ({b:'strong',i:'em',s:'del'})[tag.toLowerCase()] + '>' + body + '</' + ({b:'strong',i:'em',s:'del'})[tag.toLowerCase()] + '>');
+    result = result.replace(/\\[(size|font|color|align)=([^\\]\\r\\n]+)\\]((?:(?!\\[(?:size|font|color|align)=).)*?)\\[\\/\\1\\]/gis,
+      (full,tag,val,body) => {
+        tag=tag.toLowerCase();
+        if(tag==='size' && /^[1-5]$/.test(val)) return '<span class="forum-size-'+val+'">'+body+'</span>';
+        if(tag==='font' && /^[1-5]$/.test(val)) return '<span style="font-family:'+fonts[Number(val)-1]+'">'+body+'</span>';
+        if(tag==='color' && colors.includes(val.toLowerCase())) return '<span style="color:'+val+'">'+body+'</span>';
+        if(tag==='align' && /^(left|center|right)$/.test(val)) return '<div style="text-align:'+val+'">'+body+'</div>';
+        return full;
+      });
+    if(result===previous) break;
+  }
   return result;
 }
 function renderMessageImages(html) {
@@ -563,7 +580,7 @@ async function renderSubject() {
 <select id="forum-size" aria-label="Taille"><option value="">Taille</option><option value="1">Très petit</option><option value="2">Petit</option><option value="3">Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select>
 <select id="forum-font" aria-label="Police"><option value="">Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select>
 <select id="forum-color" aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris clair</option><option value="#111827">Noir</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select>
-<button type="button" data-align="left" title="Aligner à gauche">≡</button><button type="button" data-align="center" title="Centrer">☰</button><button type="button" data-align="right" title="Aligner à droite">≡→</button>
+<button type="button" data-align="left" title="Aligner à gauche">⇤ Gauche</button><button type="button" data-align="center" title="Centrer">↔ Centre</button><button type="button" data-align="right" title="Aligner à droite">Droite ⇥</button>
 <button type="button" id="forum-link">🔗 Lien</button>
 <button type="button" id="forum-upload-image">📷 Photo</button><input type="file" id="forum-image-input" accept="image/jpeg,image/png,image/webp" hidden>
 </div>
@@ -706,35 +723,50 @@ async function renderSubject() {
     const editor = document.getElementById("reply-body");
     // Édition visuelle : les éléments affichés sont convertis en BBCode à la publication.
     let savedRange = null;
-    const selectionRange = () => {
+    const insideEditor = range => range && editor.contains(range.commonAncestorContainer);
+    function rememberSelection() {
       const sel = window.getSelection();
-      if (sel.rangeCount && editor.contains(sel.getRangeAt(0).commonAncestorContainer)) return sel.getRangeAt(0);
-      if (savedRange && editor.contains(savedRange.commonAncestorContainer)) return savedRange;
-      const range = document.createRange(); range.selectNodeContents(editor); range.collapse(false); return range;
-    };
-    editor.addEventListener("keyup", () => { savedRange = selectionRange().cloneRange(); });
-    editor.addEventListener("mouseup", () => { savedRange = selectionRange().cloneRange(); });
-    document.getElementById("forum-format-toolbar").addEventListener("mousedown", event => {
-      if (event.target.closest("button")) { savedRange = selectionRange().cloneRange(); event.preventDefault(); }
+      if (sel.rangeCount && insideEditor(sel.getRangeAt(0))) savedRange = sel.getRangeAt(0).cloneRange();
+    }
+    function selectionRange() {
+      if (insideEditor(savedRange)) return savedRange.cloneRange();
+      const sel = window.getSelection();
+      if (sel.rangeCount && insideEditor(sel.getRangeAt(0))) return sel.getRangeAt(0).cloneRange();
+      const r = document.createRange(); r.selectNodeContents(editor); r.collapse(false); return r;
+    }
+    editor.addEventListener("keyup", rememberSelection);
+    editor.addEventListener("mouseup", rememberSelection);
+    editor.addEventListener("touchend", rememberSelection);
+    editor.addEventListener("focusout", rememberSelection);
+    document.getElementById("forum-format-toolbar").addEventListener("focusin", rememberSelection);
+    document.getElementById("forum-format-toolbar").addEventListener("pointerdown", event => {
+      rememberSelection();
+      if (event.target.closest("button")) event.preventDefault();
     });
-    function insertVisual(node) {
-      editor.focus();
-      const range = selectionRange(); range.deleteContents(); range.insertNode(node);
-      range.setStartAfter(node); range.collapse(true);
+    function placeCaret(range) {
       const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-      savedRange = range.cloneRange(); editor.dispatchEvent(new Event("input", {bubbles:true}));
+      savedRange = range.cloneRange();
+      editor.dispatchEvent(new Event("input",{bubbles:true}));
+    }
+    function insertVisual(node) {
+      const range = selectionRange();
+      range.deleteContents(); range.insertNode(node);
+      range.setStartAfter(node); range.collapse(true);
+      editor.focus(); placeCaret(range);
     }
     function styleSelection(tag, attrs = {}) {
       const range = selectionRange();
       const node = document.createElement(tag);
       Object.entries(attrs).forEach(([key,value]) => node.setAttribute(key,value));
-      if (range.collapsed) node.appendChild(document.createTextNode("\u200b"));
+      const collapsed = range.collapsed;
+      if (collapsed) node.appendChild(document.createTextNode("\u200b"));
       else node.appendChild(range.extractContents());
-      insertVisual(node);
-      if (node.textContent === "\u200b") {
-        const r = document.createRange(); r.selectNodeContents(node); r.collapse(false);
-        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); savedRange = r.cloneRange();
-      }
+      // Ne pas effacer la sélection extraite : l'insérer directement à sa place.
+      range.insertNode(node);
+      const next = document.createRange();
+      if (collapsed) { next.selectNodeContents(node); next.collapse(false); }
+      else { next.setStartAfter(node); next.collapse(true); }
+      editor.focus(); placeCaret(next);
     }
     function insertQuote(author, content) {
       const quote = document.createElement("blockquote"); quote.className = "forum-quote";
