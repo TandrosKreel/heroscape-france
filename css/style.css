@@ -2140,3 +2140,8 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .forum-selection-option{display:block;width:100%;padding:11px 13px;text-align:left;border:0;border-bottom:1px solid #35414d;background:#1d2731;color:#f0f2f4;font-size:15px}
 .forum-selection-option:last-child{border-bottom:0}
 .forum-selection-option:active,.forum-selection-option:focus-visible{background:#394754}
+
+/* Familles garanties par le navigateur sur mobile */
+.reply-rich-editor [data-forum-font="3"]{font-family:monospace!important}
+.reply-rich-editor [data-forum-font="4"]{font-family:cursive!important}
+.reply-rich-editor [data-forum-font="5"]{font-family:fantasy!important}
