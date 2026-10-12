@@ -422,7 +422,21 @@ function serializeForumEditor(editor) {
     if (el.matches("div,p")) return content + "\n";
     return content;
   };
-  const walkChildren = el => Array.from(el.childNodes).map(walk).join("");
+  // Un éditeur contenteditable peut contenir du texte nu suivi d'un DIV/P
+  // (retour Entrée sur Android). La séparation visuelle doit être sauvegardée.
+  const walkChildren = el => {
+    const nodes = Array.from(el.childNodes);
+    let result = "";
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i];
+      if (i > 0 && node.nodeType === Node.ELEMENT_NODE &&
+          node.matches("div,p") && result && !result.endsWith("\\n")) {
+        result += "\\n";
+      }
+      result += walk(node);
+    }
+    return result;
+  };
   const text = walkChildren(editor).trim();
   return editor.dataset.forumAlign && editor.dataset.forumAlign !== "left" ? "[align=" + editor.dataset.forumAlign + "]" + text + "[/align]" : text;
 }
