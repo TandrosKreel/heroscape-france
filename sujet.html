@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-quote-ux9">
+  <link rel="stylesheet" href="css/style.css?v=20261012-nested-quote10">
 </head>
 
 <body>
@@ -156,22 +156,31 @@ function renderMessageImages(html) {
     '<img class="forum-post-image" src="' + prefix + path + '" alt="Photo jointe au message" loading="lazy"></a>');
 }
 function renderForumMessage(text) {
-  const source = String(text || "");
-  const parts = [];
-  const pattern = /\[quote(?:=([^\]\r\n]{1,80}))?\]([\s\S]*?)\[\/quote\]/gi;
-  let cursor = 0, match;
-  while ((match = pattern.exec(source)) !== null) {
-    parts.push('<span>' + renderInlineMarkup(source.slice(cursor, match.index).replace(/\n+$/, "")) + '</span>');
-    const author = (match[1] || "").trim().replace(/^["']|["']$/g, "");
-    parts.push('<blockquote class="forum-quote"><strong>' +
-      (author ? esc(author) + ' a écrit :' : 'Citation :') +
-      '</strong><div>' + renderInlineMarkup(match[2].trim()) + '</div></blockquote>');
-    cursor = pattern.lastIndex;
+  const source=String(text||"");
+  const root={author:null,parts:[]},stack=[root];
+  const tokens=/\[quote(?:=([^\]\r\n]{1,80}))?\]|\[\/quote\]/gi;
+  let cursor=0,match;
+  while((match=tokens.exec(source))!==null){
+    if(match.index>cursor)stack[stack.length-1].parts.push({text:source.slice(cursor,match.index)});
+    if(/^\[\/quote\]/i.test(match[0])){
+      if(stack.length>1)stack[stack.length-1].parts.push({quote:stack.pop()});
+      else stack[0].parts.push({text:match[0]});
+    } else stack.push({author:(match[1]||"").trim().replace(/^["']|["']$/g,""),parts:[]});
+    cursor=tokens.lastIndex;
   }
-  parts.push('<span>' + renderInlineMarkup(source.slice(cursor).replace(/^\n+/, "")) + '</span>');
-  return renderMessageImages(parts.join(""));
+  if(cursor<source.length)stack[stack.length-1].parts.push({text:source.slice(cursor)});
+  while(stack.length>1){
+    const incomplete=stack.pop();
+    stack[stack.length-1].parts.push({text:"[quote"+(incomplete.author?"="+incomplete.author:"")+"]"});
+    stack[stack.length-1].parts.push(...incomplete.parts);
+  }
+  const draw=node=>node.parts.map(part=>{
+    if(Object.prototype.hasOwnProperty.call(part,"text"))return renderInlineMarkup(part.text);
+    const q=part.quote;
+    return '<blockquote class="forum-quote"><strong>'+(q.author?esc(q.author)+' a écrit :':'Citation :')+'</strong><div>'+draw(q)+'</div></blockquote>';
+  }).join("");
+  return renderMessageImages(draw(root));
 }
-
 
 // Reconstruit un éditeur visuel à partir d'un ancien message BBCode.
 
@@ -332,7 +341,7 @@ function serializeForumEditor(editor) {
     if (el.matches("img[data-forum-image]")) return "[image=" + el.dataset.forumImage + "]";
     if (el.matches("br")) return "\n";
     if (el.matches("blockquote[data-quote-author]")) {
-      const content = el.querySelector("div");
+      const content = Array.from(el.children).find(child => child.tagName === "DIV");
       const author = el.dataset.quoteAuthor.replace(/[\[\]\r\n]/g,"");
       return "[quote" + (author ? "=" + author : "") + "]\n" + (content ? walkChildren(content) : "") + "\n[/quote]\n";
     }
@@ -935,7 +944,9 @@ async function renderSubject() {
         button.classList.toggle("is-active",active);
         button.setAttribute("aria-pressed",String(active));
       }
-      const align = node?.closest?.("[data-forum-align]")?.dataset.forumAlign || editor.dataset.forumAlign || "left";
+      const align = node?.closest?.("[data-forum-align]")?.dataset.forumAlign ||
+        (document.queryCommandState("justifyCenter") ? "center" :
+         document.queryCommandState("justifyRight") ? "right" : "left");
       toolbar.querySelectorAll("[data-align]").forEach(b => {
         const active = b.dataset.align === align;
         b.classList.toggle("is-active",active);
@@ -1027,13 +1038,19 @@ async function renderSubject() {
       const heading = document.createElement("strong");
       heading.textContent = quote.dataset.quoteAuthor ? quote.dataset.quoteAuthor + " a écrit :" : "Citation :";
       const body = document.createElement("div");
-      body.textContent = String(content || "");
+      if (content) body.innerHTML = renderForumMessage(content);
       if (!content) {
         quote.classList.add("forum-quote-draft");
         body.dataset.placeholder = "Écrivez ici les paroles que vous souhaitez citer…";
         body.setAttribute("aria-label","Texte de la citation");
       }
-      quote.append(heading,body); enhanceForumQuote(quote); insertVisual(quote);
+      quote.append(heading,body); enhanceForumQuote(quote);
+      body.querySelectorAll("blockquote.forum-quote").forEach(nested => {
+        const label=nested.querySelector(":scope > strong")?.textContent||"";
+        nested.dataset.quoteAuthor=label.endsWith(" a écrit :")?label.slice(0,-" a écrit :".length):"";
+        enhanceForumQuote(nested);
+      });
+      insertVisual(quote);
       if (!content) {
         const range = document.createRange(); range.selectNodeContents(body); range.collapse(false);
         editor.focus(); placeCaret(range);
