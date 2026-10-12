@@ -1166,7 +1166,7 @@ async function renderSubject() {
       }));
     for (const [id,attribute] of [["forum-size","data-forum-size"],["forum-font","data-forum-font"],["forum-color","data-forum-color"]]) {
       const control = document.getElementById(id);
-      control.addEventListener("pointerdown", rememberSelection);
+      control.addEventListener("pointerdown", rememberSelection, true);
       control.addEventListener("touchstart", rememberSelection, {passive:true});
       // Sur Android, ouvrir un menu peut faire perdre la sélection native :
       // garder sa copie tant que l'utilisateur ne revient pas dans l'éditeur.
