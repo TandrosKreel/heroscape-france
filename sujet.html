@@ -1231,6 +1231,32 @@ async function renderSubject() {
       range.selectNodeContents(after); range.collapse(true);
       editor.focus(); placeCaret(range);
     }
+    // Android peut afficher le curseur au bord droit d'un bloc image,
+    // même non éditable. Rediriger seulement cette position vers le
+    // paragraphe qui suit, sans modifier les sélections de texte.
+    document.addEventListener("selectionchange", () => {
+      const sel = window.getSelection();
+      if (!sel || !sel.isCollapsed || !sel.rangeCount) return;
+      const range = sel.getRangeAt(0);
+      if (!editor.contains(range.startContainer)) return;
+      const container = range.startContainer;
+      let imageBlock = null;
+      if (container.nodeType === Node.ELEMENT_NODE) {
+        if (container.classList?.contains("forum-editor-image-block")) {
+          imageBlock = container;
+        } else {
+          const previous = container.childNodes[range.startOffset - 1];
+          if (previous?.nodeType === Node.ELEMENT_NODE &&
+              previous.classList.contains("forum-editor-image-block")) imageBlock = previous;
+        }
+      }
+      if (!imageBlock) return;
+      const next = imageBlock.nextElementSibling;
+      if (!next || !next.matches("div,p")) return;
+      const caret = document.createRange();
+      caret.selectNodeContents(next); caret.collapse(true);
+      sel.removeAllRanges(); sel.addRange(caret);
+    });
     function styleSelection(tag, attrs = {}) {
       const range = selectionRange();
       const node = document.createElement(tag);
