@@ -409,7 +409,7 @@ function serializeForumEditor(editor) {
       // Tant que le contenu cité n'est pas édité, conserver son BBCode original
       // pour éviter toute perte de police/couleur lors d'une conversion HTML.
       const unchanged = content && el.dataset.originalQuoteBody !== undefined &&
-        content.innerHTML === el.dataset.originalQuoteHtml;
+        el.dataset.quoteBodyEdited !== "true";
       const quotedBody = unchanged ? el.dataset.originalQuoteBody : (content ? walkChildren(content) : "");
       return "[quote" + (author ? "=" + author : "") + "]\n" + quotedBody + "\n[/quote]\n";
     }
@@ -1309,7 +1309,21 @@ async function renderSubject() {
         body.setAttribute("aria-label","Texte de la citation");
       }
       quote.append(heading,body); enhanceForumQuote(quote);
-      if (content) quote.dataset.originalQuoteHtml = body.innerHTML;
+      if (content) {
+        // Un navigateur mobile peut réorganiser le HTML sans que l'utilisateur
+        // touche à la citation : détecter une vraie édition, pas une différence
+        // de innerHTML, pour préserver les styles d'origine.
+        body.addEventListener("beforeinput", event => {
+          if (event.target === body || body.contains(event.target)) {
+            quote.dataset.quoteBodyEdited = "true";
+          }
+        });
+        body.addEventListener("input", event => {
+          if (event.target === body || body.contains(event.target)) {
+            quote.dataset.quoteBodyEdited = "true";
+          }
+        });
+      }
       body.querySelectorAll("blockquote.forum-quote").forEach(nested => {
         const label=nested.querySelector(":scope > strong")?.textContent||"";
         nested.dataset.quoteAuthor=label.endsWith(" a écrit :")?label.slice(0,-" a écrit :".length):"";
