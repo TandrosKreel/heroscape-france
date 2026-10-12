@@ -353,6 +353,26 @@ function enhanceForumQuote(quote) {
   }
 }
 
+function restoreForumVisualFormatting(wrapper) {
+  wrapper.querySelectorAll(".forum-size-1,.forum-size-2,.forum-size-3,.forum-size-4,.forum-size-5").forEach(el => {
+    const match = el.className.match(/forum-size-([1-5])/);
+    if (match) el.dataset.forumSize = match[1];
+  });
+  wrapper.querySelectorAll("span[style],div[style]").forEach(el => {
+    const font = el.style.fontFamily.toLowerCase().replace(/["']/g,"");
+    const fonts = ["arial","georgia","monospace","cursive","fantasy"];
+    if (font) {
+      const index = fonts.findIndex(f => font.startsWith(f));
+      if (index >= 0) el.dataset.forumFont = String(index + 1);
+    }
+    if (el.style.color) {
+      const colors = el.style.color.match(/\\d+/g);
+      if (colors?.length === 3) el.dataset.forumColor = "#" + colors.map(n => Number(n).toString(16).padStart(2,"0")).join("");
+    }
+    if (el.style.textAlign) el.dataset.forumAlign = el.style.textAlign;
+  });
+}
+
 function loadForumVisualContent(editor, source) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = renderForumMessage(source);
@@ -362,20 +382,7 @@ function loadForumVisualContent(editor, source) {
     quote.dataset.quoteAuthor = label.endsWith(" a écrit :") ? label.slice(0,-" a écrit :".length) : "";
     enhanceForumQuote(quote);
   });
-  wrapper.querySelectorAll(".forum-size-1,.forum-size-2,.forum-size-3,.forum-size-4,.forum-size-5").forEach(el => {
-    const match = el.className.match(/forum-size-([1-5])/);
-    if (match) el.dataset.forumSize = match[1];
-  });
-  wrapper.querySelectorAll("span[style],div[style]").forEach(el => {
-    const font = el.style.fontFamily.toLowerCase().replace(/["']/g,"");
-    const fonts = ["arial","georgia","monospace","cursive","fantasy"];
-    if (font) { const index = fonts.findIndex(f => font.startsWith(f)); if (index >= 0) el.dataset.forumFont = String(index+1); }
-    if (el.style.color) {
-      const match = el.style.color.match(/\d+/g);
-      if (match?.length === 3) el.dataset.forumColor = "#" + match.map(n => Number(n).toString(16).padStart(2,"0")).join("");
-    }
-    if (el.style.textAlign) el.dataset.forumAlign = el.style.textAlign;
-  });
+  restoreForumVisualFormatting(wrapper);
   wrapper.querySelectorAll("img.forum-post-image").forEach(img => {
     const match = img.src.match(/([0-9a-f-]{36}\/[a-z0-9-]+\.webp)$/i);
     if (match) { img.dataset.forumImage = match[1]; img.contentEditable = "false"; img.closest("a.forum-image-link")?.replaceWith(img); }
@@ -1284,7 +1291,12 @@ async function renderSubject() {
       const heading = document.createElement("strong");
       heading.textContent = quote.dataset.quoteAuthor ? quote.dataset.quoteAuthor + " a écrit :" : "Citation :";
       const body = document.createElement("div");
-      if (content) body.innerHTML = renderForumMessage(content);
+      if (content) {
+        body.innerHTML = renderForumMessage(content);
+        // Une citation insérée dans l'éditeur doit porter les mêmes attributs
+        // de mise en forme que lors de l'édition d'un message existant.
+        restoreForumVisualFormatting(body);
+      }
       if (!content) {
         quote.classList.add("forum-quote-draft");
         body.dataset.placeholder = "Écrivez ici les paroles que vous souhaitez citer…";
