@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-quote-ui9">
+  <link rel="stylesheet" href="css/style.css?v=20261012-quote-ux9">
 </head>
 
 <body>
@@ -260,6 +260,34 @@ function setupForumFormatting(editor, toolbar) {
   refresh();
 }
 
+
+function enhanceForumQuote(quote) {
+  const header=quote.querySelector(":scope > strong");
+  const body=quote.querySelector(":scope > div");
+  if(!header||!body)return;
+  header.contentEditable="false";
+  header.classList.add("forum-quote-author");
+  header.title="Appuyez pour changer le nom de la personne citée";
+  header.setAttribute("role","button");
+  header.setAttribute("tabindex","0");
+  header.setAttribute("aria-label","Modifier l'auteur de la citation");
+  const rename=()=>{
+    const current=quote.dataset.quoteAuthor||"";
+    const answer=prompt("Nom de la personne citée (facultatif) :",current);
+    if(answer===null)return;
+    quote.dataset.quoteAuthor=answer.trim().replace(/[\\[\\]\\r\\n]/g,"").slice(0,80);
+    header.textContent=quote.dataset.quoteAuthor?quote.dataset.quoteAuthor+" a écrit :":"Citation sans auteur";
+    body.focus();
+  };
+  header.addEventListener("click",rename);
+  header.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();rename();}});
+  if(!body.textContent.trim()) {
+    quote.classList.add("forum-quote-draft");
+    body.dataset.placeholder="Écrivez ici les paroles que vous souhaitez citer…";
+  }
+  body.setAttribute("aria-label","Contenu de la citation : écrivez ici le texte cité");
+}
+
 function loadForumVisualContent(editor, source) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = renderForumMessage(source);
@@ -267,6 +295,7 @@ function loadForumVisualContent(editor, source) {
     const header = quote.querySelector("strong");
     const label = header?.textContent || "";
     quote.dataset.quoteAuthor = label.endsWith(" a écrit :") ? label.slice(0,-" a écrit :".length) : "";
+    enhanceForumQuote(quote);
   });
   wrapper.querySelectorAll(".forum-size-1,.forum-size-2,.forum-size-3,.forum-size-4,.forum-size-5").forEach(el => {
     const match = el.className.match(/forum-size-([1-5])/);
@@ -829,6 +858,7 @@ async function renderSubject() {
         const body=document.createElement("div");body.dataset.placeholder="Écrivez ici le texte à citer…";
         quote.classList.add("forum-quote-draft");
         quote.append(heading,body);
+        enhanceForumQuote(quote);
         field.focus();
         const selection=window.getSelection();
         const range=selection.rangeCount?selection.getRangeAt(0):document.createRange();
@@ -1000,10 +1030,10 @@ async function renderSubject() {
       body.textContent = String(content || "");
       if (!content) {
         quote.classList.add("forum-quote-draft");
-        body.dataset.placeholder = "Écrivez ici le texte à citer…";
+        body.dataset.placeholder = "Écrivez ici les paroles que vous souhaitez citer…";
         body.setAttribute("aria-label","Texte de la citation");
       }
-      quote.append(heading,body); insertVisual(quote);
+      quote.append(heading,body); enhanceForumQuote(quote); insertVisual(quote);
       if (!content) {
         const range = document.createRange(); range.selectNodeContents(body); range.collapse(false);
         editor.focus(); placeCaret(range);
