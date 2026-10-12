@@ -437,7 +437,38 @@ function serializeForumEditor(editor) {
     }
     return result;
   };
-  const text = walkChildren(editor).trim();
+  let text = walkChildren(editor).trim();
+  // Android peut afficher un retour à la ligne entre deux fragments
+  // contenteditable sans créer de BR/DIV dans le DOM. innerText conserve
+  // ces séparations visuelles : les reporter dans le BBCode sans toucher
+  // aux balises de mise en forme.
+  if (!editor.querySelector("blockquote,[data-forum-image],a[href]")) {
+    const visual = (editor.innerText || "").replace(/\r\n?/g, "\n").trim();
+    const tagPattern = /\[(?:\/?(?:b|i|s|size|font|color|align)(?:=[^\]\r\n]+)?)\]/gi;
+    const plain = text.replace(tagPattern, "");
+    if (visual.includes("\n") && plain.replace(/\n/g, "") === visual.replace(/\n/g, "")) {
+      const pieces = text.split(/(\[(?:\/?(?:b|i|s|size|font|color|align)(?:=[^\]\r\n]+)?)\])/gi);
+      let position = 0;
+      let reconstructed = "";
+      for (const piece of pieces) {
+        if (tagPattern.test(piece) && piece.match(/^\[(?:\/?(?:b|i|s|size|font|color|align))/i)) {
+          reconstructed += piece;
+        } else {
+          for (const character of piece) {
+            if (character === "\n") {
+              if (visual[position] === "\n") { reconstructed += "\n"; position++; }
+              continue;
+            }
+            while (visual[position] === "\n") { reconstructed += "\n"; position++; }
+            reconstructed += character;
+            position++;
+          }
+        }
+        tagPattern.lastIndex = 0;
+      }
+      text = reconstructed;
+    }
+  }
   return editor.dataset.forumAlign && editor.dataset.forumAlign !== "left" ? "[align=" + editor.dataset.forumAlign + "]" + text + "[/align]" : text;
 }
 
