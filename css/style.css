@@ -2101,3 +2101,9 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .reply-rich-editor .forum-quote>div,.forum-edit-visual .forum-quote>div{padding:6px 10px;min-height:44px;font-size:15px;line-height:1.65;outline-offset:3px}
 .reply-rich-editor .forum-quote>div:empty:before,.forum-edit-visual .forum-quote>div:empty:before{content:attr(data-placeholder);color:#a6aebb;font-style:italic}
 .forum-format-toolbar [data-align].is-active{border:1px solid var(--gold)!important;box-shadow:inset 0 0 0 1px var(--gold)!important;background:#27313c!important;color:var(--text)!important}
+
+/* Bouton de suppression pour chaque niveau de citation, visible sur mobile. */
+.reply-rich-editor .forum-quote,.forum-edit-visual .forum-quote{position:relative;padding-right:37px}
+.reply-rich-editor .forum-quote>.forum-quote-remove,.forum-edit-visual .forum-quote>.forum-quote-remove{position:absolute;top:7px;right:7px;z-index:2;display:flex;align-items:center;justify-content:center;width:27px;height:27px;padding:0;border:1px solid #8b6a42;border-radius:6px;background:#26313b;color:#f4d18a;font-size:21px;line-height:1;cursor:pointer}
+.reply-rich-editor .forum-quote>.forum-quote-remove:hover,.forum-edit-visual .forum-quote>.forum-quote-remove:hover{background:#64442e}
+.reply-rich-editor .forum-quote+div,.forum-edit-visual .forum-quote+div{min-height:25px}
