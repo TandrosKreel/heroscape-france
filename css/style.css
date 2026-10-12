@@ -2084,3 +2084,7 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .reply-rich-editor[data-forum-align="center"],.reply-rich-editor [data-forum-align="center"]{text-align:center}
 .reply-rich-editor[data-forum-align="right"],.reply-rich-editor [data-forum-align="right"]{text-align:right}
 .forum-format-toolbar select{font-size:13px;min-width:110px}
+
+/* Boutons actifs : gras, italique, barré, comme dans un traitement de texte */
+.forum-format-toolbar [data-format].is-active{background:#665122!important;color:#ffe3a0!important;border-color:var(--gold)!important;box-shadow:inset 0 0 0 1px var(--gold)}
+.forum-format-toolbar [data-format]{min-width:36px}
