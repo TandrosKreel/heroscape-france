@@ -163,7 +163,7 @@ function renderForumMessage(text) {
   while((match=tokens.exec(source))!==null){
     if(match.index>cursor)stack[stack.length-1].parts.push({text:source.slice(cursor,match.index)});
     if(/^\[\/quote\]/i.test(match[0])){
-      if(stack.length>1)stack[stack.length-1].parts.push({quote:stack.pop()});
+      if(stack.length>1){const completed=stack.pop();stack[stack.length-1].parts.push({quote:completed});}
       else stack[0].parts.push({text:match[0]});
     } else stack.push({author:(match[1]||"").trim().replace(/^["']|["']$/g,""),parts:[]});
     cursor=tokens.lastIndex;
