@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-editor-edit5">
+  <link rel="stylesheet" href="css/style.css?v=20261012-editor-edit6">
 </head>
 
 <body>
@@ -222,9 +222,9 @@ function serializeForumEditor(editor) {
       return "[quote" + (author ? "=" + author : "") + "]\n" + (content ? walkChildren(content) : "") + "\n[/quote]\n";
     }
     let content = walkChildren(el);
-    if (el.matches("strong,b")) return "[b]" + content + "[/b]";
-    if (el.matches("em,i")) return "[i]" + content + "[/i]";
-    if (el.matches("del,s,strike")) return "[s]" + content + "[/s]";
+    if (el.matches("strong,b") || el.style.fontWeight === "bold" || Number(el.style.fontWeight) >= 600) return "[b]" + content + "[/b]";
+    if (el.matches("em,i") || el.style.fontStyle === "italic") return "[i]" + content + "[/i]";
+    if (el.matches("del,s,strike") || el.style.textDecorationLine.includes("line-through")) return "[s]" + content + "[/s]";
     if (el.matches("a[href]") && /^https?:\/\//i.test(el.href)) return "[url=" + el.href + "]" + content + "[/url]";
     for (const [attr,tag,allowed] of [
       ["data-forum-size","size",/^[1-5]$/],["data-forum-font","font",/^[1-5]$/],
@@ -753,6 +753,39 @@ async function renderSubject() {
           const selection=window.getSelection();selection.removeAllRanges();selection.addRange(next);editRange=next.cloneRange();
         });
       }
+      // Couleurs, liens et citations sont aussi disponibles en mode Éditer.
+      const editColor = document.createElement("select");
+      editColor.setAttribute("aria-label","Couleur du texte");
+      editColor.innerHTML = '<option value="">Couleur</option>' +
+        [["#ffffff","Blanc"],["#cbd5e1","Gris"],["#facc15","Jaune"],["#f97316","Orange"],["#ef4444","Rouge"],["#ec4899","Rose"],["#a855f7","Violet"],["#6366f1","Indigo"],["#3b82f6","Bleu"],["#22c55e","Vert"],["#14b8a6","Turquoise"]]
+        .map(([hex,label]) => '<option value="'+hex+'">'+label+'</option>').join("");
+      editToolbar.append(editColor);
+      editColor.addEventListener("change", () => {
+        restoreEdit();
+        const range = window.getSelection()?.rangeCount ? window.getSelection().getRangeAt(0) : null;
+        if (!range || !editColor.value) return;
+        const span = document.createElement("span"); span.dataset.forumColor = editColor.value;
+        if(range.collapsed) span.appendChild(document.createTextNode("\\u200b"));
+        else span.appendChild(range.extractContents());
+        range.insertNode(span);
+        const next = document.createRange();next.selectNodeContents(span);
+        if(range.collapsed) next.collapse(false);
+        const selection=window.getSelection();selection.removeAllRanges();selection.addRange(next);editRange=next.cloneRange();
+      });
+      const editLink = document.createElement("button");
+      editLink.type="button";editLink.textContent="🔗 Lien";
+      editToolbar.append(editLink);
+      editLink.addEventListener("click", () => {
+        const url=prompt("Adresse du lien (https://...) :");
+        if(!url || !/^https?:\\/\\/\\S+$/i.test(url))return;
+        const label=prompt("Texte du lien :",url);
+        if(label===null)return;
+        restoreEdit();
+        const link=document.createElement("a");link.href=url;link.textContent=label||url;
+        const range=window.getSelection().getRangeAt(0);range.deleteContents();range.insertNode(link);
+        const next=document.createRange();next.setStartAfter(link);next.collapse(true);
+        const sel=window.getSelection();sel.removeAllRanges();sel.addRange(next);editRange=next.cloneRange();
+      });
       const status = document.createElement("span");
       const save = document.createElement("button");
       save.type = "button"; save.className = "btn"; save.textContent = "Enregistrer";
