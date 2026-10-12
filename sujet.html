@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-active-format4">
+  <link rel="stylesheet" href="css/style.css?v=20261012-editor-edit5">
 </head>
 
 <body>
@@ -818,7 +818,8 @@ async function renderSubject() {
       if (color) colorSelect.value = color;
       for (const [format,selector] of [["b","strong,b"],["i","em,i"],["s","del,s,strike"]]) {
         const button = toolbar.querySelector('[data-format="'+format+'"]');
-        const active = !!node?.closest?.(selector);
+        const command = {b:"bold",i:"italic",s:"strikeThrough"}[format];
+        const active = !!node?.closest?.(selector) || (range.collapsed && document.queryCommandState(command));
         button.classList.toggle("is-active",active);
         button.setAttribute("aria-pressed",String(active));
       }
@@ -918,7 +919,23 @@ async function renderSubject() {
       editor.scrollIntoView({behavior:"smooth",block:"center"});
     }
     document.querySelectorAll("#forum-format-toolbar [data-format]").forEach(button =>
-      button.addEventListener("click", () => styleSelection(({b:"strong",i:"em",s:"del"})[button.dataset.format])));
+      button.addEventListener("click", () => {
+        const format = button.dataset.format;
+        const range = selectionRange();
+        if (range.collapsed) {
+          // Bascule ON/OFF de la prochaine saisie, sans sélectionner de texte.
+          editor.focus();
+          const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+          const command = {b:"bold",i:"italic",s:"strikeThrough"}[format];
+          document.execCommand(command,false,null);
+          rememberSelection();
+          const active = document.queryCommandState(command);
+          button.classList.toggle("is-active",active);
+          button.setAttribute("aria-pressed",String(active));
+        } else {
+          styleSelection(({b:"strong",i:"em",s:"del"})[format]);
+        }
+      }));
     for (const [id,attribute] of [["forum-size","data-forum-size"],["forum-font","data-forum-font"],["forum-color","data-forum-color"]]) {
       const control = document.getElementById(id);
       control.addEventListener("pointerdown", rememberSelection);
