@@ -2046,3 +2046,33 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 /* Photos des publications : dimensions limitées et adaptation mobile */
 .forum-image-link{display:inline-block;max-width:100%;margin:8px 0;vertical-align:top}
 .forum-post-image{display:block;max-width:100%;width:auto;height:auto;max-height:540px;object-fit:contain;border-radius:8px;border:1px solid var(--line)}
+
+/* Éditeur visuel : les styles s'affichent pendant la saisie. */
+.reply-rich-editor [data-forum-size="1"]{font-size:11px}
+.reply-rich-editor [data-forum-size="2"]{font-size:13px}
+.reply-rich-editor [data-forum-size="3"]{font-size:16px}
+.reply-rich-editor [data-forum-size="4"]{font-size:21px}
+.reply-rich-editor [data-forum-size="5"]{font-size:27px}
+.reply-rich-editor [data-forum-font="1"]{font-family:Arial,sans-serif}
+.reply-rich-editor [data-forum-font="2"]{font-family:Georgia,serif}
+.reply-rich-editor [data-forum-font="3"]{font-family:"Trebuchet MS",sans-serif}
+.reply-rich-editor [data-forum-font="4"]{font-family:"Palatino Linotype",serif}
+.reply-rich-editor [data-forum-font="5"]{font-family:Verdana,sans-serif}
+.reply-rich-editor [data-forum-color="#ffffff"]{color:#ffffff}
+.reply-rich-editor [data-forum-color="#cbd5e1"]{color:#cbd5e1}
+.reply-rich-editor [data-forum-color="#111827"]{color:#111827}
+.reply-rich-editor [data-forum-color="#facc15"]{color:#facc15}
+.reply-rich-editor [data-forum-color="#f97316"]{color:#f97316}
+.reply-rich-editor [data-forum-color="#ef4444"]{color:#ef4444}
+.reply-rich-editor [data-forum-color="#ec4899"]{color:#ec4899}
+.reply-rich-editor [data-forum-color="#a855f7"]{color:#a855f7}
+.reply-rich-editor [data-forum-color="#6366f1"]{color:#6366f1}
+.reply-rich-editor [data-forum-color="#3b82f6"]{color:#3b82f6}
+.reply-rich-editor [data-forum-color="#22c55e"]{color:#22c55e}
+.reply-rich-editor [data-forum-color="#14b8a6"]{color:#14b8a6}
+.reply-rich-editor [data-forum-align="left"]{text-align:left}
+.reply-rich-editor [data-forum-align="center"]{text-align:center}
+.reply-rich-editor [data-forum-align="right"]{text-align:right}
+.reply-rich-editor .forum-quote{display:block;margin:10px 0;padding:10px 14px}
+.reply-rich-editor .forum-post-image{display:block;max-width:min(100%,600px);height:auto;margin:8px 0;border-radius:6px}
+.reply-rich-editor a{color:#8cbcff;text-decoration:underline}
