@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-android-custom-menus16">
+  <link rel="stylesheet" href="css/style.css?v=20261012-overwrite-format17">
 </head>
 
 <body>
@@ -1146,6 +1146,24 @@ async function renderSubject() {
       if (attrs["data-forum-size"]) node.style.fontSize = ({1:"11px",2:"13px",3:"16px",4:"21px",5:"27px"})[attrs["data-forum-size"]];
       if (attrs["data-forum-font"]) node.style.fontFamily = ({1:"Arial",2:"Georgia",3:"Trebuchet MS",4:"Palatino Linotype",5:"Verdana"})[attrs["data-forum-font"]];
       if (attrs["data-forum-color"]) node.style.color = attrs["data-forum-color"];
+      // Une sélection peut chevaucher plusieurs fragments déjà formatés.
+      // Forcer la nouvelle valeur sur chaque descendant pour qu'aucune
+      // ancienne couleur, taille ou police ne prenne le dessus.
+      for (const [attribute,value] of Object.entries(attrs)) {
+        const property = attribute === "data-forum-color" ? "color" :
+          attribute === "data-forum-size" ? "font-size" :
+          attribute === "data-forum-font" ? "font-family" : null;
+        const cssValue = attribute === "data-forum-color" ? value :
+          attribute === "data-forum-size" ? ({1:"11px",2:"13px",3:"16px",4:"21px",5:"27px"})[value] :
+          attribute === "data-forum-font" ? ({1:"Arial",2:"Georgia",3:"Trebuchet MS",4:"Palatino Linotype",5:"Verdana"})[value] : null;
+        if (property && cssValue) {
+          node.style.setProperty(property,cssValue,"important");
+          node.querySelectorAll("*").forEach(child=>{
+            child.setAttribute(attribute,value);
+            child.style.setProperty(property,cssValue,"important");
+          });
+        }
+      }
       range.insertNode(node);
       const next = document.createRange();
       if (collapsed) { next.selectNodeContents(node); next.collapse(false); }
