@@ -174,11 +174,24 @@ function renderForumMessage(text) {
     stack[stack.length-1].parts.push({text:"[quote"+(incomplete.author?"="+incomplete.author:"")+"]"});
     stack[stack.length-1].parts.push(...incomplete.parts);
   }
-  const draw=node=>node.parts.map(part=>{
-    if(Object.prototype.hasOwnProperty.call(part,"text"))return renderInlineMarkup(part.text);
-    const q=part.quote;
-    return '<blockquote class="forum-quote"><strong>'+(q.author?esc(q.author)+' a écrit :':'Citation :')+'</strong><div>'+draw(q)+'</div></blockquote>';
-  }).join("");
+  // Les balises de couleur/police peuvent englober une citation.
+  // Remplacer d'abord chaque citation par un jeton neutre, puis analyser
+  // les mises en forme sur le message entier avant de restaurer les citations.
+  const draw=node=>{
+    const quotations=[];
+    const whole=node.parts.map(part=>{
+      if(Object.prototype.hasOwnProperty.call(part,"text"))return part.text;
+      const q=part.quote;
+      const html='<blockquote class="forum-quote"><strong>'+
+        (q.author?esc(q.author)+' a écrit :':'Citation :')+
+        '</strong><div>'+draw(q)+'</div></blockquote>';
+      const token="FORUMQUOTETOKEN"+quotations.length+"END";
+      quotations.push(html);
+      return token;
+    }).join("");
+    return renderInlineMarkup(whole).replace(/FORUMQUOTETOKEN(\d+)END/g,
+      (match,index)=>quotations[Number(index)]||match);
+  };
   return renderMessageImages(draw(root));
 }
 
