@@ -406,7 +406,12 @@ function serializeForumEditor(editor) {
     if (el.matches("blockquote[data-quote-author]")) {
       const content = Array.from(el.children).find(child => child.tagName === "DIV");
       const author = el.dataset.quoteAuthor.replace(/[\[\]\r\n]/g,"");
-      return "[quote" + (author ? "=" + author : "") + "]\n" + (content ? walkChildren(content) : "") + "\n[/quote]\n";
+      // Tant que le contenu cité n'est pas édité, conserver son BBCode original
+      // pour éviter toute perte de police/couleur lors d'une conversion HTML.
+      const unchanged = content && el.dataset.originalQuoteBody !== undefined &&
+        content.innerHTML === el.dataset.originalQuoteHtml;
+      const quotedBody = unchanged ? el.dataset.originalQuoteBody : (content ? walkChildren(content) : "");
+      return "[quote" + (author ? "=" + author : "") + "]\n" + quotedBody + "\n[/quote]\n";
     }
     let content = walkChildren(el);
     for (const [attr,tag,allowed] of [
@@ -1292,6 +1297,7 @@ async function renderSubject() {
       heading.textContent = quote.dataset.quoteAuthor ? quote.dataset.quoteAuthor + " a écrit :" : "Citation :";
       const body = document.createElement("div");
       if (content) {
+        quote.dataset.originalQuoteBody = content;
         body.innerHTML = renderForumMessage(content);
         // Une citation insérée dans l'éditeur doit porter les mêmes attributs
         // de mise en forme que lors de l'édition d'un message existant.
@@ -1303,6 +1309,7 @@ async function renderSubject() {
         body.setAttribute("aria-label","Texte de la citation");
       }
       quote.append(heading,body); enhanceForumQuote(quote);
+      if (content) quote.dataset.originalQuoteHtml = body.innerHTML;
       body.querySelectorAll("blockquote.forum-quote").forEach(nested => {
         const label=nested.querySelector(":scope > strong")?.textContent||"";
         nested.dataset.quoteAuthor=label.endsWith(" a écrit :")?label.slice(0,-" a écrit :".length):"";
