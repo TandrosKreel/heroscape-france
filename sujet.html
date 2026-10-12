@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-editor-edit6">
+  <link rel="stylesheet" href="css/style.css?v=20261012-shared-edit7">
 </head>
 
 <body>
@@ -174,6 +174,92 @@ function renderForumMessage(text) {
 
 
 // Reconstruit un éditeur visuel à partir d'un ancien message BBCode.
+
+// Contrôles partagés entre rédaction et modification : sélection et saisie au curseur.
+function setupForumFormatting(editor, toolbar) {
+  let saved = null;
+  const commands = {b:"bold",i:"italic",s:"strikeThrough"};
+  const inside = range => range && editor.contains(range.commonAncestorContainer);
+  function remember() {
+    const sel=window.getSelection();
+    if(sel.rangeCount && inside(sel.getRangeAt(0))) saved=sel.getRangeAt(0).cloneRange();
+  }
+  function restore() {
+    editor.focus();
+    const sel=window.getSelection();
+    if(saved && inside(saved)){sel.removeAllRanges();sel.addRange(saved);}
+    else if(!sel.rangeCount || !inside(sel.getRangeAt(0))){
+      const r=document.createRange();r.selectNodeContents(editor);r.collapse(false);
+      sel.removeAllRanges();sel.addRange(r);
+    }
+  }
+  function refresh() {
+    const sel=window.getSelection();
+    if(!sel.rangeCount || !inside(sel.getRangeAt(0)))return;
+    const node=sel.anchorNode?.nodeType===Node.TEXT_NODE?sel.anchorNode.parentElement:sel.anchorNode;
+    for(const [key,command] of Object.entries(commands)){
+      const btn=toolbar.querySelector('[data-format="'+key+'"]');
+      if(!btn)continue;
+      const active=document.queryCommandState(command);
+      btn.classList.toggle("is-active",active);btn.setAttribute("aria-pressed",String(active));
+    }
+    for(const [attr,selector,defaultValue] of [["data-forum-size","[data-size]","3"],["data-forum-font","[data-font]","1"],["data-forum-color","[data-color]",""]]){
+      const control=toolbar.querySelector(selector);
+      if(control)control.value=node?.closest?.("["+attr+"]")?.getAttribute(attr)||defaultValue;
+    }
+    const align=node?.closest?.("[data-forum-align]")?.dataset.forumAlign||editor.dataset.forumAlign||"left";
+    toolbar.querySelectorAll("[data-align]").forEach(btn=>{
+      const active=btn.dataset.align===align;
+      btn.classList.toggle("is-active",active);btn.setAttribute("aria-pressed",String(active));
+    });
+  }
+  editor.addEventListener("keyup",()=>{remember();refresh();});
+  editor.addEventListener("mouseup",()=>{remember();refresh();});
+  editor.addEventListener("touchend",remember);
+  editor.addEventListener("input",()=>{remember();refresh();});
+  toolbar.addEventListener("pointerdown",event=>{
+    remember();
+    if(event.target.closest("button"))event.preventDefault();
+  });
+  toolbar.querySelectorAll("[data-format]").forEach(btn=>btn.addEventListener("click",()=>{
+    restore();
+    const selection=window.getSelection();
+    const range=selection.getRangeAt(0);
+    const command=commands[btn.dataset.format];
+    document.execCommand(command,false,null);
+    if(!range.collapsed){
+      // Conserver le texte sélectionné pour enchaîner plusieurs commandes.
+      const sel=window.getSelection();
+      if(sel.rangeCount && !sel.isCollapsed)saved=sel.getRangeAt(0).cloneRange();
+    }
+    remember();refresh();
+  }));
+  for(const [selector,attribute] of [["[data-size]","data-forum-size"],["[data-font]","data-forum-font"],["[data-color]","data-forum-color"]]){
+    const control=toolbar.querySelector(selector);
+    if(!control)continue;
+    control.addEventListener("pointerdown",remember);
+    control.addEventListener("change",()=>{
+      const value=control.value;if(!value)return;
+      restore();
+      const range=window.getSelection().getRangeAt(0);
+      const span=document.createElement("span");span.setAttribute(attribute,value);
+      if(range.collapsed)span.appendChild(document.createTextNode("\\u200b"));
+      else span.appendChild(range.extractContents());
+      range.insertNode(span);
+      const next=document.createRange();next.selectNodeContents(span);
+      if(range.collapsed)next.collapse(false);
+      const sel=window.getSelection();sel.removeAllRanges();sel.addRange(next);
+      saved=next.cloneRange();refresh();
+    });
+  }
+  toolbar.querySelectorAll("[data-align]").forEach(btn=>btn.addEventListener("click",()=>{
+    restore();
+    document.execCommand({left:"justifyLeft",center:"justifyCenter",right:"justifyRight"}[btn.dataset.align],false,null);
+    remember();refresh();
+  }));
+  refresh();
+}
+
 function loadForumVisualContent(editor, source) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = renderForumMessage(source);
@@ -724,67 +810,27 @@ async function renderSubject() {
       loadForumVisualContent(field, post.body || "");
       const editToolbar = document.createElement("div");
       editToolbar.className = "forum-format-toolbar";
-      editToolbar.innerHTML = '<button type="button" data-edit-format="bold" title="Gras"><b>G</b></button><button type="button" data-edit-format="italic" title="Italique"><i>I</i></button><button type="button" data-edit-format="strikeThrough" title="Barré"><s>S</s></button><select data-edit-size aria-label="Taille"><option value="">Taille</option><option value="1">Très petit</option><option value="2">Petit</option><option value="3">Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select><select data-edit-font aria-label="Police"><option value="">Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select><button type="button" data-edit-align="justifyLeft">⇤</button><button type="button" data-edit-align="justifyCenter">↔</button><button type="button" data-edit-align="justifyRight">⇥</button>';
-      let editRange = null;
-      const rememberEdit = () => { const selection = window.getSelection(); if (selection.rangeCount && field.contains(selection.anchorNode)) editRange = selection.getRangeAt(0).cloneRange(); };
-      field.addEventListener("mouseup",rememberEdit);
-      field.addEventListener("keyup",rememberEdit);
-      field.addEventListener("touchend",rememberEdit);
-      editToolbar.addEventListener("pointerdown",e => {rememberEdit();if(e.target.closest("button")) e.preventDefault();});
-      const restoreEdit = () => { field.focus();if(editRange){const selection=window.getSelection();selection.removeAllRanges();selection.addRange(editRange);} };
-      editToolbar.querySelectorAll("[data-edit-format],[data-edit-align]").forEach(button => button.addEventListener("click", () => {
-        restoreEdit();
-        document.execCommand(button.dataset.editFormat || button.dataset.editAlign,false,null);
-        rememberEdit();
-        editToolbar.querySelectorAll("[data-edit-format]").forEach(b => b.classList.toggle("is-active",document.queryCommandState(b.dataset.editFormat)));
-      }));
-      for (const [selector,attribute] of [["[data-edit-size]","data-forum-size"],["[data-edit-font]","data-forum-font"]]) {
-        editToolbar.querySelector(selector).addEventListener("change",e => {
-          restoreEdit();
-          const range = window.getSelection()?.rangeCount ? window.getSelection().getRangeAt(0) : null;
-          if (!range) return;
-          const span = document.createElement("span");
-          span.setAttribute(attribute,e.target.value);
-          if(range.collapsed) span.appendChild(document.createTextNode("\\u200b"));
-          else span.appendChild(range.extractContents());
-          range.insertNode(span);
-          const next = document.createRange();next.selectNodeContents(span);
-          if(range.collapsed) next.collapse(false);
-          const selection=window.getSelection();selection.removeAllRanges();selection.addRange(next);editRange=next.cloneRange();
-        });
-      }
-      // Couleurs, liens et citations sont aussi disponibles en mode Éditer.
-      const editColor = document.createElement("select");
-      editColor.setAttribute("aria-label","Couleur du texte");
-      editColor.innerHTML = '<option value="">Couleur</option>' +
-        [["#ffffff","Blanc"],["#cbd5e1","Gris"],["#facc15","Jaune"],["#f97316","Orange"],["#ef4444","Rouge"],["#ec4899","Rose"],["#a855f7","Violet"],["#6366f1","Indigo"],["#3b82f6","Bleu"],["#22c55e","Vert"],["#14b8a6","Turquoise"]]
-        .map(([hex,label]) => '<option value="'+hex+'">'+label+'</option>').join("");
-      editToolbar.append(editColor);
-      editColor.addEventListener("change", () => {
-        restoreEdit();
-        const range = window.getSelection()?.rangeCount ? window.getSelection().getRangeAt(0) : null;
-        if (!range || !editColor.value) return;
-        const span = document.createElement("span"); span.dataset.forumColor = editColor.value;
-        if(range.collapsed) span.appendChild(document.createTextNode("\\u200b"));
-        else span.appendChild(range.extractContents());
-        range.insertNode(span);
-        const next = document.createRange();next.selectNodeContents(span);
-        if(range.collapsed) next.collapse(false);
-        const selection=window.getSelection();selection.removeAllRanges();selection.addRange(next);editRange=next.cloneRange();
-      });
-      const editLink = document.createElement("button");
-      editLink.type="button";editLink.textContent="🔗 Lien";
-      editToolbar.append(editLink);
-      editLink.addEventListener("click", () => {
+      editToolbar.innerHTML = '<button type="button" data-format="b" title="Gras"><b>G</b></button><button type="button" data-format="i" title="Italique"><i>I</i></button><button type="button" data-format="s" title="Barré"><s>S</s></button><select data-size aria-label="Taille"><option value="1">Très petit</option><option value="2">Petit</option><option value="3" selected>Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select><select data-font aria-label="Police"><option value="1" selected>Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select><select data-color aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select><button type="button" data-align="left" title="Gauche">⇤</button><button type="button" data-align="center" title="Centre">↔</button><button type="button" data-align="right" title="Droite">⇥</button><button type="button" data-link>🔗 Lien</button><button type="button" data-quote>❝ Citation</button>';
+      setupForumFormatting(field, editToolbar);
+      editToolbar.querySelector("[data-link]").addEventListener("click", () => {
         const url=prompt("Adresse du lien (https://...) :");
-        if(!url || !/^https?:\\/\\/\\S+$/i.test(url))return;
+        if(!url || !/^https?:\\/\\/\\S+$/i.test(url)) return;
         const label=prompt("Texte du lien :",url);
         if(label===null)return;
-        restoreEdit();
-        const link=document.createElement("a");link.href=url;link.textContent=label||url;
-        const range=window.getSelection().getRangeAt(0);range.deleteContents();range.insertNode(link);
-        const next=document.createRange();next.setStartAfter(link);next.collapse(true);
-        const sel=window.getSelection();sel.removeAllRanges();sel.addRange(next);editRange=next.cloneRange();
+        field.focus();
+        document.execCommand("insertHTML",false,'<a href="'+esc(url)+'">'+esc(label||url)+'</a>');
+      });
+      editToolbar.querySelector("[data-quote]").addEventListener("click", () => {
+        const quote=document.createElement("blockquote");
+        quote.className="forum-quote";quote.dataset.quoteAuthor="";
+        const heading=document.createElement("strong");heading.textContent="Citation :";
+        const body=document.createElement("div");body.textContent="Texte cité";
+        quote.append(heading,body);
+        field.focus();
+        const selection=window.getSelection();
+        const range=selection.rangeCount?selection.getRangeAt(0):document.createRange();
+        if(!field.contains(range.commonAncestorContainer)){range.selectNodeContents(field);range.collapse(false);}
+        range.deleteContents();range.insertNode(quote);
       });
       const status = document.createElement("span");
       const save = document.createElement("button");
