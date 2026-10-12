@@ -1209,10 +1209,23 @@ async function renderSubject() {
       const after = document.createElement("div");
       after.appendChild(document.createElement("br"));
       const fragment = document.createDocumentFragment();
-      fragment.append(before,node,after);
       if (node.matches("img[data-forum-image]")) {
-        node.setAttribute("contenteditable","false");
-        node.setAttribute("draggable","false");
+        // Bloc non éditable occupant toute la largeur : sur Android,
+        // aucun emplacement de saisie ne doit subsister à droite de l'image.
+        const imageBlock = document.createElement("div");
+        imageBlock.className = "forum-editor-image-block";
+        imageBlock.contentEditable = "false";
+        node.contentEditable = "false";
+        node.draggable = false;
+        imageBlock.appendChild(node);
+        imageBlock.addEventListener("click", () => {
+          const caret = document.createRange();
+          caret.selectNodeContents(after); caret.collapse(true);
+          editor.focus(); placeCaret(caret);
+        });
+        fragment.append(before,imageBlock,after);
+      } else {
+        fragment.append(before,node,after);
       }
       range.insertNode(fragment);
       range.selectNodeContents(after); range.collapse(true);
