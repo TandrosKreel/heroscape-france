@@ -2119,3 +2119,13 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .forum-recent-heading span{font-size:11px;color:var(--muted)}
 .forum-recent-body{font-size:14px;line-height:1.55;overflow-wrap:anywhere}
 .forum-recent-body .forum-quote{margin:7px 0}
+
+.forum-link-overlay{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.72)}
+.forum-link-dialog{width:min(100%,440px);padding:22px;border:1px solid #cba047;border-radius:12px;background:#1d252e;color:#f2f3f4}
+.forum-link-dialog h3{margin:0 0 18px;color:#e6bc66}
+.forum-link-dialog label{display:block;margin:12px 0;font-size:14px;font-weight:600}
+.forum-link-dialog input{box-sizing:border-box;display:block;width:100%;margin-top:7px;padding:11px;border:1px solid #697585;border-radius:6px;background:#101820;color:#fff;font-size:16px}
+.forum-link-dialog p{font-size:12px;color:#b6c0cb}
+.forum-link-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.forum-link-actions button{padding:10px 13px;border:1px solid #cba047;border-radius:6px;background:#d5a83e;color:#15191d;font-weight:700}
+.forum-link-actions button:first-child{background:transparent;color:#e5e7eb;border-color:#667382}
