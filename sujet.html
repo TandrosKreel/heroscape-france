@@ -1064,6 +1064,9 @@ async function renderSubject() {
       for (const attribute of Object.keys(attrs)) {
         node.querySelectorAll("["+attribute+"]").forEach(child => child.removeAttribute(attribute));
       }
+      if (attrs["data-forum-size"]) node.style.fontSize = ({1:"11px",2:"13px",3:"16px",4:"21px",5:"27px"})[attrs["data-forum-size"]];
+      if (attrs["data-forum-font"]) node.style.fontFamily = ({1:"Arial",2:"Georgia",3:"Trebuchet MS",4:"Palatino Linotype",5:"Verdana"})[attrs["data-forum-font"]];
+      if (attrs["data-forum-color"]) node.style.color = attrs["data-forum-color"];
       range.insertNode(node);
       const next = document.createRange();
       if (collapsed) { next.selectNodeContents(node); next.collapse(false); }
