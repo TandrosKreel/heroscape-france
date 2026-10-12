@@ -2078,7 +2078,7 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .reply-rich-editor a{color:#8cbcff;text-decoration:underline}
 
 /* Commandes de traitement de texte : état visible et alignement sans bloc ajouté */
-.forum-format-toolbar [data-align].is-active{background:#27313c!important;color:var(--text)!important;border-color:var(--line)!important;box-shadow:none!important}
+.forum-format-toolbar [data-align].is-active{background:#27313c!important;color:var(--text)!important;border-color:var(--gold)!important;box-shadow:inset 0 0 0 1px var(--gold)!important}
 .forum-format-toolbar [data-align]{font-size:16px;min-width:42px}
 .reply-rich-editor[data-forum-align="left"],.reply-rich-editor [data-forum-align="left"]{text-align:left}
 .reply-rich-editor[data-forum-align="center"],.reply-rich-editor [data-forum-align="center"]{text-align:center}
@@ -2088,3 +2088,8 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 /* Boutons actifs : gras, italique, barré, comme dans un traitement de texte */
 .forum-format-toolbar [data-format].is-active{background:#665122!important;color:#ffe3a0!important;border-color:var(--gold)!important;box-shadow:inset 0 0 0 1px var(--gold)}
 .forum-format-toolbar [data-format]{min-width:36px}
+
+/* Citation : distinguer clairement l'auteur du texte cité dans l'éditeur */
+.reply-rich-editor .forum-quote>strong,.forum-edit-visual .forum-quote>strong{font-size:12px;font-weight:700;letter-spacing:.03em;color:#e6bc66;border-bottom:1px solid rgba(230,188,102,.3);padding-bottom:7px;margin-bottom:9px}
+.reply-rich-editor .forum-quote>div,.forum-edit-visual .forum-quote>div{font-size:15px;line-height:1.6;color:var(--text);min-height:24px}
+.reply-rich-editor .forum-quote>div:empty:before,.forum-edit-visual .forum-quote>div:empty:before{content:attr(data-placeholder);color:#8995a5;font-style:italic;pointer-events:none}
