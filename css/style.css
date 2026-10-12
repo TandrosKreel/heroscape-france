@@ -2046,6 +2046,7 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 /* Photos des publications : dimensions limitées et adaptation mobile */
 .forum-image-link{display:block;width:fit-content;max-width:100%;margin:8px 0;vertical-align:top}
 .forum-post-image{display:block;max-width:100%;width:auto;height:auto;max-height:540px;object-fit:contain;border-radius:8px;border:1px solid var(--line)}
+.reply-rich-editor > img[data-forum-image]{display:block;clear:both;margin:8px 0;max-width:100%;height:auto}
 
 /* Éditeur visuel : les styles s'affichent pendant la saisie. */
 .reply-rich-editor [data-forum-size="1"]{font-size:11px}
