@@ -1415,10 +1415,11 @@ async function publishReply() {
 
   const body = serializeForumEditor(replyBody);
 
-  if (!body) {
+  if (!body || body.length > 20000) {
 
-    replyMessage.textContent =
-      "Écris une réponse avant de publier.";
+    replyMessage.textContent = !body
+      ? "Écris une réponse avant de publier."
+      : "Le message ne peut pas dépasser 20 000 caractères.";
 
     return;
   }
