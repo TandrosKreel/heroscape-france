@@ -412,7 +412,8 @@ function serializeForumEditor(editor) {
       const originalPlain = originalQuote === undefined ? "" : originalQuote.replace(/\[(?:\/?(?:b|i|s|size|font|color|align)(?:=[^\]\r\n]+)?)\]/gi, "");
       const normalizeQuoteText = value => String(value || "").replace(/\s+/g, " ").trim();
       const unchanged = content && originalQuote !== undefined &&
-        normalizeQuoteText(content.textContent) === normalizeQuoteText(originalPlain);
+        normalizeQuoteText(content.textContent) === normalizeQuoteText(originalPlain) &&
+        el.dataset.quoteBodyEdited !== "true";
       const quotedBody = unchanged ? el.dataset.originalQuoteBody : (content ? walkChildren(content) : "");
       return "[quote" + (author ? "=" + author : "") + "]\n" + quotedBody + "\n[/quote]\n";
     }
