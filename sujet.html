@@ -401,7 +401,7 @@ function serializeForumEditor(editor) {
     if (node.nodeType !== Node.ELEMENT_NODE) return "";
     const el = node;
     if (el.matches("img[data-smiley]")) return "[smiley:" + el.dataset.smiley + "]";
-    if (el.matches("img[data-forum-image]")) return "[image=" + el.dataset.forumImage + "]";
+    if (el.matches("img[data-forum-image]")) return "[image=" + el.dataset.forumImage + "]\n";
     if (el.matches("br")) return "\n";
     if (el.matches("blockquote[data-quote-author]")) {
       const content = Array.from(el.children).find(child => child.tagName === "DIV");
