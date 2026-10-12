@@ -408,13 +408,7 @@ function serializeForumEditor(editor) {
       const author = el.dataset.quoteAuthor.replace(/[\[\]\r\n]/g,"");
       // Tant que le contenu cité n'est pas édité, conserver son BBCode original
       // pour éviter toute perte de police/couleur lors d'une conversion HTML.
-      const originalQuote = el.dataset.originalQuoteBody;
-      const originalPlain = originalQuote === undefined ? "" : originalQuote.replace(/\[(?:\/?(?:b|i|s|size|font|color|align)(?:=[^\]\r\n]+)?)\]/gi, "");
-      const normalizeQuoteText = value => String(value || "").replace(/\s+/g, " ").trim();
-      const unchanged = content && originalQuote !== undefined &&
-        normalizeQuoteText(content.textContent) === normalizeQuoteText(originalPlain) &&
-        el.dataset.quoteBodyEdited !== "true";
-      const quotedBody = unchanged ? el.dataset.originalQuoteBody : (content ? walkChildren(content) : "");
+      const quotedBody = content ? walkChildren(content) : "";
       return "[quote" + (author ? "=" + author : "") + "]\n" + quotedBody + "\n[/quote]\n";
     }
     let content = walkChildren(el);
