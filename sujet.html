@@ -1210,6 +1210,10 @@ async function renderSubject() {
       after.appendChild(document.createElement("br"));
       const fragment = document.createDocumentFragment();
       fragment.append(before,node,after);
+      if (node.matches("img[data-forum-image]")) {
+        node.setAttribute("contenteditable","false");
+        node.setAttribute("draggable","false");
+      }
       range.insertNode(fragment);
       range.selectNodeContents(after); range.collapse(true);
       editor.focus(); placeCaret(range);
