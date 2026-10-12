@@ -1129,7 +1129,19 @@ async function renderSubject() {
       // Le dernier choix doit gagner, même sur une sélection déjà formatée.
       // Retirer uniquement l'attribut concurrent dans les descendants sélectionnés.
       for (const attribute of Object.keys(attrs)) {
-        node.querySelectorAll("["+attribute+"]").forEach(child => child.removeAttribute(attribute));
+        // Une sélection peut contenir des portions déjà mises en forme.
+        // Nettoyer aussi leurs styles inline, sinon l'ancienne valeur l'emporte.
+        const property = attribute === "data-forum-size" ? "font-size" :
+          attribute === "data-forum-font" ? "font-family" :
+          attribute === "data-forum-color" ? "color" : null;
+        node.querySelectorAll("*").forEach(child => {
+          child.removeAttribute(attribute);
+          if (property) child.style.removeProperty(property);
+          // Nettoyer les anciennes balises HTML de mise en forme également.
+          if (attribute === "data-forum-color" && child.tagName === "FONT") child.removeAttribute("color");
+          if (attribute === "data-forum-font" && child.tagName === "FONT") child.removeAttribute("face");
+          if (attribute === "data-forum-size" && child.tagName === "FONT") child.removeAttribute("size");
+        });
       }
       if (attrs["data-forum-size"]) node.style.fontSize = ({1:"11px",2:"13px",3:"16px",4:"21px",5:"27px"})[attrs["data-forum-size"]];
       if (attrs["data-forum-font"]) node.style.fontFamily = ({1:"Arial",2:"Georgia",3:"Trebuchet MS",4:"Palatino Linotype",5:"Verdana"})[attrs["data-forum-font"]];
