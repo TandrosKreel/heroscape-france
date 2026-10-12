@@ -157,7 +157,7 @@ function renderMessageImages(html) {
 }
 function renderForumMessage(text) {
   // Harmoniser également les messages publiés avant cette correction.
-  const source=String(text||"").replace(/(\[image=[0-9a-f-]{36}\/[a-z0-9-]+\.webp\])\n{2}(?=\S)/gi, "$1\n");
+  const source=String(text||"").replace(/(\[image=[0-9a-f-]{36}\/[a-z0-9-]+\.webp\])\n+(?=\S)/gi, "$1");
   const root={author:null,parts:[]},stack=[root];
   const tokens=/\[quote(?:=([^\]\r\n]{1,80}))?\]|\[\/quote\]/gi;
   let cursor=0,match;
