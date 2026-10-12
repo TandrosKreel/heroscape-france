@@ -131,9 +131,9 @@ function renderInlineMarkup(text) {
   // plusieurs passes pour convertir les styles internes avant les styles externes.
   for (let pass = 0; pass < 12; pass++) {
     const previous = result;
-    result = result.replace(/\\[(b|i|s)\\]((?:(?!\\[(?:b|i|s)\\]).)*?)\\[\\/\\1\\]/gis,
+    result = result.replace(/\[(b|i|s)\]((?:(?!\[(?:b|i|s)\]).)*?)\[\/\1\]/gis,
       (_,tag,body) => '<' + ({b:'strong',i:'em',s:'del'})[tag.toLowerCase()] + '>' + body + '</' + ({b:'strong',i:'em',s:'del'})[tag.toLowerCase()] + '>');
-    result = result.replace(/\\[(size|font|color|align)=([^\\]\\r\\n]+)\\]((?:(?!\\[(?:size|font|color|align)=).)*?)\\[\\/\\1\\]/gis,
+    result = result.replace(/\[(size|font|color|align)=([^\]\r\n]+)\]((?:(?!\[(?:size|font|color|align)=).)*?)\[\/\1\]/gis,
       (full,tag,val,body) => {
         tag=tag.toLowerCase();
         if(tag==='size' && /^[1-5]$/.test(val)) return '<span class="forum-size-'+val+'">'+body+'</span>';
