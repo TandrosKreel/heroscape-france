@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-visual-editor">
+  <link rel="stylesheet" href="css/style.css?v=20261012-word-controls">
 </head>
 
 <body>
@@ -200,7 +200,8 @@ function serializeForumEditor(editor) {
     return content;
   };
   const walkChildren = el => Array.from(el.childNodes).map(walk).join("");
-  return walkChildren(editor).trim();
+  const text = walkChildren(editor).trim();
+  return editor.dataset.forumAlign && editor.dataset.forumAlign !== "left" ? "[align=" + editor.dataset.forumAlign + "]" + text + "[/align]" : text;
 }
 
 function setupSmileysPicker() {
@@ -577,10 +578,10 @@ async function renderSubject() {
 <button type="button" data-format="b" title="Gras"><strong>G</strong></button>
 <button type="button" data-format="i" title="Italique"><em>I</em></button>
 <button type="button" data-format="s" title="Barré"><s>S</s></button>
-<select id="forum-size" aria-label="Taille"><option value="">Taille</option><option value="1">Très petit</option><option value="2">Petit</option><option value="3">Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select>
-<select id="forum-font" aria-label="Police"><option value="">Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select>
+<select id="forum-size" aria-label="Taille"><option value="" disabled>Taille</option><option value="1">Très petit</option><option value="2">Petit</option><option value="3">Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select>
+<select id="forum-font" aria-label="Police"><option value="" disabled>Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select>
 <select id="forum-color" aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris clair</option><option value="#111827">Noir</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select>
-<button type="button" data-align="left" title="Aligner à gauche">⇤ Gauche</button><button type="button" data-align="center" title="Centrer">↔ Centre</button><button type="button" data-align="right" title="Aligner à droite">Droite ⇥</button>
+<button type="button" data-align="left" title="Aligner à gauche" aria-label="Aligner à gauche">☰</button><button type="button" data-align="center" title="Centrer" aria-label="Centrer">≡</button><button type="button" data-align="right" title="Aligner à droite" aria-label="Aligner à droite">☷</button>
 <button type="button" id="forum-link">🔗 Lien</button>
 <button type="button" id="forum-upload-image">📷 Photo</button><input type="file" id="forum-image-input" accept="image/jpeg,image/png,image/webp" hidden>
 </div>
@@ -723,23 +724,50 @@ async function renderSubject() {
     const editor = document.getElementById("reply-body");
     // Édition visuelle : les éléments affichés sont convertis en BBCode à la publication.
     let savedRange = null;
-    const insideEditor = range => range && editor.contains(range.commonAncestorContainer);
+    let pendingStyle = null;
+    const toolbar = document.getElementById("forum-format-toolbar");
+    const sizeSelect = document.getElementById("forum-size");
+    const fontSelect = document.getElementById("forum-font");
+    const colorSelect = document.getElementById("forum-color");
+    sizeSelect.value = "3"; fontSelect.value = "1";
+    const inEditor = r => r && editor.contains(r.commonAncestorContainer);
     function rememberSelection() {
       const sel = window.getSelection();
-      if (sel.rangeCount && insideEditor(sel.getRangeAt(0))) savedRange = sel.getRangeAt(0).cloneRange();
+      if (sel.rangeCount && inEditor(sel.getRangeAt(0))) savedRange = sel.getRangeAt(0).cloneRange();
     }
     function selectionRange() {
-      if (insideEditor(savedRange)) return savedRange.cloneRange();
+      if (inEditor(savedRange)) return savedRange.cloneRange();
       const sel = window.getSelection();
-      if (sel.rangeCount && insideEditor(sel.getRangeAt(0))) return sel.getRangeAt(0).cloneRange();
+      if (sel.rangeCount && inEditor(sel.getRangeAt(0))) return sel.getRangeAt(0).cloneRange();
       const r = document.createRange(); r.selectNodeContents(editor); r.collapse(false); return r;
     }
-    editor.addEventListener("keyup", rememberSelection);
-    editor.addEventListener("mouseup", rememberSelection);
+    function updateToolbar() {
+      const sel = window.getSelection();
+      if (!sel.rangeCount || !inEditor(sel.getRangeAt(0))) return;
+      let node = sel.anchorNode;
+      if (node?.nodeType === Node.TEXT_NODE) node = node.parentElement;
+      const closest = attr => node?.closest?.("["+attr+"]")?.getAttribute(attr);
+      sizeSelect.value = closest("data-forum-size") || pendingStyle?.["data-forum-size"] || "3";
+      fontSelect.value = closest("data-forum-font") || pendingStyle?.["data-forum-font"] || "1";
+      const color = closest("data-forum-color") || pendingStyle?.["data-forum-color"];
+      if (color) colorSelect.value = color;
+      const align = node?.closest?.("[data-forum-align]")?.dataset.forumAlign || editor.dataset.forumAlign || "left";
+      toolbar.querySelectorAll("[data-align]").forEach(b => {
+        const active = b.dataset.align === align;
+        b.classList.toggle("is-active",active);
+        b.setAttribute("aria-pressed",String(active));
+      });
+    }
+    document.addEventListener("selectionchange", () => {
+      const sel = window.getSelection();
+      if (sel.rangeCount && inEditor(sel.getRangeAt(0))) {
+        rememberSelection(); updateToolbar();
+      }
+    });
+    editor.addEventListener("keyup", () => {rememberSelection();updateToolbar();});
+    editor.addEventListener("mouseup", () => {rememberSelection();updateToolbar();});
     editor.addEventListener("touchend", rememberSelection);
-    editor.addEventListener("focusout", rememberSelection);
-    document.getElementById("forum-format-toolbar").addEventListener("focusin", rememberSelection);
-    document.getElementById("forum-format-toolbar").addEventListener("pointerdown", event => {
+    toolbar.addEventListener("pointerdown", event => {
       rememberSelection();
       if (event.target.closest("button")) event.preventDefault();
     });
@@ -747,6 +775,7 @@ async function renderSubject() {
       const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
       savedRange = range.cloneRange();
       editor.dispatchEvent(new Event("input",{bubbles:true}));
+      updateToolbar();
     }
     function insertVisual(node) {
       const range = selectionRange();
@@ -759,9 +788,15 @@ async function renderSubject() {
       const node = document.createElement(tag);
       Object.entries(attrs).forEach(([key,value]) => node.setAttribute(key,value));
       const collapsed = range.collapsed;
-      if (collapsed) node.appendChild(document.createTextNode("\u200b"));
-      else node.appendChild(range.extractContents());
-      // Ne pas effacer la sélection extraite : l'insérer directement à sa place.
+      if (collapsed) {
+        // Les commandes sans sélection définissent la mise en forme de la prochaine saisie.
+        pendingStyle = {...pendingStyle,...attrs};
+        const marker = document.createTextNode("\u200b");
+        node.appendChild(marker);
+      } else {
+        node.appendChild(range.extractContents());
+        pendingStyle = null;
+      }
       range.insertNode(node);
       const next = document.createRange();
       if (collapsed) { next.selectNodeContents(node); next.collapse(false); }
@@ -780,13 +815,30 @@ async function renderSubject() {
     document.querySelectorAll("#forum-format-toolbar [data-format]").forEach(button =>
       button.addEventListener("click", () => styleSelection(({b:"strong",i:"em",s:"del"})[button.dataset.format])));
     for (const [id,attribute] of [["forum-size","data-forum-size"],["forum-font","data-forum-font"],["forum-color","data-forum-color"]]) {
-      document.getElementById(id).addEventListener("change", event => {
-        if (event.target.value) styleSelection("span",{[attribute]:event.target.value});
-        event.target.value="";
+      const control = document.getElementById(id);
+      control.addEventListener("pointerdown", rememberSelection);
+      control.addEventListener("focus", rememberSelection);
+      control.addEventListener("change", event => {
+        const value = event.target.value;
+        if (value) styleSelection("span",{[attribute]:value});
+        // Conserver la valeur visible dans les menus comme dans un traitement de texte.
+        updateToolbar();
       });
     }
     document.querySelectorAll("#forum-format-toolbar [data-align]").forEach(button =>
-      button.addEventListener("click", () => styleSelection("div",{"data-forum-align":button.dataset.align})));
+      button.addEventListener("click", () => {
+        const alignment = button.dataset.align;
+        const range = selectionRange();
+        const ancestor = range.commonAncestorContainer.nodeType === Node.TEXT_NODE ?
+          range.commonAncestorContainer.parentElement : range.commonAncestorContainer;
+        const paragraph = ancestor.closest?.("[data-forum-align],p,div") ;
+        if (paragraph && paragraph !== editor && editor.contains(paragraph) && !paragraph.closest(".forum-quote")) {
+          paragraph.dataset.forumAlign = alignment;
+        } else {
+          editor.dataset.forumAlign = alignment;
+        }
+        editor.focus(); placeCaret(range);
+      }));
     document.getElementById("forum-upload-image")?.addEventListener("click", () =>
       document.getElementById("forum-image-input")?.click());
     document.getElementById("forum-image-input")?.addEventListener("change", async event => {
