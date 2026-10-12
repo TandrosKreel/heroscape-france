@@ -2078,7 +2078,7 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .reply-rich-editor a{color:#8cbcff;text-decoration:underline}
 
 /* Commandes de traitement de texte : état visible et alignement sans bloc ajouté */
-.forum-format-toolbar [data-align].is-active{background:#665122!important;color:#ffe3a0!important;border-color:var(--gold)!important;box-shadow:inset 0 0 0 1px var(--gold)}
+.forum-format-toolbar [data-align].is-active{background:#27313c!important;color:var(--text)!important;border-color:var(--line)!important;box-shadow:none!important}
 .forum-format-toolbar [data-align]{font-size:16px;min-width:42px}
 .reply-rich-editor[data-forum-align="left"],.reply-rich-editor [data-forum-align="left"]{text-align:left}
 .reply-rich-editor[data-forum-align="center"],.reply-rich-editor [data-forum-align="center"]{text-align:center}
