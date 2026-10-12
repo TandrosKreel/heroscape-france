@@ -430,8 +430,8 @@ function serializeForumEditor(editor) {
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i];
       if (i > 0 && node.nodeType === Node.ELEMENT_NODE &&
-          node.matches("div,p") && result && !result.endsWith("\\n")) {
-        result += "\\n";
+          node.matches("div,p") && result && !result.endsWith("\n")) {
+        result += "\n";
       }
       result += walk(node);
     }
