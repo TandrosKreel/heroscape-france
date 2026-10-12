@@ -155,6 +155,37 @@ function renderForumMessage(text) {
   return renderMessageImages(parts.join(""));
 }
 
+
+// Convertit uniquement les éléments visuels autorisés en BBCode, sans conserver de HTML utilisateur.
+function serializeForumEditor(editor) {
+  const walk = node => {
+    if (node.nodeType === Node.TEXT_NODE) return node.nodeValue.replace(/\u200b/g,"");
+    if (node.nodeType !== Node.ELEMENT_NODE) return "";
+    const el = node;
+    if (el.matches("img[data-smiley]")) return "[smiley:" + el.dataset.smiley + "]";
+    if (el.matches("img[data-forum-image]")) return "[image=" + el.dataset.forumImage + "]";
+    if (el.matches("br")) return "\n";
+    if (el.matches("blockquote[data-quote-author]")) {
+      const content = el.querySelector("div");
+      const author = el.dataset.quoteAuthor.replace(/[\[\]\r\n]/g,"");
+      return "[quote" + (author ? "=" + author : "") + "]\n" + (content ? walkChildren(content) : "") + "\n[/quote]\n";
+    }
+    let content = walkChildren(el);
+    if (el.matches("strong,b")) return "[b]" + content + "[/b]";
+    if (el.matches("em,i")) return "[i]" + content + "[/i]";
+    if (el.matches("del,s,strike")) return "[s]" + content + "[/s]";
+    if (el.matches("a[href]") && /^https?:\/\//i.test(el.href)) return "[url=" + el.href + "]" + content + "[/url]";
+    for (const [attr,tag,allowed] of [
+      ["data-forum-size","size",/^[1-5]$/],["data-forum-font","font",/^[1-5]$/],
+      ["data-forum-color","color",/^#[0-9a-f]{6}$/i],["data-forum-align","align",/^(left|center|right)$/]
+    ]) if (el.hasAttribute(attr) && allowed.test(el.getAttribute(attr))) return "["+tag+"="+el.getAttribute(attr)+"]"+content+"[/"+tag+"]";
+    if (el.matches("div,p")) return content + "\n";
+    return content;
+  };
+  const walkChildren = el => Array.from(el.childNodes).map(walk).join("");
+  return walkChildren(editor).trim();
+}
+
 function setupSmileysPicker() {
   const toggle = document.getElementById("smileys-toggle");
   const picker = document.getElementById("smileys-picker");
@@ -525,6 +556,17 @@ async function renderSubject() {
 
         <h3>Répondre</h3>
 
+        <div class="forum-format-toolbar" id="forum-format-toolbar" role="toolbar" aria-label="Mise en forme du message">
+<button type="button" data-format="b" title="Gras"><strong>G</strong></button>
+<button type="button" data-format="i" title="Italique"><em>I</em></button>
+<button type="button" data-format="s" title="Barré"><s>S</s></button>
+<select id="forum-size" aria-label="Taille"><option value="">Taille</option><option value="1">Très petit</option><option value="2">Petit</option><option value="3">Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select>
+<select id="forum-font" aria-label="Police"><option value="">Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select>
+<select id="forum-color" aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris clair</option><option value="#111827">Noir</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select>
+<button type="button" data-align="left" title="Aligner à gauche">≡</button><button type="button" data-align="center" title="Centrer">☰</button><button type="button" data-align="right" title="Aligner à droite">≡→</button>
+<button type="button" id="forum-link">🔗 Lien</button>
+<button type="button" id="forum-upload-image">📷 Photo</button><input type="file" id="forum-image-input" accept="image/jpeg,image/png,image/webp" hidden>
+</div>
         <div
           id="reply-body"
           class="reply-rich-editor"
@@ -662,59 +704,57 @@ async function renderSubject() {
 
     setupSmileysPicker();
     const editor = document.getElementById("reply-body");
-    function insertQuote(author, content) {
-      const safeAuthor = String(author || "").replace(/[\[\]\r\n]/g, "").slice(0, 80);
-      const quotedText = String(content || "").replace(/\[\/quote\]/gi, "[/ citation ]");
-      const quote = "[quote" + (safeAuthor ? "=" + safeAuthor : "") + "]\n" +
-        quotedText + "\n[/quote]\n";
-      editor.focus();
-      const selection = window.getSelection();
-      let range = selection && selection.rangeCount ? selection.getRangeAt(0) : null;
-      if (!range || !editor.contains(range.commonAncestorContainer)) {
-        range = document.createRange();
-        range.selectNodeContents(editor);
-        range.collapse(false);
-      }
-      range.deleteContents();
-      const node = document.createTextNode(quote);
-      range.insertNode(node);
-      range.setStartAfter(node);
-      range.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(range);
-      editor.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-
-    function wrapSelection(open, close, placeholder = "texte") {
-      editor.focus();
-      const selection = window.getSelection();
-      let range = selection && selection.rangeCount ? selection.getRangeAt(0) : null;
-      if (!range || !editor.contains(range.commonAncestorContainer)) {
-        range = document.createRange();
-        range.selectNodeContents(editor);
-        range.collapse(false);
-      }
-      const selected = range.toString() || placeholder;
-      range.deleteContents();
-      const node = document.createTextNode(open + selected + close);
-      range.insertNode(node);
-      range.setStartAfter(node);
-      range.collapse(true);
-      selection.removeAllRanges();
-      selection.addRange(range);
-    }
-    document.querySelectorAll("#forum-format-toolbar [data-format]").forEach(button => {
-      button.addEventListener("click", () => wrapSelection("[" + button.dataset.format + "]", "[/" + button.dataset.format + "]"));
+    // Édition visuelle : les éléments affichés sont convertis en BBCode à la publication.
+    let savedRange = null;
+    const selectionRange = () => {
+      const sel = window.getSelection();
+      if (sel.rangeCount && editor.contains(sel.getRangeAt(0).commonAncestorContainer)) return sel.getRangeAt(0);
+      if (savedRange && editor.contains(savedRange.commonAncestorContainer)) return savedRange;
+      const range = document.createRange(); range.selectNodeContents(editor); range.collapse(false); return range;
+    };
+    editor.addEventListener("keyup", () => { savedRange = selectionRange().cloneRange(); });
+    editor.addEventListener("mouseup", () => { savedRange = selectionRange().cloneRange(); });
+    document.getElementById("forum-format-toolbar").addEventListener("mousedown", event => {
+      if (event.target.closest("button")) { savedRange = selectionRange().cloneRange(); event.preventDefault(); }
     });
-    for (const [id, tag] of [["forum-size","size"],["forum-font","font"],["forum-color","color"]]) {
-      document.getElementById(id)?.addEventListener("change", event => {
-        if (event.target.value) wrapSelection("[" + tag + "=" + event.target.value + "]", "[/" + tag + "]");
-        event.target.value = "";
+    function insertVisual(node) {
+      editor.focus();
+      const range = selectionRange(); range.deleteContents(); range.insertNode(node);
+      range.setStartAfter(node); range.collapse(true);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      savedRange = range.cloneRange(); editor.dispatchEvent(new Event("input", {bubbles:true}));
+    }
+    function styleSelection(tag, attrs = {}) {
+      const range = selectionRange();
+      const node = document.createElement(tag);
+      Object.entries(attrs).forEach(([key,value]) => node.setAttribute(key,value));
+      if (range.collapsed) node.appendChild(document.createTextNode("\u200b"));
+      else node.appendChild(range.extractContents());
+      insertVisual(node);
+      if (node.textContent === "\u200b") {
+        const r = document.createRange(); r.selectNodeContents(node); r.collapse(false);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); savedRange = r.cloneRange();
+      }
+    }
+    function insertQuote(author, content) {
+      const quote = document.createElement("blockquote"); quote.className = "forum-quote";
+      quote.dataset.quoteAuthor = String(author || "").replace(/[\[\]\r\n]/g,"").slice(0,80);
+      const heading = document.createElement("strong");
+      heading.textContent = quote.dataset.quoteAuthor ? quote.dataset.quoteAuthor + " a écrit :" : "Citation :";
+      const body = document.createElement("div"); body.textContent = String(content || "");
+      quote.append(heading,body); insertVisual(quote);
+      editor.scrollIntoView({behavior:"smooth",block:"center"});
+    }
+    document.querySelectorAll("#forum-format-toolbar [data-format]").forEach(button =>
+      button.addEventListener("click", () => styleSelection(({b:"strong",i:"em",s:"del"})[button.dataset.format])));
+    for (const [id,attribute] of [["forum-size","data-forum-size"],["forum-font","data-forum-font"],["forum-color","data-forum-color"]]) {
+      document.getElementById(id).addEventListener("change", event => {
+        if (event.target.value) styleSelection("span",{[attribute]:event.target.value});
+        event.target.value="";
       });
     }
-    document.querySelectorAll("#forum-format-toolbar [data-align]").forEach(button => {
-      button.addEventListener("click", () => wrapSelection("[align=" + button.dataset.align + "]", "[/align]"));
-    });
+    document.querySelectorAll("#forum-format-toolbar [data-align]").forEach(button =>
+      button.addEventListener("click", () => styleSelection("div",{"data-forum-align":button.dataset.align})));
     document.getElementById("forum-upload-image")?.addEventListener("click", () =>
       document.getElementById("forum-image-input")?.click());
     document.getElementById("forum-image-input")?.addEventListener("change", async event => {
@@ -744,7 +784,7 @@ async function renderSubject() {
         const { error } = await window.supabaseClient.storage.from("forum-images")
           .upload(path, blob, { contentType: "image/webp", upsert: false });
         if (error) throw error;
-        wrapSelection("[image=" + path + "]", "", "");
+        const img = document.createElement("img"); img.dataset.forumImage = path; img.className = "forum-post-image"; img.alt = "Photo jointe"; img.src = window.supabaseClient.storage.from("forum-images").getPublicUrl(path).data.publicUrl; img.contentEditable = "false"; insertVisual(img);
         status.textContent = "Photo insérée dans le message.";
       } catch (error) {
         console.error("Envoi photo :", error);
@@ -756,7 +796,7 @@ async function renderSubject() {
       if (!url || !/^https?:\/\/\S+$/i.test(url) || url.length > 500) return;
       const label = prompt("Texte à afficher pour le lien :", url);
       if (label === null) return;
-      wrapSelection("[url=" + url + "]", "[/url]", label || url);
+      const link = document.createElement("a"); link.href = url; link.textContent = label || url; link.target = "_blank"; link.rel = "noopener noreferrer nofollow"; insertVisual(link);
     });
     document.getElementById("insert-quote")?.addEventListener("click", () => insertQuote("", ""));
     subjectBox.querySelectorAll("[data-quote-post]").forEach(button => {
@@ -798,16 +838,7 @@ async function publishReply() {
     );
 
 
-  const clone = replyBody.cloneNode(true);
-  clone.querySelectorAll("img[data-smiley]").forEach(img => {
-    img.replaceWith(document.createTextNode("[smiley:" + img.dataset.smiley + "]"));
-  });
-  clone.querySelectorAll("br").forEach(br => br.replaceWith(document.createTextNode("\n")));
-  clone.querySelectorAll("div").forEach(div => {
-    if (div !== clone) div.insertAdjacentText("beforebegin", "\n");
-  });
-  const body = clone.textContent.trim();
-
+  const body = serializeForumEditor(replyBody);
 
   if (!body) {
 
