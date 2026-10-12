@@ -972,7 +972,15 @@ async function renderSubject() {
       bodyBox.after(form);
 
       cancel.addEventListener("click", () => { form.remove(); bodyBox.hidden = false; });
+      // Ne jamais réécrire un message si l'utilisateur n'a rien changé :
+      // cela préserve exactement son BBCode d'origine et ses polices.
+      const initialVisualHtml = field.innerHTML;
       save.addEventListener("click", async () => {
+        if (field.innerHTML === initialVisualHtml) {
+          form.remove();
+          bodyBox.hidden = false;
+          return;
+        }
         const content = serializeForumEditor(field);
         if (!content || content.length > 20000) { status.textContent = "Le message doit contenir entre 1 et 20 000 caractères."; return; }
         save.disabled = true; status.textContent = "Enregistrement…";
