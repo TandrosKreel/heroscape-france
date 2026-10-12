@@ -552,7 +552,7 @@ async function renderSubject() {
           </button>
         </p>
 
-        <div class="forum-preview-panel" id="forum-preview-panel"><strong>Aperçu du message</strong><div id="forum-live-preview" class="forum-message-body"></div></div>\n        <p id="reply-message"></p>
+        \n        <p id="reply-message"></p>
 
       </div>
     `;
@@ -661,28 +661,6 @@ async function renderSubject() {
   if (user && !thread.is_locked) {
 
     setupSmileysPicker();
-    const preview = document.getElementById("forum-live-preview");
-    const editorForPreview = document.getElementById("reply-body");
-    function editorText(node) {
-      const clone = node.cloneNode(true);
-      clone.querySelectorAll("img[data-smiley]").forEach(img =>
-        img.replaceWith(document.createTextNode("[smiley:" + img.dataset.smiley + "]")));
-      clone.querySelectorAll("br").forEach(br => br.replaceWith(document.createTextNode("\n")));
-      clone.querySelectorAll("div").forEach(div => {
-        if (div !== clone) div.insertAdjacentText("beforebegin", "\n");
-      });
-      return clone.textContent.trim();
-    }
-    function refreshPreview() {
-      preview.innerHTML = renderForumMessage(editorText(editorForPreview)) || '<span class="forum-preview-empty">Votre texte apparaîtra ici avec sa mise en forme.</span>';
-    }
-    editorForPreview.addEventListener("input", refreshPreview);
-    editorForPreview.addEventListener("keyup", refreshPreview);
-    document.getElementById("forum-format-toolbar")?.addEventListener("click", () => setTimeout(refreshPreview, 0));
-    document.getElementById("forum-format-toolbar")?.addEventListener("change", () => setTimeout(refreshPreview, 0));
-    document.getElementById("smileys-grid")?.addEventListener("click", () => setTimeout(refreshPreview, 0));
-    document.getElementById("insert-quote")?.addEventListener("click", () => setTimeout(refreshPreview, 0));
-    refreshPreview();
     const editor = document.getElementById("reply-body");
     function insertQuote(author, content) {
       const safeAuthor = String(author || "").replace(/[\[\]\r\n]/g, "").slice(0, 80);
@@ -767,7 +745,6 @@ async function renderSubject() {
           .upload(path, blob, { contentType: "image/webp", upsert: false });
         if (error) throw error;
         wrapSelection("[image=" + path + "]", "", "");
-        refreshPreview();
         status.textContent = "Photo insérée dans le message.";
       } catch (error) {
         console.error("Envoi photo :", error);
@@ -785,7 +762,7 @@ async function renderSubject() {
     subjectBox.querySelectorAll("[data-quote-post]").forEach(button => {
       button.addEventListener("click", () => {
         const post = posts.find(item => String(item.id) === button.dataset.quotePost);
-        if (post) { insertQuote(post.author, post.body); refreshPreview(); }
+        if (post) { insertQuote(post.author, post.body); }
       });
     });
 
