@@ -389,14 +389,23 @@ function serializeForumEditor(editor) {
       return "[quote" + (author ? "=" + author : "") + "]\n" + (content ? walkChildren(content) : "") + "\n[/quote]\n";
     }
     let content = walkChildren(el);
-    if (el.matches("strong,b") || el.style.fontWeight === "bold" || Number(el.style.fontWeight) >= 600) return "[b]" + content + "[/b]";
-    if (el.matches("em,i") || el.style.fontStyle === "italic") return "[i]" + content + "[/i]";
-    if (el.matches("del,s,strike") || el.style.textDecorationLine.includes("line-through")) return "[s]" + content + "[/s]";
-    if (el.matches("a[href]") && /^https?:\/\//i.test(el.href)) return "[url=" + el.href + "]" + content + "[/url]";
     for (const [attr,tag,allowed] of [
-      ["data-forum-size","size",/^[1-5]$/],["data-forum-font","font",/^[1-5]$/],
-      ["data-forum-color","color",/^#[0-9a-f]{6}$/i],["data-forum-align","align",/^(left|center|right)$/]
-    ]) if (el.hasAttribute(attr) && allowed.test(el.getAttribute(attr))) return "["+tag+"="+el.getAttribute(attr)+"]"+content+"[/"+tag+"]";
+      ["data-forum-size","size",/^[1-5]$/],
+      ["data-forum-font","font",/^[1-5]$/],
+      ["data-forum-color","color",/^#[0-9a-f]{6}$/i],
+      ["data-forum-align","align",/^(left|center|right)$/]
+    ]) {
+      const value=el.getAttribute(attr);
+      if(value && allowed.test(value)) content="["+tag+"="+value+"]"+content+"[/"+tag+"]";
+    }
+    if (el.matches("strong,b") || el.style.fontWeight === "bold" || Number(el.style.fontWeight) >= 600)
+      content="[b]"+content+"[/b]";
+    if (el.matches("em,i") || el.style.fontStyle === "italic")
+      content="[i]"+content+"[/i]";
+    if (el.matches("del,s,strike") || el.style.textDecorationLine.includes("line-through"))
+      content="[s]"+content+"[/s]";
+    if (el.matches("a[href]") && el.href.startsWith("http"))
+      content="[url="+el.href+"]"+content+"[/url]";
     if (el.matches("div,p")) return content + "\n";
     return content;
   };
