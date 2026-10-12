@@ -368,7 +368,7 @@ function loadForumVisualContent(editor, source) {
   });
   wrapper.querySelectorAll("span[style],div[style]").forEach(el => {
     const font = el.style.fontFamily.toLowerCase().replace(/["']/g,"");
-    const fonts = ["arial","georgia","trebuchet ms","palatino linotype","verdana"];
+    const fonts = ["arial","georgia","monospace","cursive","fantasy"];
     if (font) { const index = fonts.findIndex(f => font.startsWith(f)); if (index >= 0) el.dataset.forumFont = String(index+1); }
     if (el.style.color) {
       const match = el.style.color.match(/\d+/g);
