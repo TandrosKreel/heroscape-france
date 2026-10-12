@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-quote-controls11">
+  <link rel="stylesheet" href="css/style.css?v=20261012-recent-seven12">
 </head>
 
 <body>
@@ -801,6 +801,24 @@ async function renderSubject() {
   }
 
 
+  // Aide à la rédaction : sept derniers messages du sujet, ordre chronologique.
+  const recentMessagesHtml = user && !thread.is_locked && posts.length ? `
+    <section class="card forum-recent-reference" aria-label="Relire les derniers messages">
+      <h3>Relire les 7 derniers messages</h3>
+      <p class="forum-recent-help">Consulte les réponses précédentes pendant que tu rédiges la tienne.</p>
+      <div class="forum-recent-scroll" tabindex="0" role="region" aria-label="Sept derniers messages, zone défilante">
+        ${posts.slice(-7).map(post => `
+          <article class="forum-recent-item">
+            <div class="forum-recent-heading">
+              <strong>${esc(post.author || "Membre")}</strong>
+              ${post.created_at ? '<span>' + esc(formatDate(post.created_at)) + '</span>' : ''}
+            </div>
+            <div class="forum-recent-body forum-message-body">${renderForumMessage(post.body)}</div>
+          </article>
+        `).join("")}
+      </div>
+    </section>` : "";
+
   const paginationHtml = totalPages > 1 ? `<nav class="pagination" aria-label="Pages du sujet">${Array.from({length:totalPages},(_,i)=>i+1).map(n => `<a class="${n===currentPage ? "active" : ""}" href="sujet.html?id=${id}&page=${n}">${n}</a>`).join("")}</nav>` : "";
 
   subjectBox.innerHTML = `
@@ -817,6 +835,7 @@ async function renderSubject() {
 
     ${paginationHtml}
     ${replyFormHtml}
+    ${recentMessagesHtml}
 
   `;
 
