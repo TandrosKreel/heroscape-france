@@ -1075,9 +1075,25 @@ async function renderSubject() {
         rememberSelection(); updateToolbar();
       }
     });
-    editor.addEventListener("keyup", () => {rememberSelection();updateToolbar();});
-    editor.addEventListener("mouseup", () => {rememberSelection();updateToolbar();});
-    editor.addEventListener("touchend", rememberSelection);
+    // Un déplacement volontaire du curseur termine la sélection précédente.
+    // Les menus restent libres de conserver la sélection pendant leur utilisation.
+    function refreshEditorSelection() {
+      const sel=window.getSelection();
+      if(sel.rangeCount && inEditor(sel.getRangeAt(0))) {
+        if(sel.isCollapsed) formattingSelection=null;
+        rememberSelection();
+        updateToolbar();
+      }
+    }
+    editor.addEventListener("keyup", refreshEditorSelection);
+    editor.addEventListener("mouseup", refreshEditorSelection);
+    editor.addEventListener("pointerup", refreshEditorSelection);
+    editor.addEventListener("touchend", () => requestAnimationFrame(refreshEditorSelection));
+    editor.addEventListener("input", () => {
+      formattingSelection=null;
+      const sel=window.getSelection();
+      if(sel.rangeCount && inEditor(sel.getRangeAt(0))) savedRange=sel.getRangeAt(0).cloneRange();
+    });
     editor.addEventListener("selectstart", () => requestAnimationFrame(rememberSelection));
     toolbar.addEventListener("pointerdown", event => {
       rememberSelection();
