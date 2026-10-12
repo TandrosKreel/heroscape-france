@@ -366,7 +366,7 @@ function restoreForumVisualFormatting(wrapper) {
       if (index >= 0) el.dataset.forumFont = String(index + 1);
     }
     if (el.style.color) {
-      const colors = el.style.color.match(/\\d+/g);
+      const colors = el.style.color.match(/[0-9]+/g);
       if (colors?.length === 3) el.dataset.forumColor = "#" + colors.map(n => Number(n).toString(16).padStart(2,"0")).join("");
     }
     if (el.style.textAlign) el.dataset.forumAlign = el.style.textAlign;
