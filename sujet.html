@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-word-controls">
+  <link rel="stylesheet" href="css/style.css?v=20261012-selection-align2">
 </head>
 
 <body>
@@ -800,7 +800,7 @@ async function renderSubject() {
       range.insertNode(node);
       const next = document.createRange();
       if (collapsed) { next.selectNodeContents(node); next.collapse(false); }
-      else { next.setStartAfter(node); next.collapse(true); }
+      else { next.selectNodeContents(node); }
       editor.focus(); placeCaret(next);
     }
     function insertQuote(author, content) {
@@ -829,15 +829,25 @@ async function renderSubject() {
       button.addEventListener("click", () => {
         const alignment = button.dataset.align;
         const range = selectionRange();
-        const ancestor = range.commonAncestorContainer.nodeType === Node.TEXT_NODE ?
-          range.commonAncestorContainer.parentElement : range.commonAncestorContainer;
-        const paragraph = ancestor.closest?.("[data-forum-align],p,div") ;
-        if (paragraph && paragraph !== editor && editor.contains(paragraph) && !paragraph.closest(".forum-quote")) {
-          paragraph.dataset.forumAlign = alignment;
-        } else {
-          editor.dataset.forumAlign = alignment;
+        editor.focus();
+        const sel = window.getSelection();
+        sel.removeAllRanges(); sel.addRange(range);
+        // L'alignement natif agit sur le paragraphe courant, même sans sélection,
+        // sans insérer une ligne supplémentaire comme le faisait le wrapper.
+        const command = {left:"justifyLeft",center:"justifyCenter",right:"justifyRight"}[alignment];
+        const applied = document.execCommand(command, false, null);
+        if (!applied) {
+          const anchor = range.startContainer.nodeType === Node.TEXT_NODE ?
+            range.startContainer.parentElement : range.startContainer;
+          const block = anchor.closest?.("div,p") || editor;
+          block.dataset.forumAlign = alignment;
         }
-        editor.focus(); placeCaret(range);
+        rememberSelection();
+        toolbar.querySelectorAll("[data-align]").forEach(b => {
+          b.classList.toggle("is-active", b.dataset.align === alignment);
+          b.setAttribute("aria-pressed", String(b.dataset.align === alignment));
+        });
+        editor.dispatchEvent(new Event("input",{bubbles:true}));
       }));
     document.getElementById("forum-upload-image")?.addEventListener("click", () =>
       document.getElementById("forum-image-input")?.click());
