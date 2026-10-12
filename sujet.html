@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-shared-edit7">
+  <link rel="stylesheet" href="css/style.css?v=20261012-selection-toggle8">
 </head>
 
 <body>
@@ -1012,7 +1012,18 @@ async function renderSubject() {
           button.classList.toggle("is-active",active);
           button.setAttribute("aria-pressed",String(active));
         } else {
-          styleSelection(({b:"strong",i:"em",s:"del"})[format]);
+          // La commande native uniformise une sélection mixte et désactive
+          // le style lorsque toute la sélection le possède déjà.
+          editor.focus();
+          const sel = window.getSelection();
+          sel.removeAllRanges(); sel.addRange(range);
+          const command = {b:"bold",i:"italic",s:"strikeThrough"}[format];
+          document.execCommand(command,false,null);
+          const after = window.getSelection();
+          if (after.rangeCount && !after.isCollapsed && inEditor(after.getRangeAt(0))) {
+            savedRange = after.getRangeAt(0).cloneRange();
+          }
+          updateToolbar();
         }
       }));
     for (const [id,attribute] of [["forum-size","data-forum-size"],["forum-font","data-forum-font"],["forum-color","data-forum-color"]]) {
