@@ -119,14 +119,6 @@ async function renderLatestTopics() {
   // Une ligne = un message : son dé dépend de sa propre date,
   // pas de la date du message le plus récent du même sujet.
   const postPageCountCache = new Map();
-  const latestPostIds = new Set();
-  const seenThreads = new Set();
-  for (const post of posts) {
-    if (!seenThreads.has(post.thread_id)) {
-      seenThreads.add(post.thread_id);
-      latestPostIds.add(post.id);
-    }
-  }
   const latestRows = [];
   for (const post of posts) {
     const name = currentUser ? (post.profiles?.username || "Membre") : "Membre";
@@ -160,10 +152,10 @@ async function renderLatestTopics() {
       (() => {
         if (!currentUser) return "";
         // Un message publié par le membre lui-même est déjà connu de lui.
-        // Le dé rouge est réservé à son dernier message dans ce sujet.
+        // Chaque message personnel reçoit le dé rouge, même si plusieurs lignes du même sujet sont affichées.
         const isOwnPost = post.user_id === currentUser?.id;
         const unread = !isOwnPost && isThreadUnread(post.thread_id, post.created_at);
-        const ownLastPost = latestPostIds.has(post.id) && isOwnPost;
+        const ownLastPost = isOwnPost;
         return readDiceHtml(unread, "latest-read-die", ownLastPost);
       })() + '</span>' +
     '</a>');
