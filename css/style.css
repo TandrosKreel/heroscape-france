@@ -2107,3 +2107,15 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .reply-rich-editor .forum-quote>.forum-quote-remove,.forum-edit-visual .forum-quote>.forum-quote-remove{position:absolute;top:7px;right:7px;z-index:2;display:flex;align-items:center;justify-content:center;width:27px;height:27px;padding:0;border:1px solid #8b6a42;border-radius:6px;background:#26313b;color:#f4d18a;font-size:21px;line-height:1;cursor:pointer}
 .reply-rich-editor .forum-quote>.forum-quote-remove:hover,.forum-edit-visual .forum-quote>.forum-quote-remove:hover{background:#64442e}
 .reply-rich-editor .forum-quote+div,.forum-edit-visual .forum-quote+div{min-height:25px}
+
+/* Rappel compact des 7 derniers messages sous la zone de réponse. */
+.forum-recent-reference{margin-top:14px}
+.forum-recent-reference h3{margin:0 0 5px}
+.forum-recent-help{font-size:13px;color:var(--muted);margin:0 0 12px}
+.forum-recent-scroll{max-height:310px;overflow-y:auto;overscroll-behavior:contain;border:1px solid var(--line);border-radius:8px;background:#111920;scrollbar-width:thin;scrollbar-color:#c99b42 #202a34}
+.forum-recent-item{padding:12px 14px;border-bottom:1px solid var(--line)}
+.forum-recent-item:last-child{border-bottom:0}
+.forum-recent-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px 12px;margin-bottom:7px;color:#e6bc66;font-size:13px}
+.forum-recent-heading span{font-size:11px;color:var(--muted)}
+.forum-recent-body{font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.forum-recent-body .forum-quote{margin:7px 0}
