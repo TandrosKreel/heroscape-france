@@ -277,13 +277,13 @@ function loadForumVisualContent(editor, source) {
     const fonts = ["arial","georgia","trebuchet ms","palatino linotype","verdana"];
     if (font) { const index = fonts.findIndex(f => font.startsWith(f)); if (index >= 0) el.dataset.forumFont = String(index+1); }
     if (el.style.color) {
-      const match = el.style.color.match(/\\d+/g);
+      const match = el.style.color.match(/\d+/g);
       if (match?.length === 3) el.dataset.forumColor = "#" + match.map(n => Number(n).toString(16).padStart(2,"0")).join("");
     }
     if (el.style.textAlign) el.dataset.forumAlign = el.style.textAlign;
   });
   wrapper.querySelectorAll("img.forum-post-image").forEach(img => {
-    const match = img.src.match(/([0-9a-f-]{36}\\/[a-z0-9-]+\\.webp)$/i);
+    const match = img.src.match(/([0-9a-f-]{36}\/[a-z0-9-]+\.webp)$/i);
     if (match) { img.dataset.forumImage = match[1]; img.contentEditable = "false"; img.closest("a.forum-image-link")?.replaceWith(img); }
   });
   wrapper.querySelectorAll("img.forum-inline-smiley").forEach(img => {
@@ -814,7 +814,7 @@ async function renderSubject() {
       setupForumFormatting(field, editToolbar);
       editToolbar.querySelector("[data-link]").addEventListener("click", () => {
         const url=prompt("Adresse du lien (https://...) :");
-        if(!url || !/^https?:\\/\\/\\S+$/i.test(url)) return;
+        if(!url || !/^https?:\/\/\S+$/i.test(url)) return;
         const label=prompt("Texte du lien :",url);
         if(label===null)return;
         field.focus();
