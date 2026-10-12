@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-link-dialog14">
+  <link rel="stylesheet" href="css/style.css?v=20261012-android-custom-menus16">
 </head>
 
 <body>
@@ -1049,6 +1049,10 @@ async function renderSubject() {
       fontSelect.value = closest("data-forum-font") || pendingStyle?.["data-forum-font"] || "1";
       const color = closest("data-forum-color") || pendingStyle?.["data-forum-color"];
       if (color) colorSelect.value = color;
+      [sizeSelect,fontSelect,colorSelect].forEach(select=>{
+        const button=select.parentElement?.querySelector(".forum-selection-trigger");
+        if(button)button.textContent=select.options[select.selectedIndex]?.textContent||"";
+      });
       for (const [format,selector] of [["b","strong,b"],["i","em,i"],["s","del,s,strike"]]) {
         const button = toolbar.querySelector('[data-format="'+format+'"]');
         const command = {b:"bold",i:"italic",s:"strikeThrough"}[format];
@@ -1226,6 +1230,9 @@ async function renderSubject() {
       });
     }
     [sizeSelect,fontSelect,colorSelect].forEach(makeSelectionMenu);
+    document.addEventListener("pointerdown",event=>{
+      if(!event.target.closest(".forum-selection-menu"))document.querySelectorAll(".forum-selection-choices").forEach(menu=>menu.hidden=true);
+    });
     document.querySelectorAll("#forum-format-toolbar [data-align]").forEach(button =>
       button.addEventListener("click", () => {
         const alignment = button.dataset.align;
