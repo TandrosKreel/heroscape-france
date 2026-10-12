@@ -980,6 +980,47 @@ async function renderSubject() {
     const fontSelect = document.getElementById("forum-font");
     const colorSelect = document.getElementById("forum-color");
     sizeSelect.value = "3"; fontSelect.value = "1";
+    // Menus personnalisés : les <select> natifs Android perdent la sélection.
+    function makeSelectionMenu(select) {
+      const holder=document.createElement("div");
+      holder.className="forum-selection-menu";
+      const trigger=document.createElement("button");
+      trigger.type="button";trigger.className="forum-selection-trigger";
+      const choices=document.createElement("div");
+      choices.className="forum-selection-choices";choices.hidden=true;
+      trigger.textContent=select.options[select.selectedIndex]?.textContent || select.options[0]?.textContent;
+      trigger.addEventListener("pointerdown",event=>event.preventDefault());
+      trigger.addEventListener("click",()=>{
+        rememberSelection();
+        document.querySelectorAll(".forum-selection-choices").forEach(other=>{if(other!==choices)other.hidden=true;});
+        choices.hidden=!choices.hidden;
+      });
+      Array.from(select.options).forEach(option=>{
+        const item=document.createElement("button");
+        item.type="button";item.className="forum-selection-option";
+        item.textContent=option.textContent;
+        item.dataset.value=option.value;
+        item.addEventListener("pointerdown",event=>event.preventDefault());
+        item.addEventListener("click",()=>{
+          choices.hidden=true;
+          if(!option.value)return;
+          select.value=option.value;
+          trigger.textContent=option.textContent;
+          select.dispatchEvent(new Event("change",{bubbles:true}));
+        });
+        choices.appendChild(item);
+      });
+      select.parentNode.insertBefore(holder,select);
+      holder.append(trigger,choices,select);
+      select.classList.add("forum-native-select-hidden");
+      const observer=new MutationObserver(()=>{
+        const chosen=select.options[select.selectedIndex];
+        if(chosen)trigger.textContent=chosen.textContent;
+      });
+      observer.observe(select,{attributes:true,attributeFilter:["value"]});
+      return {trigger,choices};
+    }
+
     const inEditor = r => r && editor.contains(r.commonAncestorContainer);
     function rememberSelection() {
       const sel = window.getSelection();
@@ -1184,6 +1225,7 @@ async function renderSubject() {
         // sélectionné reste actif pour enchaîner taille + couleur + police.
       });
     }
+    [sizeSelect,fontSelect,colorSelect].forEach(makeSelectionMenu);
     document.querySelectorAll("#forum-format-toolbar [data-align]").forEach(button =>
       button.addEventListener("click", () => {
         const alignment = button.dataset.align;
