@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-selection-align2">
+  <link rel="stylesheet" href="css/style.css?v=20261012-selection-restore3">
 </head>
 
 <body>
@@ -767,6 +767,7 @@ async function renderSubject() {
     editor.addEventListener("keyup", () => {rememberSelection();updateToolbar();});
     editor.addEventListener("mouseup", () => {rememberSelection();updateToolbar();});
     editor.addEventListener("touchend", rememberSelection);
+    editor.addEventListener("selectstart", () => requestAnimationFrame(rememberSelection));
     toolbar.addEventListener("pointerdown", event => {
       rememberSelection();
       if (event.target.closest("button")) event.preventDefault();
@@ -802,6 +803,21 @@ async function renderSubject() {
       if (collapsed) { next.selectNodeContents(node); next.collapse(false); }
       else { next.selectNodeContents(node); }
       editor.focus(); placeCaret(next);
+      // Sur Android, la sélection native peut se refermer après le clic sur un bouton.
+      // Restaurer le passage formaté après le traitement du clic.
+      if (!collapsed) {
+        const formattedNode = node;
+        requestAnimationFrame(() => {
+          if (!formattedNode.isConnected) return;
+          const restored = document.createRange();
+          restored.selectNodeContents(formattedNode);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(restored);
+          savedRange = restored.cloneRange();
+          updateToolbar();
+        });
+      }
     }
     function insertQuote(author, content) {
       const quote = document.createElement("blockquote"); quote.className = "forum-quote";
@@ -817,7 +833,7 @@ async function renderSubject() {
     for (const [id,attribute] of [["forum-size","data-forum-size"],["forum-font","data-forum-font"],["forum-color","data-forum-color"]]) {
       const control = document.getElementById(id);
       control.addEventListener("pointerdown", rememberSelection);
-      control.addEventListener("focus", rememberSelection);
+      // Ne pas remplacer la sélection mémorisée quand le menu prend le focus.
       control.addEventListener("change", event => {
         const value = event.target.value;
         if (value) styleSelection("span",{[attribute]:value});
