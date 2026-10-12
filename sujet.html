@@ -805,7 +805,6 @@ async function renderSubject() {
   const recentMessagesHtml = user && !thread.is_locked && posts.length ? `
     <section class="card forum-recent-reference" aria-label="Relire les derniers messages">
       <h3>Relire les 7 derniers messages</h3>
-      <p class="forum-recent-help">Consulte les réponses précédentes pendant que tu rédiges la tienne.</p>
       <div class="forum-recent-scroll" tabindex="0" role="region" aria-label="Sept derniers messages, zone défilante">
         ${posts.slice(-7).map(post => `
           <article class="forum-recent-item">
