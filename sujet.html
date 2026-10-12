@@ -173,6 +173,40 @@ function renderForumMessage(text) {
 }
 
 
+// Reconstruit un éditeur visuel à partir d'un ancien message BBCode.
+function loadForumVisualContent(editor, source) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = renderForumMessage(source);
+  wrapper.querySelectorAll("blockquote.forum-quote").forEach(quote => {
+    const header = quote.querySelector("strong");
+    const label = header?.textContent || "";
+    quote.dataset.quoteAuthor = label.endsWith(" a écrit :") ? label.slice(0,-" a écrit :".length) : "";
+  });
+  wrapper.querySelectorAll(".forum-size-1,.forum-size-2,.forum-size-3,.forum-size-4,.forum-size-5").forEach(el => {
+    const match = el.className.match(/forum-size-([1-5])/);
+    if (match) el.dataset.forumSize = match[1];
+  });
+  wrapper.querySelectorAll("span[style],div[style]").forEach(el => {
+    const font = el.style.fontFamily.toLowerCase().replace(/["']/g,"");
+    const fonts = ["arial","georgia","trebuchet ms","palatino linotype","verdana"];
+    if (font) { const index = fonts.findIndex(f => font.startsWith(f)); if (index >= 0) el.dataset.forumFont = String(index+1); }
+    if (el.style.color) {
+      const match = el.style.color.match(/\\d+/g);
+      if (match?.length === 3) el.dataset.forumColor = "#" + match.map(n => Number(n).toString(16).padStart(2,"0")).join("");
+    }
+    if (el.style.textAlign) el.dataset.forumAlign = el.style.textAlign;
+  });
+  wrapper.querySelectorAll("img.forum-post-image").forEach(img => {
+    const match = img.src.match(/([0-9a-f-]{36}\\/[a-z0-9-]+\\.webp)$/i);
+    if (match) { img.dataset.forumImage = match[1]; img.contentEditable = "false"; img.closest("a.forum-image-link")?.replaceWith(img); }
+  });
+  wrapper.querySelectorAll("img.forum-inline-smiley").forEach(img => {
+    const match = img.alt.match(/^Smiley (.+)$/);
+    if (match) { img.dataset.smiley = match[1]; img.contentEditable = "false"; }
+  });
+  editor.replaceChildren(...Array.from(wrapper.childNodes));
+}
+
 // Convertit uniquement les éléments visuels autorisés en BBCode, sans conserver de HTML utilisateur.
 function serializeForumEditor(editor) {
   const walk = node => {
@@ -682,12 +716,43 @@ async function renderSubject() {
       bodyBox.hidden = true;
       const form = document.createElement("div");
       form.className = "forum-edit-form";
-      const field = document.createElement("textarea");
-      field.value = post.body || "";
-      field.maxLength = 20000;
-      field.rows = 7;
-      const preview = document.createElement("div");
-      preview.className = "forum-message-body forum-edit-preview";
+      const field = document.createElement("div");
+      field.className = "reply-rich-editor forum-edit-visual";
+      field.contentEditable = "true";
+      field.setAttribute("role","textbox");
+      field.setAttribute("aria-multiline","true");
+      loadForumVisualContent(field, post.body || "");
+      const editToolbar = document.createElement("div");
+      editToolbar.className = "forum-format-toolbar";
+      editToolbar.innerHTML = '<button type="button" data-edit-format="bold" title="Gras"><b>G</b></button><button type="button" data-edit-format="italic" title="Italique"><i>I</i></button><button type="button" data-edit-format="strikeThrough" title="Barré"><s>S</s></button><select data-edit-size aria-label="Taille"><option value="">Taille</option><option value="1">Très petit</option><option value="2">Petit</option><option value="3">Normal</option><option value="4">Grand</option><option value="5">Très grand</option></select><select data-edit-font aria-label="Police"><option value="">Police</option><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Trebuchet</option><option value="4">Palatino</option><option value="5">Verdana</option></select><button type="button" data-edit-align="justifyLeft">⇤</button><button type="button" data-edit-align="justifyCenter">↔</button><button type="button" data-edit-align="justifyRight">⇥</button>';
+      let editRange = null;
+      const rememberEdit = () => { const selection = window.getSelection(); if (selection.rangeCount && field.contains(selection.anchorNode)) editRange = selection.getRangeAt(0).cloneRange(); };
+      field.addEventListener("mouseup",rememberEdit);
+      field.addEventListener("keyup",rememberEdit);
+      field.addEventListener("touchend",rememberEdit);
+      editToolbar.addEventListener("pointerdown",e => {rememberEdit();if(e.target.closest("button")) e.preventDefault();});
+      const restoreEdit = () => { field.focus();if(editRange){const selection=window.getSelection();selection.removeAllRanges();selection.addRange(editRange);} };
+      editToolbar.querySelectorAll("[data-edit-format],[data-edit-align]").forEach(button => button.addEventListener("click", () => {
+        restoreEdit();
+        document.execCommand(button.dataset.editFormat || button.dataset.editAlign,false,null);
+        rememberEdit();
+        editToolbar.querySelectorAll("[data-edit-format]").forEach(b => b.classList.toggle("is-active",document.queryCommandState(b.dataset.editFormat)));
+      }));
+      for (const [selector,attribute] of [["[data-edit-size]","data-forum-size"],["[data-edit-font]","data-forum-font"]]) {
+        editToolbar.querySelector(selector).addEventListener("change",e => {
+          restoreEdit();
+          const range = window.getSelection()?.rangeCount ? window.getSelection().getRangeAt(0) : null;
+          if (!range) return;
+          const span = document.createElement("span");
+          span.setAttribute(attribute,e.target.value);
+          if(range.collapsed) span.appendChild(document.createTextNode("\\u200b"));
+          else span.appendChild(range.extractContents());
+          range.insertNode(span);
+          const next = document.createRange();next.selectNodeContents(span);
+          if(range.collapsed) next.collapse(false);
+          const selection=window.getSelection();selection.removeAllRanges();selection.addRange(next);editRange=next.cloneRange();
+        });
+      }
       const status = document.createElement("span");
       const save = document.createElement("button");
       save.type = "button"; save.className = "btn"; save.textContent = "Enregistrer";
@@ -696,13 +761,12 @@ async function renderSubject() {
       const actions = document.createElement("div");
       actions.className = "forum-edit-buttons";
       actions.append(save, cancel, status);
-      form.append(field, preview, actions);
+      form.append(editToolbar, field, actions);
       bodyBox.after(form);
-      const update = () => { preview.innerHTML = renderForumMessage(field.value); };
-      field.addEventListener("input", update); update();
+
       cancel.addEventListener("click", () => { form.remove(); bodyBox.hidden = false; });
       save.addEventListener("click", async () => {
-        const content = field.value.trim();
+        const content = serializeForumEditor(field);
         if (!content || content.length > 20000) { status.textContent = "Le message doit contenir entre 1 et 20 000 caractères."; return; }
         save.disabled = true; status.textContent = "Enregistrement…";
         const { data, error } = await window.supabaseClient.from("posts")
