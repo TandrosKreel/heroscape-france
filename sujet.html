@@ -7,7 +7,7 @@
 
   <title>Sujet — Heroscape France</title>
 
-  <link rel="stylesheet" href="css/style.css?v=20261012-nested-quote10">
+  <link rel="stylesheet" href="css/style.css?v=20261012-quote-controls11">
 </head>
 
 <body>
@@ -295,6 +295,30 @@ function enhanceForumQuote(quote) {
     body.dataset.placeholder="Écrivez ici les paroles que vous souhaitez citer…";
   }
   body.setAttribute("aria-label","Contenu de la citation : écrivez ici le texte cité");
+  // La citation reste éditable, mais peut être retirée indépendamment du message.
+  if(!quote.querySelector(":scope > .forum-quote-remove")){
+    const remove=document.createElement("button");
+    remove.type="button";remove.className="forum-quote-remove";
+    remove.textContent="×";remove.title="Supprimer cette citation";
+    remove.setAttribute("aria-label","Supprimer cette citation");
+    remove.contentEditable="false";
+    remove.addEventListener("mousedown",event=>event.preventDefault());
+    remove.addEventListener("click",event=>{
+      event.preventDefault();event.stopPropagation();
+      const parent=quote.parentNode;
+      if(!parent)return;
+      const next=quote.nextSibling;
+      quote.remove();
+      if(parent.isContentEditable){
+        const selection=window.getSelection(),range=document.createRange();
+        if(next)range.setStartBefore(next);
+        else { const trailing=document.createElement("div");trailing.appendChild(document.createElement("br"));parent.appendChild(trailing);range.selectNodeContents(trailing); }
+        range.collapse(true);selection.removeAllRanges();selection.addRange(range);
+        parent.dispatchEvent(new Event("input",{bubbles:true}));
+      }
+    });
+    quote.appendChild(remove);
+  }
 }
 
 function loadForumVisualContent(editor, source) {
@@ -873,6 +897,9 @@ async function renderSubject() {
         const range=selection.rangeCount?selection.getRangeAt(0):document.createRange();
         if(!field.contains(range.commonAncestorContainer)){range.selectNodeContents(field);range.collapse(false);}
         range.deleteContents();range.insertNode(quote);
+        const trailing=document.createElement("div");trailing.appendChild(document.createElement("br"));quote.after(trailing);
+        const next=document.createRange();next.selectNodeContents(body);next.collapse(false);
+        selection.removeAllRanges();selection.addRange(next);
       });
       const status = document.createElement("span");
       const save = document.createElement("button");
@@ -1051,10 +1078,14 @@ async function renderSubject() {
         enhanceForumQuote(nested);
       });
       insertVisual(quote);
+      // Ajouter un paragraphe indépendant après la citation pour écrire sa réponse.
+      const afterQuote=document.createElement("div");afterQuote.appendChild(document.createElement("br"));
+      quote.after(afterQuote);
       if (!content) {
         const range = document.createRange(); range.selectNodeContents(body); range.collapse(false);
         editor.focus(); placeCaret(range);
       }
+      if(content){const range=document.createRange();range.selectNodeContents(afterQuote);range.collapse(true);editor.focus();placeCaret(range);}
       editor.scrollIntoView({behavior:"smooth",block:"center"});
     }
     document.querySelectorAll("#forum-format-toolbar [data-format]").forEach(button =>
