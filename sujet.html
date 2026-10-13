@@ -152,8 +152,8 @@ function renderMessageImages(html) {
   if (!base) return html;
   const prefix = base.slice(0, -("placeholder".length));
   return html.replace(/\[image=([0-9a-f-]{36}\/[a-z0-9-]+\.webp)\]/gi, (_, path) =>
-    '<a class="forum-image-link" href="' + prefix + path + '" target="_blank" rel="noopener noreferrer">' +
-    '<img class="forum-post-image" src="' + prefix + path + '" alt="Photo jointe au message" loading="lazy"></a>');
+    '<div class="forum-image-row"><a class="forum-image-link" href="' + prefix + path + '" target="_blank" rel="noopener noreferrer">' +
+    '<img class="forum-post-image" src="' + prefix + path + '" alt="Photo jointe au message" loading="lazy"></a></div>');
 }
 function renderForumMessage(text) {
   // Harmoniser également les messages publiés avant cette correction.
