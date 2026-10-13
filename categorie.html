@@ -143,7 +143,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script>
 
-<script src="js/forum.js?v=20261013-atomic"></script>
+<script src="js/forum.js?v=20261013-cat11"></script>
 <script src="js/smileys-data.js?v=20261009-6"></script>
 <script src="js/topic-composer.js?v=20261013-1"></script>
 
@@ -414,7 +414,7 @@ async function render() {
   topicsBox.innerHTML =
     arr.map(topic => {
       const totalPages = Math.max(1, Math.ceil((postCounts[topic.id] || 1) / 25));
-      const lastUrl = "sujet.html?id=" + encodeURIComponent(topic.id) + "&page=" + totalPages +
+      const lastUrl = "sujet.html?v=20261013-topic11&id=" + encodeURIComponent(topic.id) + "&page=" + totalPages +
         (lastPosts[topic.id]?.id ? "#post-" + encodeURIComponent(lastPosts[topic.id].id) : "");
 
       return `
@@ -557,7 +557,7 @@ publishTopicButton.addEventListener(
 
 
     location.href =
-      "sujet.html?id=" +
+      "sujet.html?v=20261013-topic11&id=" +
       encodeURIComponent(topic.id);
   }
 );
