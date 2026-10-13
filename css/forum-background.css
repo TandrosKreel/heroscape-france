@@ -1,10 +1,9 @@
-/* Fond du forum : le fichier image n'est demandé que lorsque la préférence est active. */
+/* Essai réversible : illustration uniquement dans l'en-tête du forum sur ordinateur. */
 @media (min-width: 1000px) {
-  body.forum-image-background {
-    background-image: linear-gradient(rgba(13,17,21,.40), rgba(13,17,21,.40)), url("../Image%20ChatGPT%2013%20oct.%202026%2C%2012_13_12.png");
-    background-size: 100% 100%, contain;
-    background-position: center center, center center;
-    background-attachment: fixed, fixed;
+  body.forum-image-background > header {
+    background-image: linear-gradient(rgba(11,14,18,.38), rgba(11,14,18,.38)), url("../Image%20ChatGPT%2013%20oct.%202026%2C%2012_13_12.png");
+    background-size: 100% 100%, cover;
+    background-position: center center, center 35%;
     background-repeat: no-repeat, no-repeat;
   }
 }
