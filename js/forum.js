@@ -400,7 +400,7 @@ async function getTopics(category = null) {
     result.push({
       ...thread,
       cat: await catSlug(thread.category_id),
-      author: thread.profiles?.username || "Membre"
+      author: thread.user_id === null ? "Membre supprimé" : (thread.profiles?.username || "Membre")
     });
   }
   return result;
@@ -445,7 +445,7 @@ async function getReplies(topicId) {
     ...post,
     topic_id: post.thread_id,
     body: post.content,
-    author: post.profiles?.username || "Membre",
+    author: post.user_id === null ? "Membre supprimé" : (post.profiles?.username || "Membre"),
     avatar_url: post.profiles?.avatar_url || ""
   }));
 }
