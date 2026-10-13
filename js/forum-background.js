@@ -1,12 +1,13 @@
-/* Choix de fond du forum : visiteurs = image, membres = préférence du profil. */
+/* Préférence de fond : aucun chargement d'image avant résolution de la session.
+   Les visiteurs voient le fond ; les membres retrouvent leur choix enregistré. */
 (function () {
-  document.body.classList.add("forum-image-background");
   async function applyMemberBackground() {
     const client=window.supabaseClient;
     if(!client)return;
     try {
       const {data:{user},error:authError}=await client.auth.getUser();
-      if(authError||!user){document.body.classList.add("forum-image-background");return;}
+      if(authError){console.warn("Session du fond indisponible :",authError);return;}
+      if(!user){document.body.classList.add("forum-image-background");return;}
       const {data,error}=await client.from("profiles").select("forum_image_background").eq("id",user.id).maybeSingle();
       if(error){console.warn("Préférence du fond indisponible :",error);return;}
       document.body.classList.toggle("forum-image-background",data?.forum_image_background!==false);
