@@ -12,10 +12,14 @@
       body::before {
         content: "";
         position: fixed;
-        z-index: 0;
+        z-index: 2;
         inset: 0 auto 0 0;
         width: max(0px, calc((100vw - 1100px) / 2));
-        background: linear-gradient(to left, #11151a 0%, rgba(17,21,26,.18) 28%, rgba(17,21,26,.05) 100%), url("Image%20ChatGPT%2013%20oct.%202026%2C%2012_13_12.png") center center / cover no-repeat;
+        background-image: linear-gradient(to left, #11151a 0%, rgba(17,21,26,.18) 28%, rgba(17,21,26,.05) 100%), url("Image%20ChatGPT%2013%20oct.%202026%2C%2012_13_12.png");
+        background-position: center, 45% top;
+        background-size: 100% 100%, auto 78vh;
+        background-repeat: no-repeat;
+        background-color: #11151a;
         pointer-events: none;
       }
     }
