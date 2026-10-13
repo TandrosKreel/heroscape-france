@@ -728,7 +728,7 @@ async function renderGlobalAccount() {
   // Ne pas reconstruire inutilement les boutons à chaque navigation.
   if (!cached || cached.username !== fresh.username || cached.avatar_url !== fresh.avatar_url) drawAccount(fresh);
 
-  function drawAccount(profile) {
+  async function drawAccount(profile) {
   const avatar = profile.avatar_url
     ? '<img class="account-avatar" src="' + esc(profile.avatar_url) + '" alt="">'
     : '<span class="account-avatar account-avatar-default">' + esc((profile.username || "M").charAt(0).toUpperCase()) + '</span>';
