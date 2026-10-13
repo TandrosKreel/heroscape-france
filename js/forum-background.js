@@ -5,7 +5,8 @@
     const client=window.supabaseClient;
     if(!client)return;
     try {
-      const {data:{user},error:authError}=await client.auth.getUser();
+      const {data:{session},error:authError}=await client.auth.getSession();
+      const user=session?.user;
       if(authError){console.warn("Session du fond indisponible :",authError);return;}
       if(!user){document.body.classList.add("forum-image-background");return;}
       const {data,error}=await client.from("profiles").select("forum_image_background").eq("id",user.id).maybeSingle();
