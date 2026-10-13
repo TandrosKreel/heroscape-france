@@ -7,7 +7,9 @@
     </div>
 <nav><a href="index.html">Forum</a><a href="cartes-armee.html">Cartes Armées</a><a href="regles.html">Règles</a><a href="liens-utiles.html">Liens utiles</a><a class="active" href="membres.html">Membres</a></nav></div></header>
 <main class="container"><section class="hero"><h2>👥 Membres du forum</h2><p>Les membres sont classés selon leur nombre total de messages publiés.</p></section>
-<section id="members-list" class="members-list"><div class="empty">Chargement des membres…</div></section></main>
+<div id="admin-member-tabs" style="display:none;gap:8px;flex-wrap:wrap;margin:0 0 16px"><button class="btn" type="button" id="tab-active-members" aria-pressed="true">Membres actifs</button><button class="btn" type="button" id="tab-deleted-members" aria-pressed="false">Comptes supprimés</button></div>
+<section id="members-list" class="members-list"><div class="empty">Chargement des membres…</div></section>
+<section id="deleted-members-list" class="members-list" style="display:none"></section></main>
 <footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum.js?v=20261010-read-race"></script>
 <script>
@@ -20,6 +22,44 @@
  }
  const currentProfile=await getCurrentProfile();
  const isAdmin=currentProfile?.role==="admin";
+ if(isAdmin){
+   const tabs=document.getElementById("admin-member-tabs");
+   const activeTab=document.getElementById("tab-active-members");
+   const deletedTab=document.getElementById("tab-deleted-members");
+   const deletedBox=document.getElementById("deleted-members-list");
+   tabs.style.display="flex";
+   let deletedLoaded=false;
+   async function loadDeletedMembers(){
+     deletedBox.innerHTML='<div class="empty">Chargement des comptes supprimés…</div>';
+     const {data,error}=await window.supabaseClient.rpc("admin_list_deleted_forum_members");
+     if(error){deletedBox.innerHTML='<div class="empty">Impossible de charger les comptes supprimés : '+esc(error.message)+'</div>';return;}
+     deletedLoaded=true;
+     if(!data?.length){deletedBox.innerHTML='<div class="empty">Aucun compte supprimé enregistré depuis la mise en place de cet historique.</div>';return;}
+     deletedBox.innerHTML=data.map(m=>{
+       const date=new Date(m.deleted_at).toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"});
+       const count=Number(m.remaining_posts)||0;
+       return '<div class="card member-row"><div class="member-info"><strong>'+esc(m.username)+'</strong><div class="count">Compte supprimé le '+esc(date)+' — '+count+' message'+(count>1?'s':'')+' conservé'+(count>1?'s':'')+'</div></div>'+
+         (m.messages_preserved?'<button class="btn admin-purge-deleted" type="button" data-member-id="'+esc(m.id)+'" data-member-name="'+esc(m.username)+'">Supprimer ses messages</button>':'<span class="count">Messages déjà supprimés</span>')+'</div>';
+     }).join("");
+     deletedBox.querySelectorAll(".admin-purge-deleted").forEach(button=>button.addEventListener("click",async()=>{
+       const name=button.dataset.memberName;
+       if(!confirm('Supprimer les messages conservés de « '+name+' » ? Les premiers messages des sujets ayant des réponses d’autres membres resteront anonymisés. Cette action est irréversible.'))return;
+       button.disabled=true;
+       const {error}=await window.supabaseClient.rpc("admin_purge_deleted_forum_member_messages",{p_member_id:button.dataset.memberId});
+       if(error){alert("Suppression impossible : "+error.message);button.disabled=false;return;}
+       await loadDeletedMembers();
+     }));
+   }
+   activeTab.addEventListener("click",()=>{
+     box.style.display="";deletedBox.style.display="none";
+     activeTab.setAttribute("aria-pressed","true");deletedTab.setAttribute("aria-pressed","false");
+   });
+   deletedTab.addEventListener("click",async()=>{
+     box.style.display="none";deletedBox.style.display="";
+     activeTab.setAttribute("aria-pressed","false");deletedTab.setAttribute("aria-pressed","true");
+     if(!deletedLoaded)await loadDeletedMembers();
+   });
+ }
  const [{data:profiles,error:pe},counts]=await Promise.all([
    window.supabaseClient.from("profiles").select("id,username,avatar_url,role,created_at"),
    getMessageCounts()
