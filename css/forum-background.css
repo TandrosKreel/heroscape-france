@@ -1,0 +1,10 @@
+/* Essai réversible : fond imagé sur les pages du forum, uniquement sur ordinateur. */
+@media (min-width: 1000px) {
+  body.forum-image-background {
+    background-image: linear-gradient(rgba(13,17,21,.40), rgba(13,17,21,.40)), url("../Image%20ChatGPT%2013%20oct.%202026%2C%2012_13_12.png");
+    background-size: cover, cover;
+    background-position: center center, left center;
+    background-attachment: fixed, fixed;
+    background-repeat: no-repeat, no-repeat;
+  }
+}
