@@ -779,7 +779,7 @@ async function renderSubject() {
         pagePosts[0], true, thread.title,
         messageCounts[pagePosts[0].user_id] || 0,
         signatures[pagePosts[0].user_id] || "",
-        isAdmin
+        isAdmin, user.id
       );
     } else {
       firstPostHtml = '<h2 class="thread-page-title">' + esc(thread.title) + '</h2>';
