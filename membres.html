@@ -30,14 +30,20 @@
  if(!members.length){box.innerHTML='<div class="empty">Aucun membre pour le moment.</div>';return;}
  box.innerHTML=members.map((m,i)=>{
    const avatar=m.avatar_url?'<img class="member-avatar" src="'+esc(m.avatar_url)+'" alt="" loading="lazy">':'<div class="member-avatar post-avatar-default">'+esc((m.username||"M").charAt(0).toUpperCase())+'</div>';
-   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div></div><a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Envoyer un message</a>'+(isAdmin&&m.id!==currentProfile.id?'<button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'">Supprimer le profil</button>':'')+'</div>';
+   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div></div><a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Envoyer un message</a>'+(isAdmin&&m.id!==currentProfile.id?'<button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'" data-keep-messages="false">Supprimer profil et messages</button><button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'" data-keep-messages="true">Supprimer profil, conserver messages</button>':'')+'</div>';
  }).join("");
  if(isAdmin){
    box.querySelectorAll(".admin-delete-member").forEach(button=>button.addEventListener("click",async()=>{
-     if(!confirm("Êtes-vous sûr de vouloir supprimer ce profil ?"))return;
-     button.disabled=true;
-     const {error}=await window.supabaseClient.rpc("admin_delete_forum_member",{p_user_id:button.dataset.memberId});
-     if(error){alert("Suppression impossible : "+error.message);button.disabled=false;return;}
+     const keepMessages=button.dataset.keepMessages==="true";
+     const memberName=button.dataset.memberName;
+     const confirmation=keepMessages
+       ? 'Supprimer définitivement le compte de « '+memberName+' » ? Tous ses sujets et messages publics seront conservés sous « Membre supprimé ». Ses messages privés seront supprimés.'
+       : 'Supprimer définitivement le compte de « '+memberName+' » et ses messages ? Seuls les premiers messages de ses sujets ayant reçu des réponses d’autres membres seront conservés sous « Membre supprimé ».';
+     if(!confirm(confirmation))return;
+     box.querySelectorAll('.admin-delete-member').forEach(b=>b.disabled=true);
+     const rpcName=keepMessages?"admin_delete_forum_member_keep_messages":"admin_delete_forum_member";
+     const {error}=await window.supabaseClient.rpc(rpcName,{p_user_id:button.dataset.memberId});
+     if(error){alert("Suppression impossible : "+error.message);box.querySelectorAll('.admin-delete-member').forEach(b=>b.disabled=false);return;}
      location.reload();
    }));
  }
