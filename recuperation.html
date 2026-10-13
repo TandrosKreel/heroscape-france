@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mot de passe oublié — Heroscape France</title>
+<link rel="stylesheet" href="css/style.css?v=20261013-security">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+</head>
+<body>
+<header><div class="container"><h1>Heroscape France</h1><p>Communauté francophone Heroscape</p></div></header>
+<main class="container">
+<p><a href="connexion.html">← Retour à la connexion</a></p>
+<section class="card">
+<h2>Réinitialiser mon mot de passe</h2>
+<form id="request-form">
+<p><label for="email">Adresse e-mail du compte</label><br><input id="email" type="email" autocomplete="email" required></p>
+<button type="submit" id="send">Recevoir un lien de réinitialisation</button>
+</form>
+<form id="change-form" hidden>
+<p><label for="password">Nouveau mot de passe (12 caractères minimum)</label><br><input id="password" type="password" minlength="12" autocomplete="new-password" required></p>
+<p><label for="confirm">Confirmer le nouveau mot de passe</label><br><input id="confirm" type="password" minlength="12" autocomplete="new-password" required></p>
+<button type="submit" id="change">Enregistrer le nouveau mot de passe</button>
+</form>
+<p id="status" role="status" aria-live="polite"></p>
+</section>
+</main>
+<script>
+const client=window.supabaseClient;
+const requestForm=document.getElementById("request-form");
+const changeForm=document.getElementById("change-form");
+const status=document.getElementById("status");
+function show(message){status.textContent=message;}
+function recoveryMode(){requestForm.hidden=true;changeForm.hidden=false;show("Choisis ton nouveau mot de passe.");}
+const params=new URLSearchParams(location.search);
+const fragment=new URLSearchParams(location.hash.slice(1));
+if(params.get("error")||fragment.get("error"))show("Ce lien est invalide ou expiré. Demande un nouveau lien.");
+client.auth.onAuthStateChange((event)=>{if(event==="PASSWORD_RECOVERY")recoveryMode();});
+(async()=>{
+ const code=params.get("code");
+ if(code){
+  const {error}=await client.auth.exchangeCodeForSession(code);
+  if(error){show("Lien invalide ou expiré. Demande un nouveau lien.");return;}
+  recoveryMode();
+  history.replaceState(null,"","recuperation.html");
+ }else if(fragment.get("type")==="recovery" && fragment.get("access_token")){
+  const {data:{session}}=await client.auth.getSession();
+  if(session)recoveryMode();
+ }
+})();
+requestForm.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const button=document.getElementById("send");button.disabled=true;
+ const {error}=await client.auth.resetPasswordForEmail(document.getElementById("email").value.trim(),{
+  redirectTo:"https://tandroskreel.github.io/heroscape-france/recuperation.html"
+ });
+ show(error?"Envoi impossible : "+error.message:"Si cette adresse correspond à un compte, un lien de réinitialisation va être envoyé.");
+ button.disabled=false;
+});
+changeForm.addEventListener("submit",async e=>{
+ e.preventDefault();
+ const password=document.getElementById("password").value;
+ if(password!==document.getElementById("confirm").value){show("Les deux mots de passe ne correspondent pas.");return;}
+ const button=document.getElementById("change");button.disabled=true;
+ const {error}=await client.auth.updateUser({password});
+ if(error){show("Modification impossible : "+error.message);button.disabled=false;return;}
+ show("Mot de passe modifié ! Tu peux retourner à la connexion.");
+ await client.auth.signOut();
+ changeForm.hidden=true;
+});
+</script>
+</body></html>
