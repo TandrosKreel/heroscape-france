@@ -490,58 +490,27 @@ async function addTopic(category, title, author, body) {
     return null;
   }
 
-  // Création du sujet.
-  const { data: thread, error: threadError } = await supabase
-    .from("threads")
-    .insert({
-      category_id: categoryId,
-      user_id: user.id,
-      title: cleanTitle
-    })
-    .select()
-    .single();
+  // Une seule transaction PostgreSQL : sujet et premier message ensemble.
+  const { data, error } = await supabase.rpc("create_forum_thread_atomic", {
+    p_category_id: categoryId,
+    p_title: cleanTitle,
+    p_body: cleanBody
+  });
 
-  if (threadError) {
-    console.error("Erreur création sujet :", threadError);
+  if (error || !data?.length) {
+    console.error("Erreur création atomique du sujet :", error);
     return null;
   }
 
-  // Création du premier message.
-  const { data: firstPost, error: postError } = await supabase
-    .from("posts")
-    .insert({
-      thread_id: thread.id,
-      user_id: user.id,
-      content: cleanBody
-    })
-    .select("created_at")
-    .single();
-
-  if (postError) {
-    console.error("Erreur création premier message :", postError);
-
-    // Évite de conserver un sujet vide si le premier message échoue.
-    const { error: deleteError } = await supabase
-      .from("threads")
-      .delete()
-      .eq("id", thread.id)
-      .eq("user_id", user.id);
-
-    if (deleteError) {
-      console.error(
-        "Impossible de supprimer le sujet incomplet :",
-        deleteError
-      );
-    }
-
-    return null;
-  }
-
-  // Un sujet que l'utilisateur vient lui-même de publier est déjà lu pour lui.
-  await markThreadRead(thread.id, firstPost.created_at);
+  const created = data[0];
+  // L'échec du suivi de lecture n'annule pas la publication.
+  await markThreadRead(created.thread_id, created.first_post_created_at);
 
   return {
-    ...thread,
+    id: created.thread_id,
+    category_id: categoryId,
+    user_id: user.id,
+    title: cleanTitle,
     cat: category
   };
 }
