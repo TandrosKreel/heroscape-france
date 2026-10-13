@@ -618,9 +618,9 @@ if (categoriesBox) {
     const loadedCats = await loadCategories();
     categoriesBox.innerHTML = loadedCats.length ? loadedCats.map(c => `
       <div class="card forumrow category-${esc(c[0])}">
-        <a class="category-icon category-nav-link" href="categorie.html?cat=${encodeURIComponent(c[0])}" aria-label="Ouvrir la catégorie ${esc(c[2])}">${c[1]}</a>
+        <a class="category-icon category-nav-link" href="categorie.html?v=20261013-cat11&cat=${encodeURIComponent(c[0])}" aria-label="Ouvrir la catégorie ${esc(c[2])}">${c[1]}</a>
         <div class="category-content">
-          <a class="category-title-link category-nav-link" href="categorie.html?cat=${encodeURIComponent(c[0])}"><h3>${esc(c[2])}</h3></a>
+          <a class="category-title-link category-nav-link" href="categorie.html?v=20261013-cat11&cat=${encodeURIComponent(c[0])}"><h3>${esc(c[2])}</h3></a>
           <div class="count">${esc(c[3])}</div>
           <div class="category-last-activity" data-category-activity="${esc(c[0])}"></div>
         </div>
