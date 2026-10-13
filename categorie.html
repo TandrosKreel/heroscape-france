@@ -94,7 +94,13 @@
 <button type="button" id="topic-insert-link">🔗 Lien</button><button type="button" id="topic-insert-quote">❝ Citation</button><button type="button" id="topic-insert-image">📷 Photo</button><input type="file" id="topic-image-file" accept="image/jpeg,image/png,image/webp" hidden>
 </div>
 <div id="topic-body" class="reply-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Écris le premier message de ton sujet…"></div>
-<div class="smileys-toolbar"><button class="btn" id="topic-smileys" type="button">😊 Smileys</button><div id="topic-smileys-list" class="smileys-grid" hidden></div></div>
+<div class="smileys-toolbar">
+  <button class="btn" id="topic-smileys" type="button" aria-expanded="false" aria-controls="topic-smileys-picker">😊 Smileys</button>
+  <div class="smileys-picker" id="topic-smileys-picker" hidden>
+    <div class="smileys-picker-head"><strong>Choisir un smiley</strong><button type="button" id="topic-smileys-close" aria-label="Fermer les smileys">×</button></div>
+    <div class="smileys-grid" id="topic-smileys-list"></div>
+  </div>
+</div>
     </p>
 
     <p>
@@ -204,18 +210,52 @@ document.getElementById("topic-insert-quote").addEventListener("click",()=>{
   topicBody.append(quote,document.createElement("div"));body.focus();
 });
 const smileysList=document.getElementById("topic-smileys-list");
-document.getElementById("topic-smileys").addEventListener("click",()=>{
-  if(!smileysList.childElementCount){
-    for(const [key,url] of Object.entries(SMILEYS)){
-      const button=document.createElement("button");button.type="button";button.title=key;
-      const img=document.createElement("img");img.src=url;img.alt=key;img.className="forum-inline-smiley";
-      button.append(img);button.addEventListener("click",()=>{
-        const smiley=document.createElement("img");smiley.src=url;smiley.alt="Smiley "+key;smiley.dataset.smiley=key;smiley.contentEditable="false";smiley.className="forum-inline-smiley";
-        topicBody.append(smiley);topicBody.focus();
-      });smileysList.append(button);
-    }
-  }
-  smileysList.hidden=!smileysList.hidden;
+const smileysToggle=document.getElementById("topic-smileys");
+const smileysPicker=document.getElementById("topic-smileys-picker");
+const smileysClose=document.getElementById("topic-smileys-close");
+let topicSmileySelection=null;
+topicBody.addEventListener("keyup",()=>{
+ const selection=window.getSelection();
+ if(selection.rangeCount&&topicBody.contains(selection.getRangeAt(0).commonAncestorContainer))topicSmileySelection=selection.getRangeAt(0).cloneRange();
+});
+topicBody.addEventListener("mouseup",()=>{
+ const selection=window.getSelection();
+ if(selection.rangeCount&&topicBody.contains(selection.getRangeAt(0).commonAncestorContainer))topicSmileySelection=selection.getRangeAt(0).cloneRange();
+});
+smileysToggle.addEventListener("pointerdown",()=>{
+ const selection=window.getSelection();
+ if(selection.rangeCount&&topicBody.contains(selection.getRangeAt(0).commonAncestorContainer))topicSmileySelection=selection.getRangeAt(0).cloneRange();
+});
+smileysToggle.addEventListener("click",()=>{
+ if(!smileysList.childElementCount){
+   const names=Object.keys(SMILEYS);
+   smileysList.innerHTML=names.length
+     ? names.map(key=>'<button class="smiley-choice" type="button" data-smiley="'+key+'" title="'+key.replace(/_/g," ")+'"><img src="'+SMILEYS[key]+'" alt="'+key+'" loading="lazy" decoding="async"></button>').join("")
+     : '<p>Les fichiers des smileys ne sont pas encore disponibles.</p>';
+ }
+ smileysPicker.hidden=!smileysPicker.hidden;
+ smileysToggle.setAttribute("aria-expanded",String(!smileysPicker.hidden));
+});
+smileysClose.addEventListener("click",()=>{
+ smileysPicker.hidden=true;smileysToggle.setAttribute("aria-expanded","false");smileysToggle.focus();
+});
+smileysList.addEventListener("click",event=>{
+ const button=event.target.closest("[data-smiley]");if(!button)return;
+ topicBody.focus();
+ const selection=window.getSelection();
+ let range=topicSmileySelection&&topicBody.contains(topicSmileySelection.commonAncestorContainer)?topicSmileySelection.cloneRange():null;
+ if(!range){range=document.createRange();range.selectNodeContents(topicBody);range.collapse(false);}
+ range.deleteContents();
+ const img=document.createElement("img");
+ img.className="reply-editor-smiley";img.src=SMILEYS[button.dataset.smiley];img.alt="Smiley "+button.dataset.smiley;
+ img.dataset.smiley=button.dataset.smiley;img.contentEditable="false";
+ range.insertNode(img);range.setStartAfter(img);range.collapse(true);
+ selection.removeAllRanges();selection.addRange(range);topicSmileySelection=range.cloneRange();
+});
+document.addEventListener("keydown",event=>{
+ if(event.key==="Escape"&&!smileysPicker.hidden){
+   smileysPicker.hidden=true;smileysToggle.setAttribute("aria-expanded","false");smileysToggle.focus();
+ }
 });
 document.getElementById("topic-insert-image").addEventListener("click",()=>document.getElementById("topic-image-file").click());
 document.getElementById("topic-image-file").addEventListener("change",async event=>{
