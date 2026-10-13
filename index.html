@@ -5,18 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Heroscape France — Forum & Archives</title>
   <link rel="stylesheet" href="css/style.css?v=20261009-43">
-  <!-- Essai réversible : illustration en arrière-plan de la page Forum uniquement, sur PC. -->
-  <style id="forum-background-trial">
-    @media (min-width: 1000px) {
-      body {
-        background-image: linear-gradient(rgba(13,17,21,.40), rgba(13,17,21,.40)), url("Image%20ChatGPT%2013%20oct.%202026%2C%2012_13_12.png");
-        background-size: cover, cover;
-        background-position: center center, left center;
-        background-attachment: fixed, fixed;
-        background-repeat: no-repeat, no-repeat;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/forum-background.css?v=20261013-pref1">
+
 </head>
 
 <body>
@@ -76,6 +66,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
+<script src="js/forum-background.js?v=20261013-pref1"></script>
 <script src="js/forum.js?v=20261013-atomic"></script>
 
 <script>
