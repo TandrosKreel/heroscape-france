@@ -704,11 +704,31 @@ async function renderGlobalAccount() {
   } else {
     account.classList.add("account-panel","global-account");
   }
-  const profile = await getCurrentProfile();
-  if (!profile) {
+  // Afficher sans attendre le réseau les données déjà validées lors d'une visite précédente.
+  // Le cache est lié à l'identifiant de la session active, jamais partagé entre comptes.
+  const { data: { session } } = await getSupabase().auth.getSession();
+  if (!session?.user) {
+    sessionStorage.removeItem("forum_header_profile");
     account.innerHTML = '<a class="btn compact-login" href="connexion.html">Connexion</a>';
     return;
   }
+  let cached = null;
+  try {
+    const saved = JSON.parse(sessionStorage.getItem("forum_header_profile") || "null");
+    if (saved?.id === session.user.id && typeof saved.username === "string") cached = saved;
+  } catch (_) {}
+  if (cached) drawAccount(cached);
+  const { data: fresh, error: profileError } = await getSupabase()
+    .from("profiles").select("id,username,avatar_url").eq("id",session.user.id).single();
+  if (profileError || !fresh) {
+    if (!cached) account.innerHTML = '<a class="btn compact-login" href="connexion.html">Connexion</a>';
+    return;
+  }
+  try { sessionStorage.setItem("forum_header_profile", JSON.stringify(fresh)); } catch (_) {}
+  // Ne pas reconstruire inutilement les boutons à chaque navigation.
+  if (!cached || cached.username !== fresh.username || cached.avatar_url !== fresh.avatar_url) drawAccount(fresh);
+
+  function drawAccount(profile) {
   const avatar = profile.avatar_url
     ? '<img class="account-avatar" src="' + esc(profile.avatar_url) + '" alt="">'
     : '<span class="account-avatar account-avatar-default">' + esc((profile.username || "M").charAt(0).toUpperCase()) + '</span>';
@@ -773,6 +793,7 @@ async function renderGlobalAccount() {
   if (!unreadError && badge && unreadCount > 0) {
     badge.textContent = unreadCount > 99 ? "99+" : String(unreadCount);
     badge.hidden = false;
+  }
   }
 }
 document.addEventListener("DOMContentLoaded", renderGlobalAccount);
