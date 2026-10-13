@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Mon profil — Heroscape France</title>
   <link rel="stylesheet" href="css/style.css?v=20261009-43">
+  <link rel="stylesheet" href="css/forum-background.css?v=20261013-pref1">
 </head>
 <body>
 <header><div class="container">
@@ -45,6 +46,14 @@
           <p><span id="signature-count" class="count">0 / 60</span></p>
           <p><button class="btn" id="save-signature" type="button">Enregistrer ma signature</button></p>
           <p id="signature-message"></p>
+          <hr class="profile-separator">
+          <fieldset style="border:1px solid var(--line);border-radius:8px;padding:12px 16px;max-width:560px">
+            <legend><strong>Fond d'écran</strong></legend>
+            <label style="display:block;margin:8px 0"><input type="radio" name="forum-background" value="classic"> Noir classique</label>
+            <label style="display:block;margin:8px 0"><input type="radio" name="forum-background" value="image"> Avec fond imagé</label>
+            <p class="count">Ce choix s'applique à toutes les pages du forum sur ordinateur.</p>
+            <p id="forum-background-message" aria-live="polite"></p>
+          </fieldset>
           <p id="avatar-message"></p>
         </div>
       </div>
@@ -54,6 +63,7 @@
 <footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
+<script src="js/forum-background.js?v=20261013-pref1"></script>
 <script src="js/forum.js?v=20261010-read-race"></script>
 <script>
 (async function () {
@@ -64,6 +74,29 @@
   const {data:profile,error}=await window.supabaseClient.from("profiles").select("username, avatar_url").eq("id",user.id).single();
   if(error||!profile){loading.textContent="Impossible de charger le profil.";return;}
   loading.hidden=true; editor.hidden=false;
+  const backgroundRadios=[...document.querySelectorAll('input[name="forum-background"]')];
+  const backgroundStatus=document.getElementById("forum-background-message");
+  const {data:backgroundProfile,error:backgroundError}=await window.supabaseClient.from("profiles").select("forum_image_background").eq("id",user.id).single();
+  if(backgroundError){backgroundStatus.textContent="Impossible de charger la préférence.";backgroundRadios.forEach(r=>r.disabled=true);}
+  else {
+    const initial=backgroundProfile.forum_image_background!==false?"image":"classic";
+    backgroundRadios.find(r=>r.value===initial).checked=true;
+    backgroundRadios.forEach(r=>r.addEventListener("change",async()=>{
+      if(!r.checked)return;
+      const enabled=r.value==="image";
+      backgroundRadios.forEach(input=>input.disabled=true);
+      backgroundStatus.textContent="Enregistrement en cours…";
+      const {error}=await window.supabaseClient.from("profiles").update({forum_image_background:enabled}).eq("id",user.id);
+      if(error){
+        backgroundStatus.textContent="Impossible d'enregistrer : "+error.message;
+        backgroundRadios.find(input=>input.value===(enabled?"classic":"image")).checked=true;
+      } else {
+        backgroundStatus.textContent="Fond d'écran enregistré !";
+        window.dispatchEvent(new CustomEvent("forum-background-preference-changed",{detail:{enabled}}));
+      }
+      backgroundRadios.forEach(input=>input.disabled=false);
+    }));
+  }
   document.getElementById("profile-name").textContent=profile.username;
   const counts=await getMessageCounts();
   const total=counts[user.id]||0;
