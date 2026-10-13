@@ -16,7 +16,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 100px;
+    top: 0;
     background-image: linear-gradient(rgba(11,14,18,.35),rgba(11,14,18,.35)),url("../Bataille%20fantastique%20autour%20de%20la%20rivi%C3%A8re%E0%AA%B6%E0%AB%8D%E0%AA%95.png?v=60f607e8");
     background-size: 100% 100%, cover;
     background-position: center, center 56%;
