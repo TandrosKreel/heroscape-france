@@ -158,18 +158,20 @@ function renderMessageImages(html) {
 function renderForumMessage(text) {
   // Harmoniser également les messages publiés avant cette correction.
   const source=String(text||"").replace(/(\[image=[0-9a-f-]{36}\/[a-z0-9-]+\.webp\])\n+(?=\S)/gi, "$1");
+  // Supprimer les sauts de ligne automatiques entre une citation et une image.
+  const normalizedSource=source.replace(/\[\/quote\][\t \r\n]+(?=\[image=[0-9a-f-]{36}\/[a-z0-9-]+\.webp\])/gi, "[/quote]");
   const root={author:null,parts:[]},stack=[root];
   const tokens=/\[quote(?:=([^\]\r\n]{1,80}))?\]|\[\/quote\]/gi;
   let cursor=0,match;
-  while((match=tokens.exec(source))!==null){
-    if(match.index>cursor)stack[stack.length-1].parts.push({text:source.slice(cursor,match.index)});
+  while((match=tokens.exec(normalizedSource))!==null){
+    if(match.index>cursor)stack[stack.length-1].parts.push({text:normalizedSource.slice(cursor,match.index)});
     if(/^\[\/quote\]/i.test(match[0])){
       if(stack.length>1){const completed=stack.pop();stack[stack.length-1].parts.push({quote:completed});}
       else stack[0].parts.push({text:match[0]});
     } else stack.push({author:(match[1]||"").trim().replace(/^["']|["']$/g,""),parts:[]});
     cursor=tokens.lastIndex;
   }
-  if(cursor<source.length)stack[stack.length-1].parts.push({text:source.slice(cursor)});
+  if(cursor<normalizedSource.length)stack[stack.length-1].parts.push({text:normalizedSource.slice(cursor)});
   while(stack.length>1){
     const incomplete=stack.pop();
     stack[stack.length-1].parts.push({text:"[quote"+(incomplete.author?"="+incomplete.author:"")+"]"});
