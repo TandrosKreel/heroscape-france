@@ -85,12 +85,16 @@
     <p>
       <label for="topic-body">Message</label><br>
 
-      <textarea
-        id="topic-body"
-        rows="8"
-        maxlength="20000"
-        style="width:100%;box-sizing:border-box"
-      ></textarea>
+      <div class="forum-format-toolbar" id="topic-format-toolbar" role="toolbar" aria-label="Mise en forme du premier message">
+<button type="button" data-format="b" title="Gras"><strong>G</strong></button><button type="button" data-format="i" title="Italique"><em>I</em></button><button type="button" data-format="s" title="Barré"><s>S</s></button>
+<select data-size aria-label="Taille"><option value="3">Normal</option><option value="1">Très petit</option><option value="2">Petit</option><option value="4">Grand</option><option value="5">Très grand</option></select>
+<select data-font aria-label="Police"><option value="1">Arial</option><option value="2">Georgia</option><option value="3">Monospace</option><option value="4">Cursive</option><option value="5">Fantaisie</option></select>
+<select data-color aria-label="Couleur"><option value="">Couleur</option><option value="#ffffff">Blanc</option><option value="#cbd5e1">Gris clair</option><option value="#111827">Noir</option><option value="#facc15">Jaune</option><option value="#f97316">Orange</option><option value="#ef4444">Rouge</option><option value="#ec4899">Rose</option><option value="#a855f7">Violet</option><option value="#6366f1">Indigo</option><option value="#3b82f6">Bleu</option><option value="#22c55e">Vert</option><option value="#14b8a6">Turquoise</option></select>
+<button type="button" data-align="left" title="Aligner à gauche">⇤</button><button type="button" data-align="center" title="Centrer">↔</button><button type="button" data-align="right" title="Aligner à droite">⇥</button>
+<button type="button" id="topic-insert-link">🔗 Lien</button><button type="button" id="topic-insert-quote">❝ Citation</button><button type="button" id="topic-insert-image">📷 Photo</button><input type="file" id="topic-image-file" accept="image/jpeg,image/png,image/webp" hidden>
+</div>
+<div id="topic-body" class="reply-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Écris le premier message de ton sujet…"></div>
+<div class="smileys-toolbar"><button class="btn" id="topic-smileys" type="button">😊 Smileys</button><div id="topic-smileys-list" class="smileys-grid" hidden></div></div>
     </p>
 
     <p>
@@ -132,6 +136,8 @@
 <script src="js/supabase-config.js"></script>
 
 <script src="js/forum.js?v=20261013-atomic"></script>
+<script src="js/smileys-data.js?v=20261009-6"></script>
+<script src="js/topic-composer.js?v=20261013-1"></script>
 
 
 <script>
@@ -177,6 +183,60 @@ const topicBody =
 
 const topicMessage =
   document.getElementById("topic-message");
+
+const topicToolbar=document.getElementById("topic-format-toolbar");
+setupForumFormatting(topicBody,topicToolbar);
+document.getElementById("topic-insert-link").addEventListener("click",()=>{
+  const selected=window.getSelection()?.toString()||"";
+  openForumLinkDialog((url,label)=>{
+    topicBody.focus();
+    document.execCommand("insertHTML",false,'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer nofollow">'+esc(label)+'</a>');
+  },selected);
+});
+document.getElementById("topic-insert-quote").addEventListener("click",()=>{
+  const name=prompt("Qui souhaitez-vous citer ? (facultatif)","");
+  if(name===null)return;
+  const quote=document.createElement("blockquote");quote.className="forum-quote forum-quote-draft";
+  quote.dataset.quoteAuthor=name.trim().replace(/[\\[\\]\\r\\n]/g,"").slice(0,80);
+  const heading=document.createElement("strong");heading.textContent=quote.dataset.quoteAuthor?quote.dataset.quoteAuthor+" a écrit :":"Citation :";
+  const body=document.createElement("div");body.dataset.placeholder="Écrivez ici le texte à citer…";
+  quote.append(heading,body);enhanceForumQuote(quote);
+  topicBody.append(quote,document.createElement("div"));body.focus();
+});
+const smileysList=document.getElementById("topic-smileys-list");
+document.getElementById("topic-smileys").addEventListener("click",()=>{
+  if(!smileysList.childElementCount){
+    for(const [key,url] of Object.entries(SMILEYS)){
+      const button=document.createElement("button");button.type="button";button.title=key;
+      const img=document.createElement("img");img.src=url;img.alt=key;img.className="forum-inline-smiley";
+      button.append(img);button.addEventListener("click",()=>{
+        const smiley=document.createElement("img");smiley.src=url;smiley.alt="Smiley "+key;smiley.dataset.smiley=key;smiley.contentEditable="false";smiley.className="forum-inline-smiley";
+        topicBody.append(smiley);topicBody.focus();
+      });smileysList.append(button);
+    }
+  }
+  smileysList.hidden=!smileysList.hidden;
+});
+document.getElementById("topic-insert-image").addEventListener("click",()=>document.getElementById("topic-image-file").click());
+document.getElementById("topic-image-file").addEventListener("change",async event=>{
+ const file=event.target.files?.[0];event.target.value="";if(!file)return;
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>8*1024*1024){topicMessage.textContent="Image JPG, PNG ou WebP de moins de 8 Mo requise.";return;}
+ const button=document.getElementById("topic-insert-image");button.disabled=true;topicMessage.textContent="Envoi de la photo…";
+ try{
+  const bitmap=await createImageBitmap(file);const scale=Math.min(1,1400/Math.max(bitmap.width,bitmap.height));
+  const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+  canvas.getContext("2d").drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/webp",0.78));
+  if(!blob||blob.size>2*1024*1024)throw Error("Image trop volumineuse.");
+  const current=await getCurrentUser();if(!current)throw Error("Connexion requise.");
+  const path=current.id+"/"+crypto.randomUUID()+".webp";
+  const {error}=await window.supabaseClient.storage.from("forum-images").upload(path,blob,{contentType:"image/webp",upsert:false});
+  if(error)throw error;
+  const img=document.createElement("img");img.dataset.forumImage=path;img.className="forum-post-image";img.alt="Photo jointe";img.src=window.supabaseClient.storage.from("forum-images").getPublicUrl(path).data.publicUrl;img.contentEditable="false";
+  topicBody.append(img);topicMessage.textContent="Photo insérée.";
+ }catch(error){console.error(error);topicMessage.textContent="Envoi de la photo impossible.";}finally{button.disabled=false;}
+});
+
 
 const publishTopicButton =
   document.getElementById("publish-topic-button");
@@ -389,7 +449,7 @@ cancelTopicButton.addEventListener(
     newTopicForm.hidden = true;
 
     topicTitle.value = "";
-    topicBody.value = "";
+    topicBody.replaceChildren();
     topicMessage.textContent = "";
   }
 );
@@ -407,7 +467,7 @@ publishTopicButton.addEventListener(
       topicTitle.value.trim();
 
     const body =
-      topicBody.value.trim();
+      serializeForumEditor(topicBody).trim();
 
 
     if (title.length < 3) {
