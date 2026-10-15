@@ -24,3 +24,28 @@
     pointer-events: none;
   }
 }
+
+/* Essai réversible : une seule tête de l'hydre passe devant le bord droit du logo.
+   Retirer uniquement ce bloc pour annuler l'essai. */
+@media (min-width: 1000px) {
+  body.forum-image-background > header .home-brand {
+    position: relative;
+    isolation: isolate;
+  }
+  body.forum-image-background > header .home-brand::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    width: 150px;
+    height: 135px;
+    top: 34%;
+    left: calc(50% + 230px);
+    background-image: url("../Diorama%20h%C3%A9ro%C3%AFque%20au%20c%C5%93ur%20des%20cascades.png?v=20261015-diorama1");
+    background-repeat: no-repeat;
+    background-size: 930px auto;
+    background-position: -576px -93px;
+    -webkit-mask-image: radial-gradient(ellipse 48% 45% at 48% 47%, #000 52%, transparent 100%);
+    mask-image: radial-gradient(ellipse 48% 45% at 48% 47%, #000 52%, transparent 100%);
+    pointer-events: none;
+  }
+}
