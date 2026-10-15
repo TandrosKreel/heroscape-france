@@ -19,7 +19,7 @@
     top: 0;
     background-image: url("../Diorama%20h%C3%A9ro%C3%AFque%20au%20c%C5%93ur%20des%20cascades.png?v=20261015-diorama1");
     background-size: 100% auto;
-    background-position: center bottom;
+    background-position: center 66.6667%;
     background-repeat: no-repeat;
     pointer-events: none;
   }
@@ -34,15 +34,15 @@
   }
 }
 
-/* Afficher les 90 % inférieurs du diorama (image 2048 x 738).
-   Hauteur proportionnelle à la largeur du navigateur, cadrage ancré en bas. */
+/* Afficher les 85 % centraux décalés vers le bas du diorama :
+   10 % masqués en haut et 5 % masqués en bas (image 2048 x 738). */
 @media (min-width: 1000px) {
   body.forum-image-background > header {
     padding: 0!important;
   }
   body.forum-image-background > header > .container {
     box-sizing: border-box;
-    min-height: calc(100vw * 0.32431640625)!important;
+    min-height: calc(100vw * 0.306298828125)!important;
     padding-top: 24px!important;
     padding-bottom: 12px!important;
     display: flex!important;
