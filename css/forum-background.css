@@ -19,7 +19,7 @@
     top: 0;
     background-image: url("../Diorama%20h%C3%A9ro%C3%AFque%20au%20c%C5%93ur%20des%20cascades.png?v=20261015-diorama1");
     background-size: cover;
-    background-position: center 56%;
+    background-position: center top;
     background-repeat: no-repeat;
     pointer-events: none;
   }
@@ -31,5 +31,12 @@
     -webkit-mask-image: none;
     mask-image: none;
     transform: scale(.94);
+  }
+}
+
+/* Plus de ciel visible au-dessus du logo, sans déplacer les commandes. */
+@media (min-width: 1000px) {
+  body.forum-image-background > header > .container {
+    padding-top: 65px!important;
   }
 }
