@@ -58,8 +58,7 @@
 
 /* Barre supérieure persistante : navigation et compte réunis, sans masquer le diorama. */
 .forum-topbar {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1000;
   background: #18212a;
   border-bottom: 1px solid #ad873e;
