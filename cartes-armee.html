@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Cartes Armées — Heroscape France</title>
   <link rel="stylesheet" href="css/style.css?v=20261009-43">
-<link rel="stylesheet" href="css/forum-background.css?v=20261015-final77">
+<link rel="stylesheet" href="css/forum-background.css?v=20261015-topbar1">
   <style>
     .cards-toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
     .cards-toolbar input,.cards-toolbar select{padding:10px;min-width:210px}
@@ -78,5 +78,5 @@ fetch("data/cards.json").then(r=>{if(!r.ok)throw new Error("Catalogue introuvabl
   q.addEventListener("input",render);g.addEventListener("change",render);band.addEventListener("change",render);render();
 }).catch(err=>{console.error(err);document.getElementById("cards-status").textContent="Impossible de charger le catalogue.";});
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum.js?v=20261013-fastaccount12"></script></body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-topbar1"></script><script src="js/forum.js?v=20261013-fastaccount12"></script></body>
 </html>
