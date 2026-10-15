@@ -159,8 +159,10 @@
     min-height: 205px!important;
   }
   .forum-topbar {
-    max-height: 45vh;
-    overflow-y: auto;
+    position: sticky!important;
+    top: 0!important;
+    max-height: none!important;
+    overflow: visible!important;
   }
 }
 
@@ -194,3 +196,55 @@
   text-align: right;
 }
 .forum-read-actions .mark-all-read:hover { text-decoration: underline!important; }
+
+/* Mobile : barre flottante complète, sans défilement intérieur qui cache des liens. */
+@media (max-width: 999px) {
+  .forum-topbar {
+    position: sticky!important;
+    top: 0!important;
+    max-height: none!important;
+    overflow: visible!important;
+  }
+  .forum-topbar-inner {
+    height: auto!important;
+    min-height: 0!important;
+    flex-direction: column!important;
+    align-items: center!important;
+    justify-content: center!important;
+    gap: 5px!important;
+    padding: 7px 10px!important;
+  }
+  .forum-topbar nav {
+    width: 100%!important;
+    display: flex!important;
+    flex-wrap: wrap!important;
+    justify-content: center!important;
+    gap: 4px!important;
+    overflow: visible!important;
+  }
+  .forum-topbar nav a {
+    flex: 0 0 auto!important;
+    white-space: nowrap!important;
+  }
+  .forum-topbar #account.account-panel {
+    width: 100%!important;
+    max-width: 100%!important;
+    box-sizing: border-box!important;
+    justify-content: center!important;
+    padding: 0!important;
+    flex-wrap: wrap!important;
+  }
+  /* Logo mobile à 65 % de sa largeur précédente, sans toucher au bureau. */
+  body > header .heroscape-main-logo {
+    width: 65%!important;
+    max-width: 65%!important;
+    height: auto!important;
+  }
+  body > header .home-brand {
+    width: 100%!important;
+    align-items: center!important;
+  }
+  body.forum-image-background > header .heroscape-main-logo {
+    transform: scale(.94);
+  }
+}
