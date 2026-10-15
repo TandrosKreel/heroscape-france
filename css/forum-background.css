@@ -306,7 +306,7 @@
 /* Téléphone : logo réduit de 2 % par rapport à 68,25 %. */
 @media (max-width: 999px) {
   body > header .heroscape-main-logo {
-    width: 66.885%!important;
-    max-width: 66.885%!important;
+    width: 65.5473%!important;
+    max-width: 65.5473%!important;
   }
 }
