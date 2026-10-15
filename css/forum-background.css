@@ -275,3 +275,13 @@
   }
   img, video, iframe { max-width: 100%; }
 }
+
+/* Ajustement demandé uniquement sur téléphone : logo +5 %, légèrement remonté. */
+@media (max-width: 999px) {
+  body > header .heroscape-main-logo {
+    width: 68.25%!important;
+    max-width: 68.25%!important;
+    position: relative;
+    top: -8px;
+  }
+}
