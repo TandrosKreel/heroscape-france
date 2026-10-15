@@ -163,3 +163,34 @@
     overflow-y: auto;
   }
 }
+
+/* Les commandes de lecture sont placées dans le contenu, sous l'introduction. */
+.forum-read-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 2px 0 14px;
+  min-height: 28px;
+}
+.forum-read-actions:empty { display: none; }
+.forum-read-actions .mark-all-read {
+  position: static!important;
+  inset: auto!important;
+  top: auto!important;
+  right: auto!important;
+  display: inline-block!important;
+  width: auto!important;
+  max-width: 100%!important;
+  margin: 0!important;
+  padding: 4px 0!important;
+  border: 0!important;
+  background: transparent!important;
+  box-shadow: none!important;
+  color: #f2bd3f!important;
+  font-size: 13px!important;
+  font-style: italic!important;
+  cursor: pointer;
+  white-space: normal!important;
+  text-align: right;
+}
+.forum-read-actions .mark-all-read:hover { text-decoration: underline!important; }
