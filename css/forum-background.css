@@ -30,6 +30,6 @@
   body.forum-image-background > header .heroscape-main-logo {
     -webkit-mask-image: none;
     mask-image: none;
-    transform: scale(.95);
+    transform: scale(.94);
   }
 }
