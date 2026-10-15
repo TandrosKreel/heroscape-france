@@ -17,9 +17,9 @@
     right: 0;
     bottom: 0;
     top: 0;
-    background-image: linear-gradient(rgba(11,14,18,.35),rgba(11,14,18,.35)),url("../Diorama%20h%C3%A9ro%C3%AFque%20au%20c%C5%93ur%20des%20cascades.png?v=20261015-diorama1");
-    background-size: 100% 100%, cover;
-    background-position: center, center 56%;
+    background-image: url("../Diorama%20h%C3%A9ro%C3%AFque%20au%20c%C5%93ur%20des%20cascades.png?v=20261015-diorama1");
+    background-size: cover;
+    background-position: center 56%;
     background-repeat: no-repeat;
     pointer-events: none;
   }
@@ -29,7 +29,7 @@
    original déjà présent derrière lui. Aucune image ajoutée ou modifiée. */
 @media (min-width: 1000px) {
   body.forum-image-background > header .heroscape-main-logo {
-    -webkit-mask-image: linear-gradient(to right, #000 0%, #000 89%, rgba(0,0,0,.92) 92%, rgba(0,0,0,.40) 96%, transparent 100%);
-    mask-image: linear-gradient(to right, #000 0%, #000 89%, rgba(0,0,0,.92) 92%, rgba(0,0,0,.40) 96%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, #000 0%, #000 86%, rgba(0,0,0,.72) 90%, rgba(0,0,0,.20) 95%, transparent 100%);
+    mask-image: linear-gradient(to right, #000 0%, #000 86%, rgba(0,0,0,.72) 90%, rgba(0,0,0,.20) 95%, transparent 100%);
   }
 }
