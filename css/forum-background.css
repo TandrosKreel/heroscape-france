@@ -291,7 +291,7 @@
   body > header > .container { position: relative!important; }
   body > header > .container > .header-main {
     position: absolute!important;
-    top: 34%!important;
+    top: 40%!important;
     left: 0!important;
     right: 0!important;
     width: 100%!important;
@@ -300,5 +300,13 @@
   }
   body > header .heroscape-main-logo {
     top: 0!important;
+  }
+}
+
+/* Téléphone : logo réduit de 2 % par rapport à 68,25 %. */
+@media (max-width: 999px) {
+  body > header .heroscape-main-logo {
+    width: 66.885%!important;
+    max-width: 66.885%!important;
   }
 }
