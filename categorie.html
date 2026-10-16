@@ -386,8 +386,8 @@ async function render() {
   }
 
 
-  const [currentUser, , latestPostResult] = await Promise.all([
-    getCurrentUser(),
+  const currentUser = await getCurrentUser();
+  const [, latestPostResult] = await Promise.all([
     loadThreadReadStates(arr.map(topic => topic.id)),
     window.supabaseClient.from("posts")
       .select("id,thread_id,user_id,created_at,profiles(username)")
