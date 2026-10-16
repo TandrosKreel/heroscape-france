@@ -686,19 +686,19 @@ if (categoriesBox) {
         .from("threads")
         .select("id,category_id,user_id,created_at,updated_at");
       const threadIds = (threads || []).map(t => t.id);
-      const [, latestPostResult] = await Promise.all([
+      const [, activityResult] = await Promise.all([
         loadThreadReadStates(threadIds),
-        threadIds.length ? getSupabase().from("posts")
-          .select("id,thread_id,user_id,created_at,profiles(username)")
-          .in("thread_id", threadIds)
-          .order("created_at", { ascending: false }) : Promise.resolve({ data: [] })
+        getSupabase().rpc("forum_home_activity")
       ]);
-      const latestPosts = latestPostResult.data || [];
-      if (latestPostResult.error) console.error("Erreur activité des catégories :", latestPostResult.error);
-
+      if (activityResult.error) console.error("Erreur activité des catégories :", activityResult.error);
       const latestPostByThread = {};
-      for (const post of (latestPosts || [])) {
-        if (!latestPostByThread[post.thread_id]) latestPostByThread[post.thread_id] = post;
+      const postCountByThread = {};
+      for (const row of (activityResult.data || [])) {
+        postCountByThread[row.thread_id] = Number(row.post_count) || 0;
+        if (row.post_id != null) latestPostByThread[row.thread_id] = {
+          id: row.post_id, user_id: row.user_id, created_at: row.created_at,
+          profiles: { username: row.username }
+        };
       }
 
       const activityRows = [];
@@ -729,12 +729,8 @@ if (categoriesBox) {
 
         activityRows.push({ slot, latestThread, latestPost, hasUnread, ownLastPost, authorName, formattedDate });
       }
-      await Promise.all(activityRows.map(async row => {
-        const { count, error } = await getSupabase().from("posts")
-          .select("id", { count: "exact", head: true })
-          .eq("thread_id", row.latestThread.id);
-        if (error) console.error("Erreur pagination dernière activité :", error);
-        const lastPage = Math.max(1, Math.ceil((count || 1) / 25));
+      for (const row of activityRows) {
+        const lastPage = Math.max(1, Math.ceil((postCountByThread[row.latestThread.id] || 1) / 25));
         const lastMessageUrl = "sujet.html?id=" + encodeURIComponent(row.latestThread.id) +
           "&page=" + lastPage +
           (row.latestPost?.id ? "#post-" + encodeURIComponent(row.latestPost.id) : "#last-message");
@@ -742,7 +738,7 @@ if (categoriesBox) {
           '<a class="category-last-link" href="' + lastMessageUrl + '" title="Aller au dernier message">' +
           readDiceHtml(row.hasUnread, "category-activity-die", row.ownLastPost) +
           '<span class="category-activity-text">Posté par <strong>' + esc(row.authorName) + '</strong> à ' + esc(row.formattedDate) + '</span></a>';
-      }));
+      }
     }
   })();
 }
