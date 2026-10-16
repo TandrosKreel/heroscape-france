@@ -67,7 +67,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script>
-<script src="js/forum.js?v=20261016-speed1"></script>
+<script src="js/forum.js?v=20261016-speed2"></script>
 
 <script>
 async function renderLatestTopics() {
@@ -121,7 +121,16 @@ async function renderLatestTopics() {
 
   // Une ligne = un message : son dé dépend de sa propre date,
   // pas de la date du message le plus récent du même sujet.
-  const postPageCountCache = new Map();
+  const uniqueThreadIds = [...new Set(posts.map(post => post.thread_id))];
+  const pageCounts = new Map();
+  if (currentUser) {
+    await Promise.all(uniqueThreadIds.map(async threadId => {
+      const { count, error: countError } = await window.supabaseClient
+        .from("posts").select("id", { count: "exact", head: true }).eq("thread_id", threadId);
+      if (countError) console.error("Erreur nombre de messages du sujet :", countError);
+      pageCounts.set(threadId, Math.max(1, Math.ceil((count || 1) / 25)));
+    }));
+  }
   const latestRows = [];
   for (const post of posts) {
     const name = currentUser ? (post.profiles?.username || "Membre") : "Membre";
@@ -134,18 +143,7 @@ async function renderLatestTopics() {
     const date = post.created_at
       ? new Intl.DateTimeFormat("fr-FR",{dateStyle:"short",timeStyle:"short"}).format(new Date(post.created_at))
       : "";
-    let lastPage = 1;
-    if (currentUser) {
-      if (!postPageCountCache.has(post.thread_id)) {
-        const { count, error: countError } = await window.supabaseClient
-          .from("posts")
-          .select("id", { count: "exact", head: true })
-          .eq("thread_id", post.thread_id);
-        if (countError) console.error("Erreur nombre de messages du sujet :", countError);
-        postPageCountCache.set(post.thread_id, Math.max(1, Math.ceil((count || 1) / 25)));
-      }
-      lastPage = postPageCountCache.get(post.thread_id);
-    }
+    const lastPage = currentUser ? (pageCounts.get(post.thread_id) || 1) : 1;
     const latestUrl = "sujet.html?id=" + encodeURIComponent(post.thread_id) +
       (currentUser ? "&page=" + lastPage + "#post-" + encodeURIComponent(post.id) : "");
     latestRows.push('<a class="latest-post-row" style="display:grid;grid-template-columns:30px minmax(0,1fr) 145px;width:100%;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid #39444f" href="' + latestUrl + '">' +
