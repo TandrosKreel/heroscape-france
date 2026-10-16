@@ -143,7 +143,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script>
 
-<script src="js/forum.js?v=20261013-fastaccount12"></script>
+<script src="js/forum.js?v=20261016-category20"></script>
 <script src="js/smileys-data.js?v=20261009-6"></script>
 <script src="js/topic-composer.js?v=20261013-1"></script>
 
@@ -354,21 +354,27 @@ async function render() {
       .trim()
       .toLowerCase();
 
-  const topics =
-    await getTopics(cat);
-
-  const arr =
-    topics.filter(topic => {
-
-      const searchable =
-        (
-          (topic.title || "") +
-          " " +
-          (topic.author || "")
-        ).toLowerCase();
-
-      return searchable.includes(q);
-    });
+  const pageSize = 20;
+  const categoryPage = Math.max(1, parseInt(new URLSearchParams(location.search).get("page"), 10) || 1);
+  // La recherche continue de porter sur tous les sujets de la catégorie.
+  const allMatching = q ? (await getTopics(cat)).filter(topic =>
+    ((topic.title || "") + " " + (topic.author || "")).toLowerCase().includes(q)
+  ) : null;
+  const result = q ? {
+    topics: allMatching.slice((categoryPage - 1) * pageSize, categoryPage * pageSize),
+    count: allMatching.length, page: Math.min(categoryPage, Math.max(1, Math.ceil(allMatching.length / pageSize)))
+  } : await getTopicsPage(cat, categoryPage, pageSize);
+  const totalCategoryPages = Math.max(1, Math.ceil(result.count / pageSize));
+  const selectedPage = result.page;
+  const arr = q ? allMatching.slice((selectedPage - 1) * pageSize, selectedPage * pageSize) : result.topics;
+  const pagination = totalCategoryPages > 1
+    ? '<nav class="pagination" aria-label="Pages de la catégorie">' +
+      Array.from({ length: totalCategoryPages }, (_, i) => i + 1).map(n =>
+        '<a class="' + (n === selectedPage ? 'active' : '') +
+        '" href="categorie.html?cat=' + encodeURIComponent(cat) + '&page=' + n +
+        '" data-category-page="' + n + '">' + n + '</a>'
+      ).join("") + '</nav>'
+    : "";
 
 
   if (!arr.length) {
@@ -412,7 +418,7 @@ async function render() {
   }
 
   topicsBox.innerHTML =
-    arr.map(topic => {
+    pagination + arr.map(topic => {
       const totalPages = Math.max(1, Math.ceil((postCounts[topic.id] || 1) / 25));
       const lastUrl = "sujet.html?v=20261013-topic11&id=" + encodeURIComponent(topic.id) + "&page=" + totalPages +
         (lastPosts[topic.id]?.id ? "#post-" + encodeURIComponent(lastPosts[topic.id].id) : "");
@@ -444,7 +450,17 @@ async function render() {
       </div>
 
     `;
-    }).join("");
+    }).join("") + pagination;
+  topicsBox.querySelectorAll("[data-category-page]").forEach(link => {
+    link.addEventListener("click", event => {
+      if (!searchInput.value.trim()) return;
+      event.preventDefault();
+      const url = new URL(location.href);
+      url.searchParams.set("page", link.dataset.categoryPage);
+      history.pushState(null, "", url);
+      render();
+    });
+  });
 }
 
 
@@ -567,10 +583,13 @@ publishTopicButton.addEventListener(
 // RECHERCHE
 // ------------------------------------------------------------
 
-searchInput.addEventListener(
-  "input",
-  render
-);
+searchInput.addEventListener("input", () => {
+  const url = new URL(location.href);
+  url.searchParams.delete("page");
+  history.replaceState(null, "", url);
+  render();
+});
+window.addEventListener("popstate", render);
 
 
 // ------------------------------------------------------------
