@@ -69,7 +69,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script>
 
-<script src="js/forum.js?v=20261016-page1"></script>
+<script src="js/forum.js?v=20261016-pin1"></script>
 <script src="js/smileys-data.js?v=20261009-6"></script>
 
 
@@ -928,7 +928,7 @@ async function renderSubject() {
   subjectBox.innerHTML = `
 
     ${paginationHtml}
-    ${isAdmin ? '<div class="admin-thread-actions"><button class="btn" id="admin-delete-thread" type="button">Supprimer ce sujet</button></div>' : ""}
+    ${isAdmin ? '<div class="admin-thread-actions"><button class="btn" id="admin-toggle-pin" type="button">' + (thread.is_pinned ? 'Désépingler ce sujet' : 'Épingler ce sujet') + '</button><button class="btn" id="admin-delete-thread" type="button">Supprimer ce sujet</button></div>' : ""}
     ${firstPostHtml}
 
     <h3>Réponses</h3>
@@ -945,6 +945,26 @@ async function renderSubject() {
 
 
   if (isAdmin) {
+    const pinButton = document.getElementById("admin-toggle-pin");
+    if (pinButton) {
+      pinButton.addEventListener("click", async () => {
+        const nextPinned = !thread.is_pinned;
+        const question = nextPinned
+          ? "Souhaitez-vous vraiment épingler ce sujet en haut de sa catégorie ?"
+          : "Souhaitez-vous vraiment désépingler ce sujet ?";
+        if (!confirm(question)) return;
+        pinButton.disabled = true;
+        const { error } = await window.supabaseClient.rpc("admin_set_forum_thread_pin", {
+          p_thread_id: id, p_is_pinned: nextPinned
+        });
+        if (error) {
+          alert("Modification impossible : " + error.message);
+          pinButton.disabled = false;
+          return;
+        }
+        location.reload();
+      });
+    }
     const deleteThreadButton = document.getElementById("admin-delete-thread");
     if (deleteThreadButton) {
       deleteThreadButton.addEventListener("click", async () => {
