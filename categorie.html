@@ -143,7 +143,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script>
 
-<script src="js/forum.js?v=20261016-pin1"></script>
+<script src="js/forum.js?v=20261016-speed1"></script>
 <script src="js/smileys-data.js?v=20261009-6"></script>
 <script src="js/topic-composer.js?v=20261013-1"></script>
 
@@ -386,19 +386,25 @@ async function render() {
   }
 
 
-  const currentUser = await getCurrentUser();
-  await loadThreadReadStates(arr.map(topic => topic.id));
-  const lastAuthors = await getThreadLastAuthors(arr.map(topic => topic.id));
-  const { data: latestPosts } = await window.supabaseClient
-    .from("posts")
-    .select("thread_id,user_id,created_at,profiles(username)")
-    .in("thread_id", arr.map(topic => topic.id))
-    .order("created_at", { ascending: false });
+  const [currentUser, , latestPostResult] = await Promise.all([
+    getCurrentUser(),
+    loadThreadReadStates(arr.map(topic => topic.id)),
+    window.supabaseClient.from("posts")
+      .select("id,thread_id,user_id,created_at,profiles(username)")
+      .in("thread_id", arr.map(topic => topic.id))
+      .order("created_at", { ascending: false })
+  ]);
+  const latestPosts = latestPostResult.data || [];
+  if (latestPostResult.error) console.error("Erreur derniers messages :", latestPostResult.error);
+  const lastAuthors = {};
   const lastPosts = {};
   const postCounts = {};
   for (const post of (latestPosts || [])) {
     postCounts[post.thread_id] = (postCounts[post.thread_id] || 0) + 1;
-    if (!lastPosts[post.thread_id]) lastPosts[post.thread_id] = post;
+    if (!lastPosts[post.thread_id]) {
+      lastPosts[post.thread_id] = post;
+      lastAuthors[post.thread_id] = post.user_id;
+    }
   }
 
   function topicPageLinks(topicId) {
