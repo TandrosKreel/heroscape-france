@@ -69,7 +69,7 @@
 <script src="js/supabase-config.js"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script>
 
-<script src="js/forum.js?v=20261016-pin1"></script>
+<script src="js/forum.js?v=20261016-speed1"></script>
 <script src="js/smileys-data.js?v=20261009-6"></script>
 
 
@@ -760,15 +760,19 @@ async function renderSubject() {
   }
 
 
-  const currentProfile = await getCurrentProfile();
+  const [currentProfile, pageResult, recentPosts, messageCounts] = await Promise.all([
+    getCurrentProfile(),
+    getRepliesPage(id, page, POSTS_PER_PAGE),
+    getLatestReplies(id, 7),
+    getMessageCounts()
+  ]);
   const isAdmin = currentProfile?.role === "admin";
-  const pageResult = await getRepliesPage(id, page, POSTS_PER_PAGE);
   const posts = pageResult.posts;
-  const recentPosts = await getLatestReplies(id, 7);
   const latestPost = recentPosts.length ? recentPosts[recentPosts.length - 1] : null;
-  await markThreadRead(id, latestPost?.created_at || thread.updated_at || thread.created_at);
-  const messageCounts = await getMessageCounts();
   const signatures = await getSignatures(posts.map(post => post.user_id));
+  // La lecture est enregistrée sans retarder l'affichage du sujet.
+  markThreadRead(id, latestPost?.created_at || thread.updated_at || thread.created_at)
+    .catch(error => console.error("Erreur marquage du sujet :", error));
   const totalPages = Math.max(1, Math.ceil(pageResult.count / POSTS_PER_PAGE));
   const currentPage = pageResult.page;
   const pagePosts = posts;
