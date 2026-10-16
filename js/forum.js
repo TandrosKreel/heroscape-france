@@ -743,7 +743,6 @@ if (categoriesBox) {
           readDiceHtml(row.hasUnread, "category-activity-die", row.ownLastPost) +
           '<span class="category-activity-text">Posté par <strong>' + esc(row.authorName) + '</strong> à ' + esc(row.formattedDate) + '</span></a>';
       }));
-      }
     }
   })();
 }
