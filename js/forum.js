@@ -253,41 +253,28 @@ enforceForumSession();
 // 3. UTILISATEUR CONNECTÉ
 // ------------------------------------------------------------
 
+// Mutualiser les vérifications de session durant le chargement d'une page.
+let currentUserPromise = null;
 async function getCurrentUser() {
   const supabase = getSupabase();
-
-  if (!supabase) {
-    return null;
+  if (!supabase) return null;
+  if (!currentUserPromise) {
+    currentUserPromise = (async () => {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error || !session) return null;
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) {
+        console.error("Erreur utilisateur Supabase :", userError);
+        return null;
+      }
+      threadReadUserId = user?.id || null;
+      return user;
+    })().catch(error => {
+      currentUserPromise = null;
+      throw error;
+    });
   }
-
-  // getSession() permet de détecter proprement un visiteur anonyme
-  // sans provoquer l'erreur normale "Auth session missing!" de getUser().
-  const {
-    data: { session },
-    error
-  } = await supabase.auth.getSession();
-
-  if (error) {
-    console.error("Erreur session Supabase :", error);
-    return null;
-  }
-
-  if (!session) {
-    return null;
-  }
-
-  const {
-    data: { user },
-    error: userError
-  } = await supabase.auth.getUser();
-
-  if (userError) {
-    console.error("Erreur utilisateur Supabase :", userError);
-    return null;
-  }
-
-  threadReadUserId = user?.id || null;
-  return user;
+  return currentUserPromise;
 }
 
 async function getCurrentProfile() {
