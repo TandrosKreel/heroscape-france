@@ -420,7 +420,6 @@ async function getTopicsPage(category, requestedPage = 1, pageSize = 20) {
   const { data, error } = await supabase.from("threads")
     .select("id,category_id,user_id,title,is_locked,is_pinned,created_at,updated_at,profiles(username,avatar_url)")
     .eq("category_id", categoryId)
-    .order("is_pinned", { ascending: false })
     .order("updated_at", { ascending: false })
     .order("id", { ascending: false })
     .range((page - 1) * pageSize, page * pageSize - 1);
