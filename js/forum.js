@@ -451,6 +451,48 @@ async function getReplies(topicId) {
 }
 
 
+// Pagination côté Supabase : ne transférer que la page demandée.
+async function getRepliesPage(topicId, requestedPage = 1, pageSize = 25) {
+  const supabase = getSupabase();
+  if (!supabase) return { posts: [], count: 0, page: 1 };
+  const { count, error: countError } = await supabase.from("posts")
+    .select("id", { count: "exact", head: true }).eq("thread_id", topicId);
+  if (countError) throw countError;
+  const total = count || 0;
+  const maxPage = Math.max(1, Math.ceil(total / pageSize));
+  const page = Math.min(Math.max(1, Number(requestedPage) || 1), maxPage);
+  const { data, error } = await supabase.from("posts")
+    .select("id,thread_id,user_id,content,created_at,updated_at,profiles(username,avatar_url)")
+    .eq("thread_id", topicId)
+    .order("created_at", { ascending: true }).order("id", { ascending: true })
+    .range((page - 1) * pageSize, page * pageSize - 1);
+  if (error) throw error;
+  return {
+    count: total, page,
+    posts: (data || []).map(post => ({
+      ...post, topic_id: post.thread_id, body: post.content,
+      author: post.user_id === null ? "Membre supprimé" : (post.profiles?.username || "Membre"),
+      avatar_url: post.profiles?.avatar_url || ""
+    }))
+  };
+}
+
+async function getLatestReplies(topicId, limit = 7) {
+  const supabase = getSupabase();
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("posts")
+    .select("id,thread_id,user_id,content,created_at,updated_at,profiles(username,avatar_url)")
+    .eq("thread_id", topicId)
+    .order("created_at", { ascending: false }).order("id", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return (data || []).reverse().map(post => ({
+    ...post, topic_id: post.thread_id, body: post.content,
+    author: post.user_id === null ? "Membre supprimé" : (post.profiles?.username || "Membre"),
+    avatar_url: post.profiles?.avatar_url || ""
+  }));
+}
+
 // ------------------------------------------------------------
 // 6. CRÉER UN SUJET
 // ------------------------------------------------------------
