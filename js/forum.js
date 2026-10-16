@@ -686,19 +686,22 @@ if (categoriesBox) {
         .from("threads")
         .select("id,category_id,user_id,created_at,updated_at");
       const threadIds = (threads || []).map(t => t.id);
-      await loadThreadReadStates(threadIds);
-      const lastAuthors = await getThreadLastAuthors(threadIds);
-      const { data: latestPosts } = threadIds.length ? await getSupabase()
-        .from("posts")
-        .select("id,thread_id,user_id,created_at,profiles(username)")
-        .in("thread_id", threadIds)
-        .order("created_at", { ascending: false }) : { data: [] };
+      const [, latestPostResult] = await Promise.all([
+        loadThreadReadStates(threadIds),
+        threadIds.length ? getSupabase().from("posts")
+          .select("id,thread_id,user_id,created_at,profiles(username)")
+          .in("thread_id", threadIds)
+          .order("created_at", { ascending: false }) : Promise.resolve({ data: [] })
+      ]);
+      const latestPosts = latestPostResult.data || [];
+      if (latestPostResult.error) console.error("Erreur activité des catégories :", latestPostResult.error);
 
       const latestPostByThread = {};
       for (const post of (latestPosts || [])) {
         if (!latestPostByThread[post.thread_id]) latestPostByThread[post.thread_id] = post;
       }
 
+      const activityRows = [];
       for (const cat of loadedCats) {
         const catThreads = (threads || []).filter(t => Number(t.category_id) === Number(cat[4]));
         const hasUnread = catThreads.some(t => isThreadUnread(
@@ -716,7 +719,7 @@ if (categoriesBox) {
         if (!slot || !latestThread) continue;
 
         const latestPost = latestPostByThread[latestThread.id];
-        const latestAuthor = latestPost?.user_id || lastAuthors[latestThread.id] || latestThread.user_id;
+        const latestAuthor = latestPost?.user_id ?? latestThread.user_id;
         const ownLastPost = latestAuthor === user.id && !hasUnread;
         const authorName = latestPost?.profiles?.username || (latestAuthor === user.id ? "vous" : "Membre");
         const activityDate = latestPost?.created_at || latestThread.updated_at || latestThread.created_at;
@@ -724,18 +727,22 @@ if (categoriesBox) {
           day:"2-digit", month:"2-digit", year:"numeric", hour:"2-digit", minute:"2-digit"
         }).format(new Date(activityDate));
 
-        const { count: latestThreadPostCount } = await getSupabase()
-          .from("posts")
+        activityRows.push({ slot, latestThread, latestPost, hasUnread, ownLastPost, authorName, formattedDate });
+      }
+      await Promise.all(activityRows.map(async row => {
+        const { count, error } = await getSupabase().from("posts")
           .select("id", { count: "exact", head: true })
-          .eq("thread_id", latestThread.id);
-        const latestThreadLastPage = Math.max(1, Math.ceil((latestThreadPostCount || 1) / 25));
-        const lastMessageUrl = "sujet.html?id=" + encodeURIComponent(latestThread.id) +
-          "&page=" + latestThreadLastPage +
-          (latestPost?.id ? "#post-" + encodeURIComponent(latestPost.id) : "#last-message");
-        slot.innerHTML =
+          .eq("thread_id", row.latestThread.id);
+        if (error) console.error("Erreur pagination dernière activité :", error);
+        const lastPage = Math.max(1, Math.ceil((count || 1) / 25));
+        const lastMessageUrl = "sujet.html?id=" + encodeURIComponent(row.latestThread.id) +
+          "&page=" + lastPage +
+          (row.latestPost?.id ? "#post-" + encodeURIComponent(row.latestPost.id) : "#last-message");
+        row.slot.innerHTML =
           '<a class="category-last-link" href="' + lastMessageUrl + '" title="Aller au dernier message">' +
-          readDiceHtml(hasUnread, "category-activity-die", ownLastPost) +
-          '<span class="category-activity-text">Posté par <strong>' + esc(authorName) + '</strong> à ' + esc(formattedDate) + '</span></a>';
+          readDiceHtml(row.hasUnread, "category-activity-die", row.ownLastPost) +
+          '<span class="category-activity-text">Posté par <strong>' + esc(row.authorName) + '</strong> à ' + esc(row.formattedDate) + '</span></a>';
+      }));
       }
     }
   })();
