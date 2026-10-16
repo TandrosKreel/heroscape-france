@@ -407,6 +407,30 @@ async function getTopics(category = null) {
 }
 
 
+// Catégories : pagination serveur, 20 sujets par page, activité récente d'abord.
+async function getTopicsPage(category, requestedPage = 1, pageSize = 20) {
+  const supabase = getSupabase();
+  const categoryId = await catId(category);
+  if (!supabase || !categoryId) return { topics: [], count: 0, page: 1 };
+  const { count, error: countError } = await supabase.from("threads")
+    .select("id", { count: "exact", head: true }).eq("category_id", categoryId);
+  if (countError) throw countError;
+  const total = count || 0;
+  const page = Math.min(Math.max(1, Number(requestedPage) || 1), Math.max(1, Math.ceil(total / pageSize)));
+  const { data, error } = await supabase.from("threads")
+    .select("id,category_id,user_id,title,is_locked,is_pinned,created_at,updated_at,profiles(username,avatar_url)")
+    .eq("category_id", categoryId)
+    .order("is_pinned", { ascending: false })
+    .order("updated_at", { ascending: false })
+    .order("id", { ascending: false })
+    .range((page - 1) * pageSize, page * pageSize - 1);
+  if (error) throw error;
+  return { count: total, page, topics: (data || []).map(thread => ({
+    ...thread, cat: category,
+    author: thread.user_id === null ? "Membre supprimé" : (thread.profiles?.username || "Membre")
+  })) };
+}
+
 // ------------------------------------------------------------
 // 5. MESSAGES D'UN SUJET
 // ------------------------------------------------------------
