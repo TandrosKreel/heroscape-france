@@ -17,22 +17,29 @@ async function load(){
 }
 const cardOptions=()=>cards.map((c,i)=>'<option value="'+i+'">'+esc(c.name)+' ('+c.points+' pts)</option>').join('');
 function buildRender(){
- $('bet-build').innerHTML=build.map((a,i)=>'<div class="bet-build-army"><h4>Armée '+(i+1)+'</h4><label>Joueur <select data-player="'+i+'"><option value="">Non membre du forum</option>'+members.map(m=>'<option value="'+esc(m.id)+'" '+(a.member_id===m.id?'selected':'')+'>'+esc(m.username)+'</option>').join('')+'</select></label>'+a.cards.map((c,j)=>'<div class="bet-build-card"><select data-card="'+i+':'+j+'">'+cardOptions()+'</select><label>Quantité <input type="number" min="1" max="50" value="'+c.quantity+'" data-qty="'+i+':'+j+'"></label><button data-remove-card="'+i+':'+j+'">×</button></div>').join('')+'<p>Total : <strong>'+a.cards.reduce((s,c)=>s+cards[c.index].points*c.quantity,0)+' points</strong></p><button data-add-card="'+i+'">+ Figurine</button><button data-remove-army="'+i+'">Supprimer cette armée</button></div>').join('');
+ $('bet-build').innerHTML=build.map((a,i)=>'<div class="bet-build-army"><div class="bet-army-heading"><h4>Armée '+(i+1)+'</h4><button data-remove-army="'+i+'" title="Supprimer cette armée">Supprimer l’armée</button></div><label class="bet-player-row">Joueur <select data-player="'+i+'"><option value="">Non membre du forum</option>'+members.map(m=>'<option value="'+esc(m.id)+'" '+(a.member_id===m.id?'selected':'')+'>'+esc(m.username)+'</option>').join('')+'</select></label>'+a.cards.map((c,j)=>'<div class="bet-build-card"><div class="bet-card-picker"><input type="search" autocomplete="off" spellcheck="false" data-card-search="'+i+':'+j+'" placeholder="Rechercher une figurine…" value="'+esc(c.index===null?'':cards[c.index]?.name||'')+'" aria-label="Chercher une figurine"><div class="bet-card-suggestions" data-suggestions="'+i+':'+j+'" hidden></div></div><input type="number" min="1" max="50" value="'+c.quantity+'" data-qty="'+i+':'+j+'" aria-label="Quantité" title="Quantité"><button class="bet-remove-card" data-remove-card="'+i+':'+j+'" title="Retirer cette figurine">×</button></div>').join('')+'<div class="bet-build-footer"><strong>Total : '+a.cards.reduce((sum,c)=>sum+(c.index===null?0:cards[c.index].points*c.quantity),0)+' points</strong><button data-add-card="'+i+'">+ Figurine</button></div></div>').join('');
  document.querySelectorAll('[data-player]').forEach(e=>e.onchange=()=>build[+e.dataset.player].member_id=e.value);
- document.querySelectorAll('[data-card]').forEach(e=>{const [i,j]=e.dataset.card.split(':').map(Number);e.value=build[i].cards[j].index;e.onchange=()=>{build[i].cards[j].index=+e.value;buildRender()}});
+ document.querySelectorAll('[data-card-search]').forEach(e=>{
+  const [i,j]=e.dataset.cardSearch.split(':').map(Number),list=document.querySelector('[data-suggestions="'+i+':'+j+'"]');
+  const search=()=>{const term=e.value.trim().toLocaleLowerCase('fr');const matches=cards.map((card,index)=>({card,index})).filter(x=>!term||x.card.name.toLocaleLowerCase('fr').includes(term)).slice(0,30);list.innerHTML=matches.map(x=>'<button type="button" data-pick="'+x.index+'">'+esc(x.card.name)+' <small>('+x.card.points+' pts)</small></button>').join('')||'<span class="bet-no-results">Aucune figurine trouvée</span>';list.hidden=false;list.querySelectorAll('[data-pick]').forEach(button=>button.onmousedown=event=>{event.preventDefault();build[i].cards[j].index=+button.dataset.pick;buildRender();document.querySelector('[data-card-search="'+i+':'+j+'"]')?.focus()})};
+  e.addEventListener('input',()=>{build[i].cards[j].index=null;search();const total=e.closest('.bet-build-army').querySelector('.bet-build-footer strong');total.textContent='Total : '+build[i].cards.reduce((sum,c)=>sum+(c.index===null?0:cards[c.index].points*c.quantity),0)+' points'});
+  e.addEventListener('focus',search);
+  e.addEventListener('keydown',event=>{if(event.key==='Escape')list.hidden=true;if(event.key==='Enter'&&!list.hidden){event.preventDefault();const first=list.querySelector('[data-pick]');if(first){build[i].cards[j].index=+first.dataset.pick;buildRender()}}});
+  e.addEventListener('blur',()=>{setTimeout(()=>{list.hidden=true},150)});
+ });
  document.querySelectorAll('[data-qty]').forEach(e=>e.onchange=()=>{const [i,j]=e.dataset.qty.split(':').map(Number);build[i].cards[j].quantity=Math.max(1,Math.min(50,+e.value||1));buildRender()});
- document.querySelectorAll('[data-add-card]').forEach(e=>e.onclick=()=>{build[+e.dataset.addCard].cards.push({index:0,quantity:1});buildRender()});
+ document.querySelectorAll('[data-add-card]').forEach(e=>e.onclick=()=>{build[+e.dataset.addCard].cards.push({index:null,quantity:1});buildRender();document.querySelector('[data-card-search="'+e.dataset.addCard+':'+(build[+e.dataset.addCard].cards.length-1)+'"]')?.focus()});
  document.querySelectorAll('[data-remove-card]').forEach(e=>e.onclick=()=>{const [i,j]=e.dataset.removeCard.split(':').map(Number);build[i].cards.splice(j,1);buildRender()});
  document.querySelectorAll('[data-remove-army]').forEach(e=>e.onclick=()=>{build.splice(+e.dataset.removeArmy,1);buildRender()});
 }
-$('bet-add').onclick=()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}$('bet-form').hidden=false;build=[{member_id:'',cards:[{index:0,quantity:1}]},{member_id:'',cards:[{index:0,quantity:1}]}];buildRender()};
+$('bet-add').onclick=()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}$('bet-form').hidden=false;build=[{member_id:'',cards:[{index:null,quantity:1}]},{member_id:'',cards:[{index:null,quantity:1}]}];buildRender()};
 $('bet-cancel-form').onclick=()=>$('bet-form').hidden=true;
-$('bet-army-add').onclick=()=>{if(build.length>=20)return;build.push({member_id:'',cards:[{index:0,quantity:1}]});buildRender()};
+$('bet-army-add').onclick=()=>{if(build.length>=20)return;build.push({member_id:'',cards:[{index:null,quantity:1}]});buildRender()};
 $('bet-save').onclick=async()=>{try{
  const format=$('bet-format').value.trim(),photos=$('bet-photos').value.split('\n').map(x=>x.trim()).filter(Boolean);
  if(!/^\d+(vs\d+)+$/i.test(format))throw Error('Format attendu : 1vs1, 2vs2, 1vs1vs1…');
  const counts=format.toLowerCase().split('vs').map(Number);if(counts.some(x=>x<1)||counts.reduce((a,b)=>a+b,0)!==build.length)throw Error('Le format doit correspondre au nombre d’armées.');
- if(build.length<2||build.some(a=>!a.cards.length))throw Error('Chaque armée doit avoir une carte.');
+ if(build.length<2||build.some(a=>!a.cards.length||a.cards.some(c=>c.index===null)))throw Error('Sélectionne une figurine valide dans chaque ligne de chaque armée.');
  if(photos.some(x=>!/^https:\/\//i.test(x)))throw Error('Les photos doivent avoir une URL HTTPS.');
  const chosen=build.map(a=>a.member_id).filter(Boolean);if(new Set(chosen).size!==chosen.length)throw Error('Un membre ne peut contrôler deux armées.');
  await call('bet_create',{p_format:format,p_map:$('bet-map').value,p_photos:photos,p_armies:build.map(a=>({member_id:a.member_id,cards:a.cards.map(c=>({name:cards[c.index].name,points:cards[c.index].points,quantity:c.quantity}))}))});
