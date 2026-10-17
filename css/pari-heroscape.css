@@ -17,3 +17,11 @@
 .bet-panel .bet-card-suggestions button{display:block;width:100%;margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;color:var(--text);text-align:left;padding:8px;white-space:normal}
 .bet-panel .bet-card-suggestions button:hover,.bet-panel .bet-card-suggestions button:focus{background:var(--panel2)}
 .bet-no-results{display:block;padding:9px}
+
+/* Repères colorés par armée, sans modifier les couleurs générales du forum. */
+#bet-build{--bet-army-1:#d5a43b;--bet-army-2:#48a5d6;--bet-army-3:#8fcb70;--bet-army-4:#d58fc6;--bet-army-5:#e28b60;--bet-army-6:#a2a0e8}
+#bet-build .bet-build-army{border:2px solid var(--army-accent);border-left-width:6px;background:color-mix(in srgb,var(--army-accent) 8%,transparent)}
+#bet-build .bet-army-heading h4{color:var(--army-accent);font-weight:800}
+#bet-build .bet-card-picker{z-index:auto}
+#bet-build .bet-build-card:focus-within{position:relative;z-index:50}
+#bet-build .bet-card-suggestions{z-index:100}
