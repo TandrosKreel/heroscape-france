@@ -1,1 +1,19 @@
 .bet-tabs,.bet-controls,.bet-actions,.bet-vote-actions{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.bet-tabs button{border:1px solid var(--line);padding:10px;border-radius:6px;background:var(--panel);color:var(--text);cursor:pointer}.bet-tabs button.active{background:var(--gold);color:#17130a}.bet-panel[hidden],#bet-form[hidden]{display:none!important}.bet-panel .card{margin:14px 0;padding:18px}.bet-armies{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px}.bet-army{flex:1 1 190px;min-width:0;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:12px}.bet-vs{align-self:center;font-weight:900;color:var(--gold)}.bet-panel label{display:block;margin:9px 0}.bet-panel input,.bet-panel select,.bet-panel textarea{padding:8px;max-width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:5px}.bet-panel button{cursor:pointer;padding:7px 11px;margin:3px}.bet-build-army{border:1px solid var(--line);padding:12px;margin:12px 0;border-radius:8px}.bet-build-card{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}.bet-build-card select{max-width:65%}.bet-build-card input{width:65px}.bet-meta{font-size:.88em;color:var(--muted)}.bet-map-images img{max-width:180px;max-height:130px;margin:6px;object-fit:contain}.bet-stat-table{width:100%;border-collapse:collapse}.bet-stat-table th,.bet-stat-table td{padding:9px;border-bottom:1px solid var(--line);text-align:left}.bet-pagination button{margin:3px}.bet-vote-choice{display:inline-flex!important;gap:5px;align-items:center;margin-right:12px!important}.bet-vote-choice input{width:auto}.bet-result{font-weight:bold;color:var(--gold)}@media(max-width:600px){.bet-stat-table{font-size:12px}.bet-stat-table th,.bet-stat-table td{padding:5px}.bet-tabs button{flex:1 1 40%}}
+/* Création d'armée compacte et recherche de figurines par fragment du nom. */
+.bet-build-army{padding:9px 11px;margin:8px 0}
+.bet-army-heading,.bet-build-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.bet-army-heading h4{margin:0}
+.bet-player-row{display:flex!important;align-items:center;gap:9px;margin:5px 0 8px!important}
+.bet-player-row select{flex:1;min-width:0}
+.bet-build-card{display:flex;gap:5px;margin:3px 0;flex-wrap:nowrap;align-items:center}
+.bet-card-picker{position:relative;flex:1;min-width:0}
+.bet-panel .bet-card-picker input{box-sizing:border-box;width:100%;max-width:none;padding:6px 8px}
+.bet-panel .bet-build-card>input[data-qty]{width:53px;flex:0 0 53px;padding:6px 4px;text-align:center}
+.bet-panel .bet-remove-card{padding:5px 9px;margin:0;flex:0 0 auto}
+.bet-build-footer{margin-top:5px}
+.bet-build-footer button{margin:0}
+.bet-card-suggestions{position:absolute;z-index:30;top:100%;left:0;right:0;max-height:230px;overflow-y:auto;background:var(--panel);border:1px solid var(--gold);border-radius:5px;box-shadow:0 8px 22px #0008}
+.bet-card-suggestions[hidden]{display:none}
+.bet-panel .bet-card-suggestions button{display:block;width:100%;margin:0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:transparent;color:var(--text);text-align:left;padding:8px;white-space:normal}
+.bet-panel .bet-card-suggestions button:hover,.bet-panel .bet-card-suggestions button:focus{background:var(--panel2)}
+.bet-no-results{display:block;padding:9px}
