@@ -54,6 +54,13 @@
             <p class="count">Ce choix s'applique à toutes les pages du forum sur ordinateur.</p>
             <p id="forum-background-message" aria-live="polite"></p>
           </fieldset>
+          <hr class="profile-separator">
+          <fieldset style="border:1px solid var(--line);border-radius:8px;padding:12px 16px;max-width:560px">
+            <legend><strong>Notifications du Pari Heroscape</strong></legend>
+            <label style="display:flex;align-items:center;gap:10px"><input type="checkbox" id="profile-bet-notifications"> Recevoir une notification lorsqu'une nouvelle partie est publiée</label>
+            <p class="count">Ce réglage est également disponible dans l'onglet Notifications.</p>
+            <p id="profile-bet-notifications-status" aria-live="polite"></p>
+          </fieldset>
           <p id="avatar-message"></p>
         </div>
       </div>
@@ -157,6 +164,23 @@
     }catch(err){console.error(err);message.textContent="Impossible d'enregistrer l'avatar : "+(err.message||"erreur inconnue");message.className="error-message";}
     finally{save.disabled=false;}
   });
+})();
+</script>
+<script>
+(async()=>{
+ const checkbox=document.getElementById("profile-bet-notifications"),status=document.getElementById("profile-bet-notifications-status");
+ const {data:{user}}=await window.supabaseClient.auth.getUser();if(!user)return;
+ const {data,error}=await window.supabaseClient.from("profiles").select("bet_notifications_enabled").eq("id",user.id).single();
+ if(error){status.textContent="Impossible de charger la préférence.";checkbox.disabled=true;return}
+ checkbox.checked=data.bet_notifications_enabled!==false;
+ checkbox.addEventListener("change",async()=>{
+  checkbox.disabled=true;status.textContent="Enregistrement…";
+  const enabled=checkbox.checked;
+  const {error}=await window.supabaseClient.from("profiles").update({bet_notifications_enabled:enabled}).eq("id",user.id);
+  if(error){checkbox.checked=!enabled;status.textContent="Erreur : "+error.message}
+  else status.textContent=enabled?"Notifications du Pari Heroscape activées.":"Notifications du Pari Heroscape désactivées.";
+  checkbox.disabled=false;
+ });
 })();
 </script>
 </body>
