@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const db=window.supabaseClient,$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let cards=[],members=[],user=null,admin=false,matches=[],armies=[],items=[],votes=[],finishedPage=0,memberPage=0,cardPage=0,playedCardsOnly=false,build=[],tab='encours',mapPhotos=[],photoUploading=false;
+let cards=[],members=[],user=null,admin=false,matches=[],armies=[],items=[],votes=[],openPage=0,finishedPage=0,memberPage=0,cardPage=0,playedCardsOnly=false,build=[],tab='encours',mapPhotos=[],photoUploading=false;
 const msg=s=>$('bet-status').textContent=s;
 const call=async(name,args)=>{const {data,error}=await db.rpc(name,args);if(error)throw error;return data};
 const names=()=>new Map(members.map(m=>[m.id,m.username]));
@@ -114,11 +114,17 @@ function cardScore(name){const s=cardScores().find(x=>x.name===canonicalCardName
 function memberScores(){const map=new Map;for(const m of matches.filter(x=>x.status==='finished')){const aa=byMatch(m.id),wins=aa.filter(a=>a.is_winner).map(a=>a.id),pts=aa.length>=3&&aa.length%2===1?2:1;for(const v of voteFor(m.id)){const x=map.get(v.user_id)||{id:v.user_id,good:0,bad:0,points:0};const good=!m.is_draw&&v.army_ids.length>0&&v.army_ids.every(id=>wins.includes(id));if(good){x.good++;x.points+=pts}else x.bad++;map.set(v.user_id,x)}}return [...map.values()].map(x=>({...x,rate:100*x.good/(x.good+x.bad)}))}
 function pages(el,page,total,callback){$(el).innerHTML='<div class="bet-pagination"><button '+(page?'':'disabled')+' data-prev>← Précédent</button> Page '+(page+1)+' / '+Math.max(1,Math.ceil(total))+' <button '+((page+1)*1<total?'':'disabled')+' data-next>Suivant →</button></div>';$(el).querySelector('[data-prev]').onclick=()=>callback(page-1);$(el).querySelector('[data-next]').onclick=()=>callback(page+1)}
 function render(){if(!cards.length)return;
- const open=matches.filter(m=>m.status==='open').sort((a,b)=>new Date(a.created_at)-new Date(b.created_at)||a.id-b.id);
+ const chronological=(a,b)=>new Date(a.created_at)-new Date(b.created_at)||a.id-b.id;
+ const open=matches.filter(m=>m.status==='open').sort(chronological);
  const openNumbers=new Map(open.map((m,i)=>[m.id,i+1]));
- $('bet-open-list').innerHTML=open.slice().reverse().map(m=>matchHTML(m,openNumbers.get(m.id))).join('')||'<p>Aucune partie en cours.</p>';
- const finished=matches.filter(m=>m.status==='finished');finishedPage=Math.min(finishedPage,Math.max(0,Math.ceil(finished.length/20)-1));
- $('bet-finished-list').innerHTML=finished.slice(finishedPage*20,(finishedPage+1)*20).map(matchHTML).join('')||'<p>Aucune partie terminée.</p>';pages('bet-finished-pagination',finishedPage,finished.length/20,p=>{finishedPage=p;render()});
+ openPage=Math.min(openPage,Math.max(0,Math.ceil(open.length/4)-1));
+ $('bet-open-list').innerHTML=open.slice().reverse().slice(openPage*4,(openPage+1)*4).map(m=>matchHTML(m,openNumbers.get(m.id))).join('')||'<p>Aucune partie en cours.</p>';
+ pages('bet-open-pagination',openPage,open.length/4,p=>{openPage=p;render()});
+ const finished=matches.filter(m=>m.status==='finished').sort(chronological);
+ const finishedNumbers=new Map(finished.map((m,i)=>[m.id,i+1]));
+ finishedPage=Math.min(finishedPage,Math.max(0,Math.ceil(finished.length/4)-1));
+ $('bet-finished-list').innerHTML=finished.slice().reverse().slice(finishedPage*4,(finishedPage+1)*4).map(m=>matchHTML(m,finishedNumbers.get(m.id))).join('')||'<p>Aucune partie terminée.</p>';
+ pages('bet-finished-pagination',finishedPage,finished.length/4,p=>{finishedPage=p;render()});
  let ms=memberScores(),sort=$('bet-member-sort').value,dir=$('bet-member-direction').value==='asc'?1:-1;ms.sort((a,b)=>dir*(a[sort]-b[sort])||a.id.localeCompare(b.id));memberPage=Math.min(memberPage,Math.max(0,Math.ceil(ms.length/20)-1));
 
  const statTiles=(rows,kind)=>'<div class="bet-stats-summary">'+(kind==='cards'?'<button type="button" class="bet-summary-filter'+(!playedCardsOnly?' active':'')+'" data-card-filter="all" aria-pressed="'+(!playedCardsOnly)+'"><small>Cartes disponibles</small><strong>'+rows.length+'</strong></button><button type="button" class="bet-summary-filter'+(playedCardsOnly?' active':'')+'" data-card-filter="played" aria-pressed="'+playedCardsOnly+'"><small>Cartes jouées</small><strong>'+rows.filter(x=>x.total>0).length+'</strong></button>':'<div><small>Pronostiqueurs</small><strong>'+rows.length+'</strong></div><div><small>Paris réalisés</small><strong>'+rows.reduce((n,x)=>n+x.good+x.bad,0)+'</strong></div><div><small>Pronostics réussis</small><strong>'+rows.reduce((n,x)=>n+x.good,0)+'</strong></div>')+'</div>';
