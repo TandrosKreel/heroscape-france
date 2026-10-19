@@ -35,3 +35,5 @@
 #bet-build .bet-card-suggestions button{color:#f7f7f7!important;background:#202b38!important;min-height:42px}
 #bet-build .bet-card-suggestions button:active,#bet-build .bet-card-suggestions button:focus{background:#35475c!important}
 #bet-build .bet-build-card:focus-within{z-index:auto}
+
+#bet-build .bet-card-list{display:block;width:100%;max-width:100%;margin-top:4px;padding:3px;background:#202b38;color:white;border:1px solid #d5a43b;border-radius:5px;max-height:230px}#bet-build .bet-card-list[hidden]{display:none!important}#bet-build .bet-card-list option{padding:8px 5px}#bet-build .bet-card-picker input[type=text]{width:100%!important;box-sizing:border-box;text-align:left!important}#bet-build .bet-quantity-label{display:flex!important;align-items:center;gap:4px;margin:0!important}#bet-build .bet-quantity-label input{width:49px!important;text-align:center}
