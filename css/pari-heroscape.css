@@ -47,3 +47,38 @@
 #bet-build .bet-quantity-label input[data-qty]{display:block!important;width:58px!important;min-width:0!important;max-width:58px!important;box-sizing:border-box!important;padding:8px 2px!important;font-size:15px!important;text-align:center!important}
 #bet-build .bet-remove-card{grid-column:3!important;width:34px!important;min-width:0!important;margin:0!important;padding:9px 0!important}
 #bet-build .bet-build-army{min-width:0!important;overflow:visible!important}
+
+/* Interface de paris : panneaux compacts, boutons de choix et résultats. */
+.bet-voting{border:1px solid #b48b39;border-radius:12px;padding:14px;margin:18px 0;background:#18232f;max-width:100%;box-sizing:border-box}
+.bet-vote-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.bet-vote-heading h4{margin:0 0 4px;font-size:1.12em;color:#e9bd57}
+.bet-vote-subtitle{font-size:.83em;opacity:.8}
+.bet-vote-total{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid #c49b48;border-radius:10px;background:#2c3440;padding:7px 16px;min-width:92px}
+.bet-vote-total strong{font-size:1.65em;line-height:1.1;color:#f1c45c}
+.bet-vote-total span{font-size:.78em}
+.bet-vote-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:15px 0}
+.bet-panel .bet-vote-switch button{margin:0;padding:11px 7px;background:#283442;color:#eee;border:1px solid #526071;border-radius:7px;font-weight:700}
+.bet-panel .bet-vote-switch button.active{background:#c69b3e;color:#171c23;border-color:#e0b959}
+.bet-vote-panel[hidden]{display:none!important}
+.bet-vote-help{font-size:.87em;opacity:.86;margin:9px 0}
+.bet-vote-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));gap:9px;margin:12px 0}
+.bet-vote-tile{position:relative;display:flex!important;align-items:center;justify-content:space-between;gap:8px;margin:0!important;padding:13px 11px;border:2px solid #526071;border-radius:9px;background:#263341;cursor:pointer;min-width:0}
+.bet-vote-tile:has(input:checked){border-color:#e9bd57;background:#3a392e}
+.bet-vote-tile input[type=checkbox]{position:absolute;opacity:0;width:1px;height:1px;min-width:0!important;pointer-events:none}
+.bet-vote-tile-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+.bet-vote-tile-text strong{font-size:1em}
+.bet-vote-tile-text small{font-size:.78em;opacity:.8;overflow-wrap:anywhere}
+.bet-vote-tick{display:flex;align-items:center;justify-content:center;border:2px solid #8a95a3;border-radius:6px;width:27px;height:27px;flex:0 0 27px;color:transparent}
+.bet-vote-tile:has(input:checked) .bet-vote-tick{background:#e9bd57;border-color:#e9bd57;color:#17212a;font-weight:900}
+.bet-vote-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.bet-panel .bet-vote-buttons button{margin:0;padding:10px;border-radius:7px}
+.bet-panel .bet-vote-buttons [data-save-vote]{background:#d4a747;color:#1a2029;font-weight:bold;border:0}
+.bet-vote-bar-row{margin:13px 0}
+.bet-vote-bar-label{display:flex;justify-content:space-between;gap:10px;font-size:.91em}
+.bet-vote-track{height:11px;background:#303d4c;border-radius:20px;overflow:hidden;margin-top:6px}
+.bet-vote-fill{height:100%;background:#d6aa4a;border-radius:20px}
+.bet-voter-list{margin-top:16px;border-top:1px solid #455464;padding-top:12px}
+.bet-voter-list summary{cursor:pointer;font-weight:600}
+.bet-voter-list p{font-size:.86em;margin:8px 0}
+.bet-vote-result-banner{border:1px solid #8a7239;padding:12px;border-radius:7px;color:#e9bd57}
+@media(max-width:600px){.bet-voting{padding:11px}.bet-vote-choices{grid-template-columns:repeat(2,minmax(0,1fr))}.bet-vote-tile{padding:10px 8px}.bet-vote-total{min-width:72px;padding:6px 10px}}
