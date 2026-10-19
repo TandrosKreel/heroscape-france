@@ -2148,3 +2148,8 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .reply-rich-editor [data-forum-font="3"]{font-family:monospace!important}
 .reply-rich-editor [data-forum-font="4"]{font-family:cursive!important}
 .reply-rich-editor [data-forum-font="5"]{font-family:fantasy!important}
+
+/* Compteur des notifications non consultées à côté de la cloche. */
+.account-notification-icon{position:relative!important}
+.notification-badge{position:absolute;top:-6px;right:-7px;display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;box-sizing:border-box;border-radius:999px;background:#d9a943;color:#101820;font-size:12px;font-weight:800;border:2px solid #17222d;line-height:1}
+.notification-badge[hidden]{display:none!important}
