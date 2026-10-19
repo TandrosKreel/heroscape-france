@@ -111,3 +111,20 @@
 .bet-armies .bet-played-by{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px;margin:10px 0;color:#e2e7ee}
 .bet-armies .bet-played-by span{font-weight:500;color:#bac7d4}
 .bet-armies .bet-played-by strong{font-weight:700;color:#fff;overflow-wrap:anywhere}
+
+/* Visual statistics panels */
+.bet-stats-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0 24px}
+.bet-stats-summary>div{border:1px solid #8c733e;background:linear-gradient(145deg,#25303b,#171e26);border-radius:13px;padding:17px 12px;text-align:center}
+.bet-stats-summary small{display:block;color:#b9c0cb;font-size:.85rem;margin-bottom:7px}
+.bet-stats-summary strong{display:block;color:#e7b948;font-size:clamp(1.5rem,4vw,2.4rem)}
+.bet-stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px;margin:16px 0 24px}
+.bet-stat-tile{border:1px solid #3e4a57;border-radius:14px;padding:18px;background:linear-gradient(150deg,#252f3a,#161d25);min-width:0;box-shadow:0 5px 16px #0002}
+.bet-stat-title{display:flex;align-items:center;gap:10px;min-width:0;color:#f0c35e}
+.bet-stat-title a{color:#f0c35e;font-weight:700;overflow-wrap:anywhere;text-decoration:none}
+.bet-stat-title strong{overflow-wrap:anywhere}.bet-stat-title b{margin-left:auto;white-space:nowrap;color:#f0c35e}
+.bet-stat-symbol{font-size:1.35rem}.bet-stat-big{font-size:1.8rem;font-weight:800;color:#f3f5f7;margin:16px 0 10px}
+.bet-stat-big small{font-size:.82rem;font-weight:400;color:#b7c0ca}.bet-stat-unused{margin:19px 0 14px;color:#aab4c0;font-style:italic}
+.bet-result-track{display:flex;overflow:hidden;height:12px;border-radius:9px;background:#46515c;margin:12px 0}
+.bet-result-track span{display:block;height:100%}.bet-stat-details{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.85rem;color:#d8dee5}
+.bet-stats-count{color:#bfc7d0}
+@media(max-width:480px){.bet-stats-summary{gap:6px}.bet-stats-summary>div{padding:12px 5px}.bet-stats-summary small{font-size:.7rem}.bet-stat-tile{padding:15px}}
