@@ -82,3 +82,14 @@
 .bet-voter-list p{font-size:.86em;margin:8px 0}
 .bet-vote-result-banner{border:1px solid #8a7239;padding:12px;border-radius:7px;color:#e9bd57}
 @media(max-width:600px){.bet-voting{padding:11px}.bet-vote-choices{grid-template-columns:repeat(2,minmax(0,1fr))}.bet-vote-tile{padding:10px 8px}.bet-vote-total{min-width:72px;padding:6px 10px}}
+
+/* Nom personnalisé des armées et séparateur VS centré, y compris sur mobile. */
+#bet-build .bet-army-name-row{display:flex!important;align-items:center;gap:8px;margin:8px 0!important}
+#bet-build .bet-army-name-row input{flex:1;min-width:0!important;width:100%;max-width:100%;box-sizing:border-box;padding:8px!important}
+.bet-army-custom-name{color:#f0c25a;font-weight:700;font-size:1.04em;margin:4px 0 8px;overflow-wrap:anywhere}
+.bet-armies{display:flex;align-items:stretch;flex-wrap:wrap;gap:0}
+.bet-armies .bet-army{flex:1 1 190px;min-width:0}
+.bet-armies .bet-vs{display:flex;flex:0 0 54px;align-items:center;justify-content:center;align-self:stretch;margin:0;color:#f3c35c;font-weight:900;font-size:1.13em}
+.bet-armies .bet-vs span{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:#303a45;border:1px solid #c39b48;box-shadow:0 2px 8px #0004}
+.bet-vote-tile-text em{font-size:.82em;font-style:normal;color:#f0c25a;overflow-wrap:anywhere}
+@media(max-width:620px){.bet-armies{flex-direction:column;align-items:stretch;gap:0}.bet-armies .bet-army{flex:0 0 auto;width:100%;box-sizing:border-box}.bet-armies .bet-vs{flex:0 0 auto;align-self:center;min-height:50px;margin:-1px 0;position:relative;z-index:1}.bet-armies .bet-vs span{width:43px;height:43px}}
