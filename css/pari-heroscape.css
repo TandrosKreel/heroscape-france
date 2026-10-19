@@ -25,3 +25,13 @@
 #bet-build .bet-card-picker{z-index:auto}
 #bet-build .bet-build-card:focus-within{position:relative;z-index:50}
 #bet-build .bet-card-suggestions{z-index:100}
+
+/* Résultats de recherche dans le flux normal : toujours visibles sur mobile,
+   sans recouvrement par l'armée suivante ni par le clavier virtuel. */
+#bet-build .bet-card-picker{position:static!important;overflow:visible!important}
+#bet-build .bet-build-card{align-items:flex-start}
+#bet-build .bet-card-suggestions{position:static!important;top:auto!important;left:auto!important;right:auto!important;display:block;background:#202b38!important;color:#f7f7f7!important;border:1px solid #d5a43b!important;box-shadow:none!important;max-height:210px;overflow-y:auto;width:100%;box-sizing:border-box;margin-top:3px;z-index:auto!important}
+#bet-build .bet-card-suggestions[hidden]{display:none!important}
+#bet-build .bet-card-suggestions button{color:#f7f7f7!important;background:#202b38!important;min-height:42px}
+#bet-build .bet-card-suggestions button:active,#bet-build .bet-card-suggestions button:focus{background:#35475c!important}
+#bet-build .bet-build-card:focus-within{z-index:auto}
