@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const db=window.supabaseClient,$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let cards=[],members=[],user=null,admin=false,matches=[],armies=[],items=[],votes=[],finishedPage=0,memberPage=0,cardPage=0,build=[],tab='encours';
+let cards=[],members=[],user=null,admin=false,matches=[],armies=[],items=[],votes=[],finishedPage=0,memberPage=0,cardPage=0,build=[],tab='encours',mapPhotos=[],photoUploading=false;
 const msg=s=>$('bet-status').textContent=s;
 const call=async(name,args)=>{const {data,error}=await db.rpc(name,args);if(error)throw error;return data};
 const names=()=>new Map(members.map(m=>[m.id,m.username]));
@@ -35,18 +35,46 @@ function buildRender(){
  document.querySelectorAll('[data-remove-card]').forEach(e=>e.onclick=()=>{const [i,j]=e.dataset.removeCard.split(':').map(Number);build[i].cards.splice(j,1);buildRender()});
  document.querySelectorAll('[data-remove-army]').forEach(e=>e.onclick=()=>{build.splice(+e.dataset.removeArmy,1);buildRender()});
 }
-$('bet-add').onclick=()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}$('bet-form').hidden=false;build=[{member_id:'',army_name:'',cards:[{index:null,quantity:1}]},{member_id:'',army_name:'',cards:[{index:null,quantity:1}]}];buildRender()};
+function renderMapPhotos(){
+ $('bet-photo-preview').innerHTML=mapPhotos.map((p,i)=>'<div class="bet-photo-thumb"><img src="'+esc(p.url)+'" alt="Photo de la map"><button type="button" data-remove-photo="'+i+'" aria-label="Retirer cette photo">×</button></div>').join('');
+ document.querySelectorAll('[data-remove-photo]').forEach(b=>b.onclick=()=>{mapPhotos.splice(+b.dataset.removePhoto,1);renderMapPhotos()});
+}
+$('bet-upload-photo').onclick=()=>{if(!photoUploading&&mapPhotos.length<8)$('bet-photo-file').click();else if(mapPhotos.length>=8)msg('Maximum de 8 photos par partie.')};
+$('bet-photo-file').addEventListener('change',async event=>{
+ const file=event.target.files?.[0];event.target.value='';if(!file)return;
+ if(!user){msg('Connecte-toi pour ajouter une photo.');return}
+ if(mapPhotos.length>=8){msg('Maximum de 8 photos par partie.');return}
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024){msg('Choisis une image JPG, PNG ou WebP de moins de 8 Mo.');return}
+ photoUploading=true;$('bet-upload-photo').disabled=true;msg('Préparation de la photo…');
+ try{
+  const bitmap=await createImageBitmap(file);
+  const scale=Math.min(1,1400/Math.max(bitmap.width,bitmap.height));
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+  canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',0.78));
+  if(!blob||blob.size>2*1024*1024)throw Error('Image trop volumineuse après compression.');
+  const path=user.id+'/'+crypto.randomUUID()+'.webp';
+  msg('Envoi de la photo…');
+  const {error}=await db.storage.from('forum-images').upload(path,blob,{contentType:'image/webp',upsert:false});
+  if(error)throw error;
+  const url=db.storage.from('forum-images').getPublicUrl(path).data.publicUrl;
+  mapPhotos.push({url,path});renderMapPhotos();msg('Photo ajoutée. Tu peux en ajouter une autre.');
+ }catch(error){msg('Envoi impossible : '+error.message)}
+ finally{photoUploading=false;$('bet-upload-photo').disabled=false}
+});
+$('bet-add').onclick=()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}$('bet-form').hidden=false;mapPhotos=[];renderMapPhotos();build=[{member_id:'',army_name:'',cards:[{index:null,quantity:1}]},{member_id:'',army_name:'',cards:[{index:null,quantity:1}]}];buildRender()};
 $('bet-cancel-form').onclick=()=>$('bet-form').hidden=true;
 $('bet-army-add').onclick=()=>{if(build.length>=20)return;build.push({member_id:'',army_name:'',cards:[{index:null,quantity:1}]});buildRender()};
 $('bet-save').onclick=async()=>{try{
- const format=$('bet-format').value.trim(),photos=$('bet-photos').value.split('\n').map(x=>x.trim()).filter(Boolean);
+ const format=$('bet-format').value.trim(),photos=mapPhotos.map(p=>p.url);if(photoUploading)throw Error('Attends la fin de l’envoi de la photo.');
  if(!/^\d+(vs\d+)+$/i.test(format))throw Error('Format attendu : 1vs1, 2vs2, 1vs1vs1…');
  const counts=format.toLowerCase().split('vs').map(Number);if(counts.some(x=>x<1)||counts.reduce((a,b)=>a+b,0)!==build.length)throw Error('Le format doit correspondre au nombre d’armées.');
  if(build.length<2||build.some(a=>!a.cards.length||a.cards.some(c=>c.index===null)))throw Error('Sélectionne une figurine valide dans chaque ligne de chaque armée.');
  if(photos.some(x=>!/^https:\/\//i.test(x)))throw Error('Les photos doivent avoir une URL HTTPS.');
  const chosen=build.map(a=>a.member_id).filter(Boolean);if(new Set(chosen).size!==chosen.length)throw Error('Un membre ne peut contrôler deux armées.');
  await call('bet_create',{p_format:format,p_map:$('bet-map').value,p_photos:photos,p_armies:build.map(a=>({member_id:a.member_id,army_name:(a.army_name||'').trim(),cards:a.cards.map(c=>({name:cards[c.index].name,points:cards[c.index].points,quantity:c.quantity}))}))});
- $('bet-form').hidden=true;msg('Partie créée.');await load();
+ $('bet-form').hidden=true;mapPhotos=[];renderMapPhotos();msg('Partie créée.');await load();
  }catch(e){msg(e.message)}};
 const pointsOf=a=>byArmy(a.id).reduce((s,c)=>s+c.points*c.quantity,0);
 const matchHTML=m=>{const aa=byMatch(m.id),vv=voteFor(m.id),mine=vv.find(v=>v.user_id===user?.id),participant=aa.some(a=>a.member_id===user?.id),winner=aa.filter(a=>a.is_winner),maxVote=Math.floor(aa.length/2),score=m.status==='finished';
