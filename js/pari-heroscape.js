@@ -15,6 +15,7 @@ async function load(){
  for(const x of [m,ms,as,cs,vs])if(x.error)throw x.error;
  user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&x.role==='admin');cards=c;matches=ms.data||[];armies=as.data||[];items=cs.data||[];votes=vs.data||[];render();
 }
+const canonicalCardName=name=>name==='10th Regiment of Footh'?'10th Regiment of Foot':name;
 const cardOptions=()=>cards.map((c,i)=>'<option value="'+i+'">'+esc(c.name)+' ('+c.points+' pts)</option>').join('');
 function buildRender(){
  const sorted=cards.map((card,index)=>({card,index})).sort((a,b)=>a.card.name.localeCompare(b.card.name,'fr',{sensitivity:'base'}));
@@ -108,8 +109,8 @@ function finishEditor(id){
  };
  redraw();
 }
-function cardScores(){const map=new Map;for(const m of matches.filter(x=>x.status==='finished'))for(const a of byMatch(m.id))for(const c of byArmy(a.id)){const x=map.get(c.card_name)||{name:c.card_name,wins:0,draws:0,losses:0};if(m.is_draw)x.draws++;else if(a.is_winner)x.wins++;else x.losses++;map.set(c.card_name,x)}return cards.map(c=>{const x=map.get(c.name)||{name:c.name,wins:0,draws:0,losses:0};const total=x.wins+x.draws+x.losses;return {...x,total,rate:total?100*x.wins/total:0}})}
-function cardScore(name){const s=cardScores().find(x=>x.name===name);return s?s.wins+'-'+s.draws+'-'+s.losses+' ('+s.rate.toFixed(1)+' %)':'0-0-0'}
+function cardScores(){const map=new Map;for(const m of matches.filter(x=>x.status==='finished'))for(const a of byMatch(m.id))for(const c of byArmy(a.id)){const name=canonicalCardName(c.card_name);const x=map.get(name)||{name,wins:0,draws:0,losses:0};if(m.is_draw)x.draws++;else if(a.is_winner)x.wins++;else x.losses++;map.set(name,x)}return cards.map(c=>{const x=map.get(c.name)||{name:c.name,wins:0,draws:0,losses:0};const total=x.wins+x.draws+x.losses;return {...x,total,rate:total?100*x.wins/total:0}})}
+function cardScore(name){const s=cardScores().find(x=>x.name===canonicalCardName(name));return s?s.wins+'-'+s.draws+'-'+s.losses+' ('+s.rate.toFixed(1)+' %)':'0-0-0'}
 function memberScores(){const map=new Map;for(const m of matches.filter(x=>x.status==='finished')){const aa=byMatch(m.id),wins=aa.filter(a=>a.is_winner).map(a=>a.id),pts=aa.length>=3&&aa.length%2===1?2:1;for(const v of voteFor(m.id)){const x=map.get(v.user_id)||{id:v.user_id,good:0,bad:0,points:0};const good=!m.is_draw&&v.army_ids.length>0&&v.army_ids.every(id=>wins.includes(id));if(good){x.good++;x.points+=pts}else x.bad++;map.set(v.user_id,x)}}return [...map.values()].map(x=>({...x,rate:100*x.good/(x.good+x.bad)}))}
 function pages(el,page,total,callback){$(el).innerHTML='<div class="bet-pagination"><button '+(page?'':'disabled')+' data-prev>← Précédent</button> Page '+(page+1)+' / '+Math.max(1,Math.ceil(total))+' <button '+((page+1)*1<total?'':'disabled')+' data-next>Suivant →</button></div>';$(el).querySelector('[data-prev]').onclick=()=>callback(page-1);$(el).querySelector('[data-next]').onclick=()=>callback(page+1)}
 function render(){if(!cards.length)return;
