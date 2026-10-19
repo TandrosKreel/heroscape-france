@@ -142,3 +142,9 @@
 .bet-finish-buttons{display:flex;flex-wrap:wrap;gap:10px}
 .bet-finish-buttons button:disabled{opacity:.45;cursor:not-allowed}
 @media(max-width:400px){.bet-finish-box{padding:11px}.bet-finish-choice button{font-size:.72rem}}
+
+/* Larger match map photographs, preserving aspect ratio */
+.bet-map-images{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0}
+.bet-map-images a{display:block;max-width:100%}
+.bet-map-images img{display:block;width:auto;height:auto;max-width:min(100%,420px);max-height:520px;margin:0;object-fit:contain;border-radius:10px}
+@media(max-width:600px){.bet-map-images a{width:100%}.bet-map-images img{max-width:100%;max-height:550px}}
