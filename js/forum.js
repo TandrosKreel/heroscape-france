@@ -797,10 +797,24 @@ async function renderGlobalAccount() {
   account.innerHTML =
     '<a class="account-user" href="profil.html" title="Mon profil">' + avatar + '<strong>' + esc(profile.username) + '</strong></a>' +
     '<a class="account-icon account-message-icon" href="messages.html" title="Messages privés" aria-label="Messages privés">✉<span class="message-badge" data-message-badge hidden></span></a>' +
-    '<a class="account-icon" href="notifications.html" title="Notifications" aria-label="Notifications">🔔</a>' +
+    '<a class="account-icon account-notification-icon" href="notifications.html" title="Notifications" aria-label="Notifications">🔔<span class="notification-badge" data-notification-badge hidden></span></a>' +
     '<button class="account-logout" type="button" data-global-logout>Se déconnecter</button>' +
     (readActionLabel ? '<button class="mark-all-read" type="button" data-mark-all-read>' + readActionLabel + '</button>' : '');
-  account.querySelector("[data-global-logout]")?.addEventListener("click", logout);
+    // Compteur des notifications non consultées (y compris les nouvelles parties).
+  const notificationBadge=account.querySelector("[data-notification-badge]");
+  if(notificationBadge){
+    const refreshNotificationBadge=async()=>{
+      const {count,error}=await getSupabase().from("notifications").select("id",{count:"exact",head:true}).eq("user_id",profile.id).eq("is_read",false);
+      if(!error && notificationBadge.isConnected){
+        notificationBadge.textContent=count>99?"99+":String(count||0);
+        notificationBadge.hidden=!count;
+      }
+    };
+    refreshNotificationBadge();
+    document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshNotificationBadge()});
+    window.addEventListener("focus",refreshNotificationBadge);
+  }
+account.querySelector("[data-global-logout]")?.addEventListener("click", logout);
   account.querySelector("[data-mark-all-read]")?.addEventListener("click", async () => {
     const button = account.querySelector("[data-mark-all-read]");
     if (button) button.disabled = true;
