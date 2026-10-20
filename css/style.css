@@ -2162,3 +2162,25 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .forum-online-member{display:inline-flex;align-items:center;gap:8px;border:1px solid #536574;border-radius:8px;padding:7px 11px;background:#263646;color:#eef3f7;font-weight:600;overflow-wrap:anywhere}
 .forum-online-dot{width:8px;height:8px;border-radius:50%;background:#5dce8b;box-shadow:0 0 7px #5dce8b70;flex:none}
 .forum-online-empty{margin:0;color:#bbc6d3}
+
+/* Notifications : réglage compact avec interrupteur et historique temporaire. */
+.bet-notification-settings{margin-bottom:14px!important;padding:20px 24px!important}
+.bet-notification-setting-row{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.bet-notification-setting-copy h3{margin:0 0 5px;color:var(--gold)}
+.bet-notification-setting-copy p{margin:0;color:var(--muted);font-size:.93rem}
+.bet-notification-switch{position:relative;display:inline-flex;flex:0 0 auto;cursor:pointer;margin:0!important}
+.bet-notification-switch input{position:absolute;width:1px;height:1px;opacity:0}
+.bet-notification-switch-track{display:block;width:52px;height:29px;border-radius:18px;background:#536171;border:1px solid #788596;transition:background .15s}
+.bet-notification-switch-track:before{content:"";position:absolute;left:4px;top:4px;width:23px;height:23px;border-radius:50%;background:white;box-shadow:0 1px 3px #0008;transition:transform .15s}
+.bet-notification-switch input:checked+.bet-notification-switch-track{background:#cba044;border-color:#e8ba53}
+.bet-notification-switch input:checked+.bet-notification-switch-track:before{transform:translateX(23px)}
+.bet-notification-switch input:focus-visible+.bet-notification-switch-track{outline:2px solid #fff;outline-offset:3px}
+.bet-notification-switch input:disabled+.bet-notification-switch-track{opacity:.5}
+.bet-notification-status:empty{display:none}
+.bet-notification-status{margin:8px 0 0;font-size:.85rem}
+.bet-notification-hint{color:var(--muted);font-size:.86rem;margin:0 0 12px}
+.notification-row{padding:12px 0;border-bottom:1px solid var(--line)}
+.notification-row:last-child{border-bottom:0}
+.notification-row p{margin:6px 0}
+.bet-notification-new{color:#e8ba53}
+@media(max-width:600px){.bet-notification-settings{padding:16px!important}.bet-notification-setting-row{gap:12px}}
