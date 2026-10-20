@@ -41,6 +41,11 @@ function fillPlacement(){
  el.innerHTML='<option value="">Classement automatique par points</option>'+all.map(x=>'<option value="'+esc(x._source?'base:'+x._source:'custom:'+x.id)+'">Après '+esc(x.name)+' — '+esc(x.general)+' ('+esc(x.points)+' pts)</option>').join('');
  el.value=value;
 }
+function updateRestore(){
+ const hidden=edits.filter(e=>e.is_hidden);
+ const tools=$('cards-restore-tools');tools.hidden=!hidden.length;
+ $('cards-restore-list').innerHTML=hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join('');
+}
 function openForm(card=null){
  editing=card;
  panel.hidden=false;
@@ -55,6 +60,7 @@ function openForm(card=null){
  $('cards-delete').hidden=!card;
  $('cards-cancel').hidden=false;
  fillPlacement();
+ updateRestore();
  inform('');
  panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -138,6 +144,14 @@ $('cards-admin-open').addEventListener('click',()=>openForm());
 $('cards-cancel').addEventListener('click',closeForm);
 form.addEventListener('submit',saveEdit);
 $('cards-delete').addEventListener('click',deleteEdit);
+$('cards-restore').addEventListener('click',async()=>{
+ if(!admin||!db)return;
+ const id=$('cards-restore-list').value;
+ if(!id)return;
+ const {error}=await db.from('army_card_edits').update({is_hidden:false}).eq('id',id);
+ if(error){inform('Restauration impossible : '+error.message,true);return}
+ await loadEdits();merge();render();updateRestore();inform('Carte restaurée.');
+});
 box.addEventListener('click',e=>{const b=e.target.closest('[data-card-key]');if(!b||!admin)return;const card=all.find(x=>(x._source?'base:'+x._source:'custom:'+x.id)===b.dataset.cardKey);if(card)openForm(card)});
 init();
 })();
