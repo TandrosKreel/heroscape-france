@@ -163,5 +163,17 @@ function render(){if(!cards.length)return;
  document.querySelectorAll('[data-finish]').forEach(b=>b.onclick=()=>finishEditor(+b.dataset.finish));
 }
 ['bet-member-sort','bet-member-direction','bet-card-search','bet-card-sort','bet-card-direction'].forEach(id=>$(id).addEventListener(id==='bet-card-search'?'input':'change',()=>{memberPage=0;cardPage=0;render()}));
-load().then(()=>showTab(['encours','terminees','participants','cartes'].includes(location.hash.slice(1))?location.hash.slice(1):'encours')).catch(e=>msg('Erreur de chargement : '+e.message));
+load().then(()=>{
+ const requested=Number(new URLSearchParams(location.search).get('match'));
+ const found=requested?matches.find(m=>m.id===requested):null;
+ let selected=['encours','terminees','participants','cartes'].includes(location.hash.slice(1))?location.hash.slice(1):'encours';
+ if(found){
+  selected=found.status==='finished'?'terminees':'encours';
+  const same=matches.filter(m=>m.status===found.status).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at)||b.id-a.id);
+  const page=Math.max(0,Math.floor(same.findIndex(m=>m.id===requested)/4));
+  if(selected==='terminees')finishedPage=page;else openPage=page;
+ }
+ showTab(selected);
+ if(found)requestAnimationFrame(()=>document.getElementById('match-'+requested)?.scrollIntoView({block:'start'}));
+}).catch(e=>msg('Erreur de chargement : '+e.message));
 })();
