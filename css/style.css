@@ -2184,3 +2184,23 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .notification-row p{margin:6px 0}
 .bet-notification-new{color:#e8ba53}
 @media(max-width:600px){.bet-notification-settings{padding:16px!important}.bet-notification-setting-row{gap:12px}}
+
+/* Chat texte temporaire, toujours accessible en bas à droite. */
+.forum-online-member[data-forum-chat-user]{cursor:pointer;font:inherit}
+.forum-online-member[data-forum-chat-user]:hover{border-color:#e7bb57;color:#fff}
+.forum-chat{position:fixed;right:16px;bottom:14px;width:min(350px,calc(100vw - 24px));z-index:9998;font-size:14px;color:#edf2f6}
+.forum-chat[hidden],.forum-chat-window[hidden],.forum-chat-launch[hidden]{display:none!important}
+.forum-chat-window{background:#182431;border:1px solid #c59d49;border-radius:12px;box-shadow:0 10px 35px #000a;overflow:hidden}
+.forum-chat-head{display:flex;align-items:center;gap:8px;background:#27384a;padding:10px 12px}
+.forum-chat-name{flex:1;min-width:0;overflow-wrap:anywhere}
+.forum-chat-status{font-size:11px;color:#c4d3df}
+.forum-chat-close{background:transparent;border:0;color:#f5f5f5;font-size:24px;cursor:pointer;padding:0 5px}
+.forum-chat-messages{height:245px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.forum-chat-bubble{max-width:85%;width:fit-content;margin:0!important;padding:8px 11px;border-radius:12px;overflow-wrap:anywhere;white-space:pre-wrap;background:#33485a}
+.forum-chat-bubble.mine{align-self:flex-end;background:#755e30}
+.forum-chat-bubble.theirs{align-self:flex-start}
+.forum-chat-form{display:flex;gap:6px;padding:10px;border-top:1px solid #415163}
+.forum-chat-input{flex:1;min-width:0!important;width:0!important;padding:9px!important;border-radius:7px}
+.forum-chat-form button{padding:8px 10px;font-size:12px}
+.forum-chat-launch{width:100%;padding:12px;border:1px solid #d6ac4f;border-radius:10px;background:#26384a;color:#f5d58c;cursor:pointer;box-shadow:0 5px 20px #0008;text-align:left;font-weight:700}
+@media(max-width:600px){.forum-chat{right:8px;bottom:8px;width:min(350px,calc(100vw - 16px))}.forum-chat-messages{height:205px}}
