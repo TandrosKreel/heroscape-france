@@ -161,3 +161,12 @@
 #bet-form #bet-map{display:block;box-sizing:border-box;flex:1 1 520px;width:100%;max-width:100%;min-width:0;min-height:150px;resize:vertical}
 .bet-map-info-title{margin:18px 0 8px;color:var(--gold);font-size:1.15rem;font-weight:700}
 .bet-map-description{white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 10px}
+
+/* Modes Standard et Point Delta : filtres et badges. */
+.bet-scoring-label{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:12px 0;font-weight:700}
+.bet-scoring-label select{flex:1;min-width:150px;max-width:320px}
+.bet-scoring-hint{font-size:.86em;color:#b9c5d2;margin:4px 0 12px}
+.bet-scoring-stats{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin:4px 0 16px;padding:12px;border:1px solid #b48b39;border-radius:9px;background:#1d2835}
+.bet-scoring-stats label{font-weight:700;color:#e9bd57}
+.bet-scoring-stats select{min-width:160px;max-width:250px}
+.bet-scoring-tag{display:inline-block;vertical-align:middle;font-size:.62em;line-height:1.3;font-weight:700;padding:4px 9px;margin-left:8px;border-radius:999px;border:1px solid #b48b39;color:#e9bd57;background:#283442}
