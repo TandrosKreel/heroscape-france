@@ -118,7 +118,7 @@
   .sort((a,b)=>b.message_count-a.message_count||String(a.username).localeCompare(String(b.username),"fr"));
  const byId=new Map(members.map(m=>[m.id,m]));
  const isStaff=m=>m.role==="admin"||m.role==="moderator"||m.role==="cards_admin"||m.can_moderate||m.can_manage_cards;
- const canBlock=m=>canModerate&&m.id!==user.id&&!isStaff(m);
+ const canBlock=m=>canModerate&&m.id!==user.id&&(isCreator?m.role!=='admin':!isStaff(m));
  if(isCreator||canModerate){
   dashboard.hidden=false;
   if(!isCreator)document.getElementById("member-dashboard-hint").textContent="Vous pouvez bloquer ou rétablir la publication des membres ordinaires. La suppression des comptes est réservée au Créateur.";
