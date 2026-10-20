@@ -2153,3 +2153,12 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .account-notification-icon{position:relative!important}
 .notification-badge{position:absolute;top:-6px;right:-7px;display:flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 4px;box-sizing:border-box;border-radius:999px;background:#d9a943;color:#101820;font-size:12px;font-weight:800;border:2px solid #17222d;line-height:1}
 .notification-badge[hidden]{display:none!important}
+
+/* Bloc "Qui est en ligne ?" en bas du forum. */
+.forum-online-section{margin:26px 0 22px;padding:18px 20px;border:1px solid #495767;border-radius:12px;background:rgba(20,29,40,.91)}
+.forum-online-section h2{margin:0 0 7px;font-size:1.15rem}
+.forum-online-section>p{margin:0 0 15px;color:#bbc6d3;font-size:.9rem}
+.forum-online-list{display:flex;gap:9px;flex-wrap:wrap}
+.forum-online-member{display:inline-flex;align-items:center;gap:8px;border:1px solid #536574;border-radius:8px;padding:7px 11px;background:#263646;color:#eef3f7;font-weight:600;overflow-wrap:anywhere}
+.forum-online-dot{width:8px;height:8px;border-radius:50%;background:#5dce8b;box-shadow:0 0 7px #5dce8b70;flex:none}
+.forum-online-empty{margin:0;color:#bbc6d3}
