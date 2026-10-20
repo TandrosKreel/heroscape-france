@@ -292,7 +292,7 @@ async function getCurrentProfile() {
 
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, username, avatar_url, role, created_at")
+    .select("id, username, avatar_url, role, can_moderate, can_manage_cards, posting_blocked, created_at")
     .eq("id", user.id)
     .single();
 
