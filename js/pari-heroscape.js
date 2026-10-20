@@ -35,9 +35,9 @@ async function refreshCards(){
  try{return await cardsRefreshing}finally{cardsRefreshing=null}
 }
 async function load(){
- const [u,c,m,ms,as,cs,vs]=await Promise.all([user?Promise.resolve({data:{user}}):db.auth.getUser(),window.HeroscapeCards.load(db),members.length?Promise.resolve({data:members}):db.from('profiles').select('id,username,role'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
+ const [u,c,m,ms,as,cs,vs]=await Promise.all([user?Promise.resolve({data:{user}}):db.auth.getUser(),window.HeroscapeCards.load(db),members.length?Promise.resolve({data:members}):db.from('profiles').select('id,username,role,can_moderate'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
  for(const x of [m,ms,as,cs,vs])if(x.error)throw x.error;
- user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&(x.role==='admin'||x.role==='moderator'));
+ user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&(x.role==='admin'||x.role==='moderator'||x.can_moderate===true));
  setCatalogue(c);
  matches=ms.data||[];armies=as.data||[];items=cs.data||[];votes=vs.data||[];indexRows();render();
 }
