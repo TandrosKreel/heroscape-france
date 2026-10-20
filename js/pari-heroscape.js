@@ -85,7 +85,7 @@ $('bet-save').onclick=async()=>{try{
  const counts=format.toLowerCase().split('vs').map(Number);if(counts.some(x=>x<1)||counts.reduce((a,b)=>a+b,0)!==build.length)throw Error('Le format doit correspondre au nombre d’armées.');
  if(build.length<2||build.some(a=>!a.cards.length||a.cards.some(c=>c.index===null)))throw Error('Sélectionne une figurine valide dans chaque ligne de chaque armée.');
  if(photos.some(x=>!/^https:\/\//i.test(x)))throw Error('Les photos doivent avoir une URL HTTPS.');
- const chosen=build.map(a=>a.member_id).filter(Boolean);if(new Set(chosen).size!==chosen.length)throw Error('Un membre ne peut contrôler deux armées.');
+
  await call('bet_create',{p_format:format,p_map:$('bet-map').value,p_photos:photos,p_armies:build.map(a=>({member_id:a.member_id,army_name:(a.army_name||'').trim(),cards:a.cards.map(c=>({name:cards[c.index].name,points:cards[c.index].points,quantity:c.quantity}))}))});
  $('bet-form').hidden=true;mapPhotos=[];renderMapPhotos();msg('Partie créée.');await load();
  }catch(e){msg(e.message)}};
