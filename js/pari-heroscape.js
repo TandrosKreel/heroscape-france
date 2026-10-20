@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const db=window.supabaseClient,$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let cards=[],catalogueAll=[],members=[],user=null,admin=false,matches=[],armies=[],items=[],votes=[],openPage=0,finishedPage=0,memberPage=0,cardPage=0,playedCardsOnly=false,build=[],tab='encours',mapPhotos=[],photoUploading=false;
+let cards=[],catalogueAll=[],catalogueStamp='',cardsRefreshing=null,members=[],user=null,admin=false,matches=[],armies=[],items=[],votes=[],openPage=0,finishedPage=0,memberPage=0,cardPage=0,playedCardsOnly=false,build=[],tab='encours',mapPhotos=[],photoUploading=false;
 const msg=s=>$('bet-status').textContent=s;
 const call=async(name,args)=>{const {data,error}=await db.rpc(name,args);if(error)throw error;return data};
 const names=()=>new Map(members.map(m=>[m.id,m.username]));
@@ -11,19 +11,34 @@ const matchPoints=m=>m.format;
 let armiesByMatch=new Map(),itemsByArmy=new Map(),votesByMatch=new Map();
 const indexRows=()=>{armiesByMatch=new Map();itemsByArmy=new Map();votesByMatch=new Map();for(const a of armies){if(!armiesByMatch.has(a.match_id))armiesByMatch.set(a.match_id,[]);armiesByMatch.get(a.match_id).push(a)}for(const a of armiesByMatch.values())a.sort((x,y)=>x.position-y.position);for(const c of items){if(!itemsByArmy.has(c.army_id))itemsByArmy.set(c.army_id,[]);itemsByArmy.get(c.army_id).push(c)}for(const v of votes){if(!votesByMatch.has(v.match_id))votesByMatch.set(v.match_id,[]);votesByMatch.get(v.match_id).push(v)}};
 
-function showTab(t){tab=t;document.querySelectorAll('.bet-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));document.querySelectorAll('.bet-panel').forEach(p=>p.hidden=p.id!=='bet-'+t);location.hash=t;render()}
+function showTab(t){if(t==='cartes')void refreshCards().catch(e=>console.warn('Actualisation des cartes :',e));tab=t;document.querySelectorAll('.bet-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));document.querySelectorAll('.bet-panel').forEach(p=>p.hidden=p.id!=='bet-'+t);location.hash=t;render()}
 document.querySelectorAll('.bet-tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
-async function load(){
- const [u,c,m,ms,as,cs,vs]=await Promise.all([user?Promise.resolve({data:{user}}):db.auth.getUser(),window.HeroscapeCards.load(db),members.length?Promise.resolve({data:members}):db.from('profiles').select('id,username,role'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
- for(const x of [m,ms,as,cs,vs])if(x.error)throw x.error;
- user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&x.role==='admin');
+function setCatalogue(c){
+ const nextStamp=JSON.stringify(c.all.map(x=>[x.catalog_id,x.name,x.general,x.points,x.points_order,x.is_hidden]));
+ if(nextStamp===catalogueStamp)return false;
  const oldIds=cards.map(card=>card.catalog_id);
- cards=c.active;catalogueAll=c.all;
+ cards=c.active;catalogueAll=c.all;catalogueStamp=nextStamp;
  for(const army of build)for(const selected of army.cards)if(selected.index!==null){
   const previousId=oldIds[selected.index];
   const nextIndex=cards.findIndex(card=>card.catalog_id===previousId);
   selected.index=nextIndex>=0?nextIndex:null;
  }
+ return true;
+}
+async function refreshCards(){
+ if(cardsRefreshing)return cardsRefreshing;
+ cardsRefreshing=(async()=>{
+  const changed=setCatalogue(await window.HeroscapeCards.load(db));
+  if(changed)render();
+  return changed;
+ })();
+ try{return await cardsRefreshing}finally{cardsRefreshing=null}
+}
+async function load(){
+ const [u,c,m,ms,as,cs,vs]=await Promise.all([user?Promise.resolve({data:{user}}):db.auth.getUser(),window.HeroscapeCards.load(db),members.length?Promise.resolve({data:members}):db.from('profiles').select('id,username,role'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
+ for(const x of [m,ms,as,cs,vs])if(x.error)throw x.error;
+ user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&x.role==='admin');
+ setCatalogue(c);
  matches=ms.data||[];armies=as.data||[];items=cs.data||[];votes=vs.data||[];indexRows();render();
 }
 async function reloadVotes(){const {data,error}=await db.from('bet_votes').select('*');if(error)throw error;votes=data||[];indexRows();render()}
@@ -85,10 +100,11 @@ const applyFormat=(value,resize=true)=>{const counts=formatCounts(value);if(!cou
 $('bet-format-choice').onchange=()=>{const custom=$('bet-format-choice').value==='custom';$('bet-custom-format-row').hidden=!custom;if(custom){$('bet-format').focus();return}applyFormat($('bet-format-choice').value)};
 $('bet-format').addEventListener('input',()=>{if($('bet-format-choice').value==='custom'&&formatCounts($('bet-format').value))applyFormat($('bet-format').value)});
 $('bet-format').addEventListener('change',()=>{if($('bet-format-choice').value==='custom')applyFormat($('bet-format').value)});
-$('bet-add').onclick=()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}$('bet-form').hidden=false;$('bet-title').value='';$('bet-title').focus();mapPhotos=[];renderMapPhotos();build=[emptyArmy(),emptyArmy()];$('bet-format-choice').value='1vs1';$('bet-custom-format-row').hidden=true;applyFormat('1vs1')};
+$('bet-add').onclick=async()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}try{await refreshCards()}catch(e){msg('Catalogue non actualisé : '+e.message);return}$('bet-form').hidden=false;$('bet-title').value='';$('bet-title').focus();mapPhotos=[];renderMapPhotos();build=[emptyArmy(),emptyArmy()];$('bet-format-choice').value='1vs1';$('bet-custom-format-row').hidden=true;applyFormat('1vs1')};
 $('bet-cancel-form').onclick=()=>$('bet-form').hidden=true;
 $('bet-army-add').onclick=()=>{if(build.length>=20)return;build.push(emptyArmy());const format=Array(build.length).fill('1').join('vs');$('bet-format-choice').value='custom';$('bet-custom-format-row').hidden=false;$('bet-format').value=format;buildRender()};
 $('bet-save').onclick=async()=>{try{
+  await refreshCards();
  const format=$('bet-format').value.trim(),title=$('bet-title').value.trim(),photos=mapPhotos.map(p=>p.url);if(title.length<3||title.length>120){$('bet-title').focus();throw Error('Donne un titre à la partie (3 à 120 caractères).')}if(photoUploading)throw Error('Attends la fin de l’envoi de la photo.');
  if(!/^\d+(vs\d+)+$/i.test(format))throw Error('Format attendu : 1vs1, 2vs2, 1vs1vs1…');
  const counts=format.toLowerCase().split('vs').map(Number);if(counts.some(x=>x<1)||counts.reduce((a,b)=>a+b,0)!==build.length)throw Error('Le format doit correspondre au nombre d’armées.');
@@ -196,6 +212,13 @@ function render(){if(!cards.length)return;
  document.querySelectorAll('[data-finish]').forEach(b=>b.onclick=()=>finishEditor(+b.dataset.finish));
 }
 ['bet-member-sort','bet-member-direction','bet-card-search','bet-card-sort','bet-card-direction'].forEach(id=>$(id).addEventListener(id==='bet-card-search'?'input':'change',()=>{memberPage=0;cardPage=0;render()}));
+// Mises à jour légères : évènements temps réel, retour sur l'onglet et changements locaux.
+if(db){
+ db.channel('bet-army-card-catalogue').on('postgres_changes',{event:'*',schema:'public',table:'army_card_edits'},()=>{void refreshCards().catch(e=>console.warn('Actualisation des cartes :',e))}).subscribe();
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)void refreshCards().catch(e=>console.warn('Actualisation des cartes :',e))});
+window.addEventListener('focus',()=>{void refreshCards().catch(e=>console.warn('Actualisation des cartes :',e))});
+window.addEventListener('storage',e=>{if(e.key==='heroscape-cards-updated')void refreshCards().catch(err=>console.warn('Actualisation des cartes :',err))});
 load().then(()=>{
  const requested=Number(new URLSearchParams(location.search).get('match'));
  const found=requested?matches.find(m=>m.id===requested):null;

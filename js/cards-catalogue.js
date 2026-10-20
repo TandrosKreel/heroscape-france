@@ -11,6 +11,7 @@ const sortCards=(a,b)=>a.general.localeCompare(b.general,'fr')||a.points-b.point
 const valid=s=>String(s??'').trim();
 const inform=(message,error=false)=>{notice.textContent=message;notice.style.color=error?'#ffaaaa':'#b7e5c7'};
 function merge(){all=window.HeroscapeCards.merge(base,edits).active;}
+const notifyCatalogueChange=()=>{try{localStorage.setItem('heroscape-cards-updated',String(Date.now()))}catch{}};
 
 function render(){
  const generals=[...new Set(all.map(x=>x.general))].sort((a,b)=>a.localeCompare(b,'fr'));
@@ -99,7 +100,7 @@ async function saveEdit(e){
   const query=editing?db.from('army_card_edits')[editing._editId?'update':'insert'](row):db.from('army_card_edits').insert(row);
   const res=editing&&editing._editId?await query.eq('id',editing._editId):await query;
   if(res.error)throw res.error;
-  await loadEdits();merge();render();closeForm();
+  await loadEdits();merge();render();closeForm();notifyCatalogueChange();
  }catch(err){inform('Impossible d’enregistrer : '+(err.message||'erreur'),true)}
  finally{$('cards-save').disabled=false}
 }
@@ -115,7 +116,7 @@ async function deleteEdit(){
    res=item._editId?await db.from('army_card_edits').update({is_hidden:true}).eq('id',item._editId):await db.from('army_card_edits').insert(row);
   }else res=await db.from('army_card_edits').update({is_hidden:true}).eq('id',item._editId);
   if(res.error)throw res.error;
-  await loadEdits();merge();render();closeForm();
+  await loadEdits();merge();render();closeForm();notifyCatalogueChange();
  }catch(err){inform('Impossible de supprimer : '+(err.message||'erreur'),true)}
  finally{$('cards-delete').disabled=false}
 }
@@ -169,7 +170,7 @@ $('cards-restore').addEventListener('click',async()=>{
  if(!id)return;
  const {error}=await db.from('army_card_edits').update({is_hidden:false}).eq('id',id);
  if(error){inform('Restauration impossible : '+error.message,true);return}
- await loadEdits();merge();render();updateRestore();inform('Carte restaurée.');
+ await loadEdits();merge();render();updateRestore();inform('Carte restaurée.');notifyCatalogueChange();
 });
 box.addEventListener('click',e=>{const b=e.target.closest('[data-card-key]');if(!b||!admin)return;const card=all.find(x=>(x._source?'base:'+x._source:'custom:'+x.id)===b.dataset.cardKey);if(card)openForm(card)});
 init();
