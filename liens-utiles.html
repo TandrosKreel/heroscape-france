@@ -10,6 +10,7 @@
 <style>
 /* Mise en page propre à la page Liens utiles ; trois liens par ligne sur ordinateur. */
 .useful-links-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch;margin:14px 0 50px}
+#useful-links-grid[hidden]{display:none!important}
 .useful-links-grid>.useful-link{box-sizing:border-box;min-width:0;min-height:180px}
 .useful-link-entry{display:flex;flex-direction:column;overflow-wrap:anywhere}
 .useful-link-entry .link-cta{margin-top:auto;padding-top:16px}
@@ -77,19 +78,8 @@
     </form>
   </section>
   <p id="useful-links-status" role="status" aria-live="polite"></p>
-  <section class="useful-links-grid" id="useful-links-grid" aria-label="Sites et ressources Heroscape">
-    <a class="card useful-link" href="https://heroscape.org/builder/" target="_blank" rel="noopener noreferrer">
-      <h3>⚔️ Heroscape Autobuilder</h3>
-      <p>Ce site permet de créer ses armées Heroscape, de rechercher les unités et de calculer automatiquement les points.</p>
-      <span class="link-cta">Ouvrir l'Autobuilder ↗</span>
-    </a>
-    <a class="card useful-link" href="https://www.heroscapers.com/" target="_blank" rel="noopener noreferrer">
-      <h3>🇺🇸 Heroscapers</h3>
-      <p>Le grand site communautaire américain consacré à Heroscape : forums, discussions, ressources et communauté anglophone.</p>
-      <span class="link-cta">Ouvrir Heroscapers ↗</span>
-    </a>
-  </section>
+  <section class="useful-links-grid" id="useful-links-grid" aria-label="Sites et ressources Heroscape" hidden></section>
 </main>
 <footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/useful-links-admin.js?v=20261020-admin2"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/useful-links-admin.js?v=20261020-no-flash3"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
 </html>
