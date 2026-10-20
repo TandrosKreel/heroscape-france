@@ -118,7 +118,7 @@ function finishEditor(id){
   if(!draw&&(values.includes('draw')||!values.includes('win')||!values.includes('loss'))){msg('Sélectionne au moins une victoire et une défaite, ou une égalité générale.');return}
   if(!confirm('Confirmer le résultat définitif de la partie ?'))return;
   const button=host.querySelector('[data-confirm-finish]');button.disabled=true;
-  try{await call('bet_finish',{p_match:id,p_winners:draw?[]:aa.filter(a=>results.get(a.id)==='win').map(a=>a.id),p_draw:draw});msg('Partie terminée et statistiques actualisées.');await load()}
+  try{await call('bet_finish',{p_match:id,p_winners:draw?[]:aa.filter(a=>results.get(a.id)==='win').map(a=>a.id),p_draw:draw});msg('Partie terminée et statistiques actualisées.');window.scrollTo({top:0,behavior:'smooth'});await load()}
   catch(e){msg(e.message);button.disabled=false}
  };
  redraw();
