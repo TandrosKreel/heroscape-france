@@ -54,6 +54,12 @@
     <div id="latest-topics" style="display:block;width:100%"><div class="empty">Chargement des derniers messages…</div></div>
   </section>
 
+  <section class="forum-online-section" aria-labelledby="forum-online-title">
+    <h2 id="forum-online-title">Qui est en ligne ?</h2>
+    <p>Les membres actifs sur le site au cours des cinq dernières minutes apparaissent ici.</p>
+    <div id="forum-online-members" aria-live="polite">Chargement des membres actifs…</div>
+  </section>
+
 </main>
 
 
@@ -167,5 +173,6 @@ async function renderLatestTopics() {
 renderLatestTopics();
 </script>
 
+<script src="js/forum-presence.js?v=20261020-1"></script>
 </body>
 </html>
