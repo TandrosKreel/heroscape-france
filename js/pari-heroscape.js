@@ -74,6 +74,7 @@ const formatCounts=value=>{if(!/^[0-9]+(vs[0-9]+)+$/i.test(value))return null;co
 const applyFormat=(value,resize=true)=>{const counts=formatCounts(value);if(!counts){msg('Format invalide : utilise par exemple 1vs1, 2vs2 ou 2vs3 (20 armées maximum).');return false}
  $('bet-format').value=counts.join('vs');if(resize){const total=counts.reduce((a,b)=>a+b,0);while(build.length<total)build.push(emptyArmy());if(build.length>total)build.length=total;buildRender()}msg('');return true};
 $('bet-format-choice').onchange=()=>{const custom=$('bet-format-choice').value==='custom';$('bet-custom-format-row').hidden=!custom;if(custom){$('bet-format').focus();return}applyFormat($('bet-format-choice').value)};
+$('bet-format').addEventListener('input',()=>{if($('bet-format-choice').value==='custom'&&formatCounts($('bet-format').value))applyFormat($('bet-format').value)});
 $('bet-format').addEventListener('change',()=>{if($('bet-format-choice').value==='custom')applyFormat($('bet-format').value)});
 $('bet-add').onclick=()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}$('bet-form').hidden=false;mapPhotos=[];renderMapPhotos();build=[emptyArmy(),emptyArmy()];$('bet-format-choice').value='1vs1';$('bet-custom-format-row').hidden=true;applyFormat('1vs1')};
 $('bet-cancel-form').onclick=()=>$('bet-form').hidden=true;
