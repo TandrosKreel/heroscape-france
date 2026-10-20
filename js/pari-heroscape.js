@@ -70,7 +70,7 @@ $('bet-photo-file').addEventListener('change',async event=>{
  finally{photoUploading=false;$('bet-upload-photo').disabled=false}
 });
 const emptyArmy=()=>({member_id:'',army_name:'',cards:[{index:null,quantity:1}]});
-const formatCounts=value=>{if(!/^\\d+(vs\\d+)+$/i.test(value))return null;const counts=value.toLowerCase().split('vs').map(Number);const total=counts.reduce((a,b)=>a+b,0);return counts.every(n=>n>=1)&&total>=2&&total<=20?counts:null};
+const formatCounts=value=>{if(!/^[0-9]+(vs[0-9]+)+$/i.test(value))return null;const counts=value.toLowerCase().split('vs').map(Number);const total=counts.reduce((a,b)=>a+b,0);return counts.every(n=>n>=1)&&total>=2&&total<=20?counts:null};
 const applyFormat=(value,resize=true)=>{const counts=formatCounts(value);if(!counts){msg('Format invalide : utilise par exemple 1vs1, 2vs2 ou 2vs3 (20 armées maximum).');return false}
  $('bet-format').value=counts.join('vs');if(resize){const total=counts.reduce((a,b)=>a+b,0);while(build.length<total)build.push(emptyArmy());if(build.length>total)build.length=total;buildRender()}msg('');return true};
 $('bet-format-choice').onchange=()=>{const custom=$('bet-format-choice').value==='custom';$('bet-custom-format-row').hidden=!custom;if(custom){$('bet-format').focus();return}applyFormat($('bet-format-choice').value)};
