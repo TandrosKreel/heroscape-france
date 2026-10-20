@@ -664,7 +664,7 @@ async function getThread() {
 // UN MESSAGE
 // ============================================================
 
-function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0, signature = "", isAdmin = false, viewerId = null) {
+function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0, signature = "", canDeletePosts = false, viewerId = null) {
 
   const avatar = post.avatar_url
     ? `<img class="post-avatar" src="${esc(post.avatar_url)}" alt="Avatar de ${esc(post.author || "Membre")}" loading="lazy">`
@@ -698,7 +698,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
       <div class="forum-message-body">${renderForumMessage(post.body)}</div>\n      ${post.updated_at && new Date(post.updated_at).getTime() > new Date(post.created_at).getTime() + 2000 ? `<div class="forum-edited-date">Modifié le ${esc(formatDate(post.updated_at))}</div>` : ""}\n      ${viewerId && viewerId === post.user_id ? `<div class="forum-edit-actions"><button type="button" class="forum-edit-post" data-edit-post="${post.id}">Éditer</button></div>` : ""}
 
       ${signature ? `<div class="post-signature">${esc(signature)}</div>` : ""}\n
-      ${isAdmin ? `<div class="admin-post-actions"><button class="btn admin-delete-post" style="background:transparent!important;color:#aeb7c2!important;border:0!important;box-shadow:none!important;padding:2px 0!important;font-size:9px!important;font-weight:400!important;min-width:0!important;min-height:0!important;line-height:1.2!important" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
+      ${canDeletePosts ? `<div class="admin-post-actions"<button class="btn admin-delete-post" style="background:transparent!important;color:#aeb7c2!important;border:0!important;box-shadow:none!important;padding:2px 0!important;font-size:12px!important;font-weight:400!important;min-width:0!important;min-height:0!important;line-height:1.2!important" type="button" data-post-id="${post.id}">Supprimer ce message</button></div>` : ""}
 
       </div>
     </article>
