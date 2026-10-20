@@ -130,9 +130,9 @@ async function refreshAdmin(){
    if(sessionError)throw sessionError;
    const uid=sessionData?.session?.user?.id;
    if(uid){
-    const {data:profile,error:profileError}=await db.from('profiles').select('role').eq('id',uid).maybeSingle();
+    const {data:profile,error:profileError}=await db.from('profiles').select('role,can_manage_cards').eq('id',uid).maybeSingle();
     if(profileError)throw profileError;
-    allowed=profile?.role==='admin'||profile?.role==='cards_admin';
+    allowed=profile?.role==='admin'||profile?.role==='cards_admin'||profile?.can_manage_cards===true;
    }
   }catch(err){console.warn('Droits de gestion des cartes non vérifiés :',err)}
  }
