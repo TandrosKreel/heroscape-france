@@ -767,6 +767,7 @@ async function renderSubject() {
     getMessageCounts()
   ]);
   const isAdmin = currentProfile?.role === "admin";
+  const canModerate = isAdmin || currentProfile?.role === "moderator";
   const posts = pageResult.posts;
   const latestPost = recentPosts.length ? recentPosts[recentPosts.length - 1] : null;
   const signatures = await getSignatures(posts.map(post => post.user_id));
@@ -786,7 +787,7 @@ async function renderSubject() {
         pagePosts[0], true, thread.title,
         messageCounts[pagePosts[0].user_id] || 0,
         signatures[pagePosts[0].user_id] || "",
-        isAdmin, user.id
+        canModerate, user.id
       );
     } else {
       firstPostHtml = '<h2 class="thread-page-title">' + esc(thread.title) + '</h2>';
@@ -795,7 +796,7 @@ async function renderSubject() {
     const visibleReplies = currentPage === 1 ? pagePosts.slice(1) : pagePosts;
     repliesHtml = visibleReplies.length
       ? visibleReplies.map(post =>
-          messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "", isAdmin, user.id)
+          messageHtml(post, false, "", messageCounts[post.user_id] || 0, signatures[post.user_id] || "", canModerate, user.id)
         ).join("")
       : '<div class="empty">Aucune réponse sur cette page.</div>';
 
@@ -932,7 +933,7 @@ async function renderSubject() {
   subjectBox.innerHTML = `
 
     ${paginationHtml}
-    ${isAdmin ? '<div class="admin-thread-actions"><button class="btn" id="admin-toggle-pin" type="button">' + (thread.is_pinned ? 'Désépingler ce sujet' : 'Épingler ce sujet') + '</button><button class="btn" id="admin-delete-thread" type="button">Supprimer ce sujet</button></div>' : ""}
+    ${canModerate ? '<div class="admin-thread-actions">' + (isAdmin ? '<button class="btn" id="admin-toggle-pin" type="button">' + (thread.is_pinned ? 'Désépingler ce sujet' : 'Épingler ce sujet') + '</button>' : '') + '<button class="btn" id="admin-delete-thread" type="button">Supprimer ce sujet</button></div>' : ""}
     ${firstPostHtml}
 
     <h3>Réponses</h3>
@@ -948,8 +949,8 @@ async function renderSubject() {
   `;
 
 
-  if (isAdmin) {
-    const pinButton = document.getElementById("admin-toggle-pin");
+  if (canModerate) {
+    const pinButton = isAdmin ? document.getElementById("admin-toggle-pin") : null;
     if (pinButton) {
       pinButton.addEventListener("click", async () => {
         const nextPinned = !thread.is_pinned;
