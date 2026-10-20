@@ -2238,3 +2238,22 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     body:has(#notifications-list) .forum-chat-messages{height:80px;max-height:80px;min-height:48px}
   }
 }
+
+/* Lisibilité du forum — ajustement ciblé des textes (octobre 2026).
+   Ne change ni les positions des dés, ni les icônes, ni la grille. */
+#categories .card.forumrow .category-content h3{font-size:19.5px!important;line-height:1.3!important}
+#categories .card.forumrow.category-customs .category-content h3{font-size:19px!important}
+#categories .card.forumrow .category-content .count{font-size:13.5px!important;line-height:1.5!important}
+#categories .card.forumrow .category-activity-text{font-size:11.5px!important;line-height:1.25!important;white-space:normal!important}
+#latest-topics .latest-post-text{font-size:14.5px!important;line-height:1.5!important}
+#latest-topics .latest-post-row time{font-size:12px!important}
+#topics .topic-title{font-size:18.5px;line-height:1.4}
+#topics .topic-meta{font-size:13px;line-height:1.5}
+.forum-post .forum-message-body{font-size:16.5px;line-height:1.6}
+.forum-post .post-author{font-size:14px}
+.forum-post .post-message-count,.forum-post .forum-message-head .count{font-size:13px}
+@media(max-width:600px){
+  #categories .card.forumrow .category-content h3{font-size:19px!important}
+  #topics .topic-title{font-size:17.5px}
+  #latest-topics .latest-post-text{font-size:14px!important}
+}
