@@ -767,7 +767,7 @@ async function renderSubject() {
     getMessageCounts()
   ]);
   const isAdmin = currentProfile?.role === "admin";
-  const canModerate = isAdmin || currentProfile?.role === "moderator";
+  const canModerate = isAdmin || currentProfile?.role === "moderator" || currentProfile?.can_moderate === true;
   const posts = pageResult.posts;
   const latestPost = recentPosts.length ? recentPosts[recentPosts.length - 1] : null;
   const signatures = await getSignatures(posts.map(post => post.user_id));
