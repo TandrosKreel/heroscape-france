@@ -10,12 +10,8 @@ const q=$('q'),g=$('g'),band=$('band'),box=$('cards'),status=$('cards-status'),p
 const sortCards=(a,b)=>a.general.localeCompare(b.general,'fr')||a.points-b.points||Number(a.points_order||0)-Number(b.points_order||0)||a.name.localeCompare(b.name,'fr');
 const valid=s=>String(s??'').trim();
 const inform=(message,error=false)=>{notice.textContent=message;notice.style.color=error?'#ffaaaa':'#b7e5c7'};
-function merge(){
- const overrides=new Map(edits.filter(e=>e.source_name).map(e=>[e.source_name,e]));
- all=base.map(b=>{const e=overrides.get(b.name);return e?{...b,...e,_source:b.name,_editId:e.id}: {...b,_source:b.name,_editId:null}}).filter(x=>!x.is_hidden);
- all.push(...edits.filter(e=>!e.source_name&&!e.is_hidden).map(e=>({...e,_source:null,_editId:e.id})));
- all.sort(sortCards);
-}
+function merge(){all=window.HeroscapeCards.merge(base,edits).active;}
+
 function render(){
  const generals=[...new Set(all.map(x=>x.general))].sort((a,b)=>a.localeCompare(b,'fr'));
  const selected=g.value;
@@ -78,7 +74,7 @@ async function saveEdit(e){
  const name=valid($('cards-name').value),general=valid($('cards-general').value),points=Number($('cards-points').value),fr=valid($('cards-fr').value)||null,en=valid($('cards-en').value)||null;
  if(!name||!general||!Number.isInteger(points)||points<0||points>2000){inform('Renseigne un nom, un général et un coût valide.',true);return}
  if((fr&&!safeUrl(fr))||(en&&!safeUrl(en))){inform('Les liens VF et VO doivent commencer par https:// ou http://.',true);return}
- if(!editing&&all.some(x=>x.name.toLocaleLowerCase('fr')===name.toLocaleLowerCase('fr'))){inform('Une carte porte déjà ce nom.',true);return}
+ if(all.some(x=>x.name.toLocaleLowerCase('fr')===name.toLocaleLowerCase('fr')&&(!editing||x.catalog_id!==editing.catalog_id))){inform('Une carte porte déjà ce nom.',true);return}
  let points_order=editing?Number(editing.points_order):9999;
  if(!editing){
   const after=$('cards-place-after').value;
@@ -117,7 +113,7 @@ async function deleteEdit(){
   if(item._source){
    const row={source_name:item._source,name:item.name,general:item.general,points:item.points,points_order:item.points_order,fr:item.fr||null,en:item.en||null,is_hidden:true};
    res=item._editId?await db.from('army_card_edits').update({is_hidden:true}).eq('id',item._editId):await db.from('army_card_edits').insert(row);
-  }else res=await db.from('army_card_edits').delete().eq('id',item._editId);
+  }else res=await db.from('army_card_edits').update({is_hidden:true}).eq('id',item._editId);
   if(res.error)throw res.error;
   await loadEdits();merge();render();closeForm();
  }catch(err){inform('Impossible de supprimer : '+(err.message||'erreur'),true)}

@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const db=window.supabaseClient,$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let cards=[],members=[],user=null,admin=false,matches=[],armies=[],items=[],votes=[],openPage=0,finishedPage=0,memberPage=0,cardPage=0,playedCardsOnly=false,build=[],tab='encours',mapPhotos=[],photoUploading=false;
+let cards=[],catalogueAll=[],members=[],user=null,admin=false,matches=[],armies=[],items=[],votes=[],openPage=0,finishedPage=0,memberPage=0,cardPage=0,playedCardsOnly=false,build=[],tab='encours',mapPhotos=[],photoUploading=false;
 const msg=s=>$('bet-status').textContent=s;
 const call=async(name,args)=>{const {data,error}=await db.rpc(name,args);if(error)throw error;return data};
 const names=()=>new Map(members.map(m=>[m.id,m.username]));
@@ -14,9 +14,17 @@ const indexRows=()=>{armiesByMatch=new Map();itemsByArmy=new Map();votesByMatch=
 function showTab(t){tab=t;document.querySelectorAll('.bet-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));document.querySelectorAll('.bet-panel').forEach(p=>p.hidden=p.id!=='bet-'+t);location.hash=t;render()}
 document.querySelectorAll('.bet-tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 async function load(){
- const [u,c,m,ms,as,cs,vs]=await Promise.all([user?Promise.resolve({data:{user}}):db.auth.getUser(),cards.length?Promise.resolve(cards):fetch('data/cards.json').then(x=>x.json()),members.length?Promise.resolve({data:members}):db.from('profiles').select('id,username,role'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
+ const [u,c,m,ms,as,cs,vs]=await Promise.all([user?Promise.resolve({data:{user}}):db.auth.getUser(),window.HeroscapeCards.load(db),members.length?Promise.resolve({data:members}):db.from('profiles').select('id,username,role'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
  for(const x of [m,ms,as,cs,vs])if(x.error)throw x.error;
- user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&x.role==='admin');cards=c;matches=ms.data||[];armies=as.data||[];items=cs.data||[];votes=vs.data||[];indexRows();render();
+ user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&x.role==='admin');
+ const oldIds=cards.map(card=>card.catalog_id);
+ cards=c.active;catalogueAll=c.all;
+ for(const army of build)for(const selected of army.cards)if(selected.index!==null){
+  const previousId=oldIds[selected.index];
+  const nextIndex=cards.findIndex(card=>card.catalog_id===previousId);
+  selected.index=nextIndex>=0?nextIndex:null;
+ }
+ matches=ms.data||[];armies=as.data||[];items=cs.data||[];votes=vs.data||[];indexRows();render();
 }
 async function reloadVotes(){const {data,error}=await db.from('bet_votes').select('*');if(error)throw error;votes=data||[];indexRows();render()}
 
@@ -87,13 +95,13 @@ $('bet-save').onclick=async()=>{try{
  if(build.length<2||build.some(a=>!a.cards.length||a.cards.some(c=>c.index===null)))throw Error('Sélectionne une figurine valide dans chaque ligne de chaque armée.');
  if(photos.some(x=>!/^https:\/\//i.test(x)))throw Error('Les photos doivent avoir une URL HTTPS.');
 
- await call('bet_create_with_title',{p_title:title,p_scoring_format:$('bet-scoring-format').value,p_format:format,p_map:$('bet-map').value,p_photos:photos,p_armies:build.map(a=>({member_id:a.member_id,army_name:(a.army_name||'').trim(),cards:a.cards.map(c=>({name:cards[c.index].name,points:isDeltaBuild()?0:cards[c.index].points,quantity:c.quantity}))}))});
+ await call('bet_create_with_title',{p_title:title,p_scoring_format:$('bet-scoring-format').value,p_format:format,p_map:$('bet-map').value,p_photos:photos,p_armies:build.map(a=>({member_id:a.member_id,army_name:(a.army_name||'').trim(),cards:a.cards.map(c=>({name:cards[c.index].name,catalog_id:cards[c.index].catalog_id,points:isDeltaBuild()?0:cards[c.index].points,quantity:c.quantity}))}))});
  $('bet-form').hidden=true;mapPhotos=[];renderMapPhotos();msg('Partie créée.');openPage=0;window.scrollTo({top:0,behavior:'smooth'});await load();
  }catch(e){msg(e.message);window.scrollTo({top:0,behavior:'smooth'})}};
 $('bet-scoring-format').addEventListener('change',()=>{$('bet-scoring-hint').textContent=isDeltaBuild()?'Point Delta : les coûts des figurines et le total des armées ne sont pas affichés.':'Standard : coûts et totaux des armées affichés.';buildRender()});
 const pointsOf=a=>byArmy(a.id).reduce((s,c)=>s+c.points*c.quantity,0);
 const matchHTML=(m)=>{const aa=byMatch(m.id),vv=voteFor(m.id),mine=vv.find(v=>v.user_id===user?.id),participant=aa.some(a=>a.member_id===user?.id),winner=aa.filter(a=>a.is_winner),maxVote=Math.floor(aa.length/2),score=m.status==='finished';
- const armyHTML=aa.map((a,i)=>'<div class="bet-army"><h4>Armée '+a.position+'</h4>'+(a.army_name?'<p class="bet-army-custom-name">'+esc(a.army_name)+'</p>':'')+'<p class="bet-played-by"><span>Joué par</span> <strong>'+esc(a.player_name)+'</strong></p><ul>'+byArmy(a.id).map(c=>'<li>'+esc(c.card_name)+(c.quantity>1?' ×'+c.quantity:'')+(score?' — '+cardScore(c.card_name,m.scoring_format||'standard'):'')+'</li>').join('')+'</ul><p>'+pointsOf(a)+' points</p>'+(score?'<p class="bet-result">'+(m.is_draw?'Égalité':a.is_winner?'Vainqueur':'Vaincu')+'</p>':'')+'</div>').join('<div class="bet-vs" aria-label="contre"><span>VS</span></div>');
+ const armyHTML=aa.map((a,i)=>'<div class="bet-army"><h4>Armée '+a.position+'</h4>'+(a.army_name?'<p class="bet-army-custom-name">'+esc(a.army_name)+'</p>':'')+'<p class="bet-played-by"><span>Joué par</span> <strong>'+esc(a.player_name)+'</strong></p><ul>'+byArmy(a.id).map(c=>'<li>'+esc(c.card_name)+(c.quantity>1?' ×'+c.quantity:'')+(score?' — '+cardScore(c.card_name,m.scoring_format||'standard',c.catalog_id):'')+'</li>').join('')+'</ul><p>'+pointsOf(a)+' points</p>'+(score?'<p class="bet-result">'+(m.is_draw?'Égalité':a.is_winner?'Vainqueur':'Vaincu')+'</p>':'')+'</div>').join('<div class="bet-vs" aria-label="contre"><span>VS</span></div>');
  const counts=aa.map(a=>({army:a,count:vv.filter(v=>v.army_ids.includes(a.id)).length})),totalChoices=counts.reduce((n,x)=>n+x.count,0);
  const voteSummary='<section class="bet-voting'+(score?' bet-voting-finished':'')+'"><div class="bet-vote-heading"><div><h4>🗳️ Les paris</h4><span class="bet-vote-subtitle">'+(score?'Résultats des pronostics':'Choisissez votre pronostic')+'</span></div><div class="bet-vote-total"><strong>'+vv.length+'</strong><span>vote'+(vv.length>1?'s':'')+' au total</span></div></div>'+(score?'':'<div class="bet-vote-switch"><button type="button" class="bet-vote-tab active" data-vote-view="choose" data-vote-match="'+m.id+'">Voter</button><button type="button" class="bet-vote-tab" data-vote-view="results" data-vote-match="'+m.id+'">Voir les votes</button></div><div class="bet-vote-panel" data-vote-panel="choose" data-vote-match="'+m.id+'">')+''+(score?'':user&&!participant?'<p class="bet-vote-help">Sélectionnez jusqu’à '+maxVote+' armée'+(maxVote>1?'s':'')+'. Vous pouvez modifier ou retirer votre vote.</p><div class="bet-vote-choices">'+aa.map(a=>'<label class="bet-vote-tile"><input type="checkbox" data-vote="'+m.id+'" value="'+a.id+'" '+(mine?.army_ids.includes(a.id)?'checked':'')+'><span class="bet-vote-tile-text"><strong>Armée '+a.position+'</strong>'+(a.army_name?'<em class="bet-vote-army-name">'+esc(a.army_name)+'</em>':'')+'<small>'+esc(a.player_name)+'</small></span><span class="bet-vote-tick">✓</span></label>').join('')+'</div><div class="bet-vote-buttons"><button data-save-vote="'+m.id+'">Enregistrer mon vote</button><button data-clear-vote="'+m.id+'">Retirer mon vote</button></div>':'<p class="bet-vote-help">'+(participant?'Vous participez à cette partie : vous ne pouvez pas voter.':'Connectez-vous pour participer aux votes.')+'</p>')+(score?'':'</div>')+'<div class="bet-vote-panel" data-vote-panel="results" data-vote-match="'+m.id+'"'+(score?'':' hidden')+'><p class="bet-vote-help">Répartition des '+totalChoices+' choix exprimés par '+vv.length+' membre'+(vv.length>1?'s':'')+'.</p><div class="bet-vote-bars">'+counts.map(x=>'<div class="bet-vote-bar-row"><div class="bet-vote-bar-label"><strong>Armée '+x.army.position+'</strong><span>'+x.count+' vote'+(x.count>1?'s':'')+' · '+(totalChoices?Math.round(100*x.count/totalChoices):0)+' %</span></div><div class="bet-vote-track" role="meter" aria-label="Votes pour l’armée '+x.army.position+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+(totalChoices?Math.round(100*x.count/totalChoices):0)+'"><div class="bet-vote-fill" style="width:'+(totalChoices?100*x.count/totalChoices:0)+'%"></div></div></div>').join('')+'</div><details class="bet-voter-list" '+(score?'open':'')+'><summary>Votes des membres</summary><div>'+ (vv.length?vv.map(v=>{const ok=!m.is_draw&&v.army_ids.length>0&&v.army_ids.every(id=>winner.some(a=>a.id===id));return '<p><strong>'+esc(names().get(v.user_id)||'Membre supprimé')+'</strong> : '+v.army_ids.map(id=>'Armée '+(aa.find(a=>a.id===id)?.position||'?')).join(', ')+(score?' — '+(ok?'✓ Réussi':'✗ Raté'):'')+'</p>'}).join(''):'Aucun vote pour le moment.')+'</div></details></div></section>';
  return '<article class="card" id="match-'+m.id+'"><h3>'+'Partie #'+m.id+' — '+esc(m.title||'Partie historique #'+m.id)+' <span class="bet-scoring-tag">'+(m.scoring_format==='delta'?'Point Delta':'Standard')+'</span></h3><p class="bet-meta">Format : '+esc(m.format)+' · Publiée le '+new Date(m.created_at).toLocaleString('fr-FR')+' par '+esc(names().get(m.creator_id)||'Membre supprimé')+'</p><div class="bet-armies">'+armyHTML+'</div>'+((m.map_description?.trim()||m.map_photos?.length)?'<h4 class="bet-map-info-title">🗺️ Infos sur la map</h4>':'')+(m.map_description?.trim()?'<p class="bet-map-description">'+esc(m.map_description)+'</p>':'')+(m.map_photos?.length?'<div class="bet-map-images">'+m.map_photos.filter(x=>/^https:\/\//.test(x)).map(x=>'<a href="'+esc(x)+'" target="_blank" rel="noopener"><img src="'+esc(x)+'" alt="Photo de la map" loading="lazy"></a>').join('')+'</div>':'')+voteSummary+'<div class="bet-actions">'+(!score&&m.creator_id===user?.id?'<button data-finish="'+m.id+'">Mettre fin à la partie</button><button data-delete="'+m.id+'">Annuler la partie</button>':'')+(admin&&(score||m.creator_id!==user?.id)?'<button data-delete="'+m.id+'">Supprimer (admin)</button>':'')+'</div><div data-finish-editor="'+m.id+'" hidden></div></article>'};
@@ -123,8 +131,33 @@ function finishEditor(id){
  };
  redraw();
 }
-function cardScores(scoringFormat='all'){const map=new Map;for(const m of matches.filter(x=>x.status==='finished'&&(scoringFormat==='all'||(x.scoring_format||'standard')===scoringFormat)))for(const a of byMatch(m.id))for(const c of byArmy(a.id)){const name=canonicalCardName(c.card_name);const x=map.get(name)||{name,wins:0,draws:0,losses:0};if(m.is_draw)x.draws++;else if(a.is_winner)x.wins++;else x.losses++;map.set(name,x)}return cards.map(c=>{const x=map.get(c.name)||{name:c.name,wins:0,draws:0,losses:0};const total=x.wins+x.draws+x.losses;return {...x,total,rate:total?100*x.wins/total:0}})}
-function cardScore(name,scoringFormat='all'){const s=cardScores(scoringFormat).find(x=>x.name===canonicalCardName(name));return s?s.wins+'-'+s.draws+'-'+s.losses+' ('+s.rate.toFixed(1)+' %)':'0-0-0'}
+function cardScores(scoringFormat='all'){
+ const map=new Map();
+ for(const m of matches.filter(x=>x.status==='finished'&&(scoringFormat==='all'||(x.scoring_format||'standard')===scoringFormat)))
+  for(const a of byMatch(m.id))for(const c of byArmy(a.id)){
+   const id=c.catalog_id||'base:'+canonicalCardName(c.card_name);
+   const x=map.get(id)||{name:canonicalCardName(c.card_name),wins:0,draws:0,losses:0};
+   if(m.is_draw)x.draws++;else if(a.is_winner)x.wins++;else x.losses++;
+   map.set(id,x);
+  }
+ const known=new Set();
+ const output=catalogueAll.map(c=>{
+  const id=c.catalog_id;known.add(id);
+  const x=map.get(id)||{wins:0,draws:0,losses:0};
+  const total=x.wins+x.draws+x.losses;
+  return {...x,name:c.name,catalog_id:id,is_hidden:!!c.is_hidden,total,rate:total?100*x.wins/total:0};
+ }).filter(x=>!x.is_hidden||x.total>0);
+ for(const [id,x] of map)if(!known.has(id)){
+  const total=x.wins+x.draws+x.losses;
+  output.push({...x,catalog_id:id,is_hidden:true,total,rate:total?100*x.wins/total:0});
+ }
+ return output;
+}
+function cardScore(name,scoringFormat='all',catalogId=null){
+ const id=catalogId||'base:'+canonicalCardName(name);
+ const s=cardScores(scoringFormat).find(x=>x.catalog_id===id);
+ return s?s.wins+'-'+s.draws+'-'+s.losses+' ('+s.rate.toFixed(1)+' %)':'0-0-0';
+}
 function memberScores(scoringFormat='all'){const map=new Map;for(const m of matches.filter(x=>x.status==='finished'&&(scoringFormat==='all'||(x.scoring_format||'standard')===scoringFormat))){const aa=byMatch(m.id);if(aa.length!==2||!/^1\s*vs\s*1$/i.test(String(m.format||'').trim()))continue;const wins=aa.filter(a=>a.is_winner).map(a=>a.id),pts=1;for(const v of voteFor(m.id)){const x=map.get(v.user_id)||{id:v.user_id,good:0,bad:0,points:0};const good=!m.is_draw&&v.army_ids.length>0&&v.army_ids.every(id=>wins.includes(id));if(good){x.good++;x.points+=pts}else x.bad++;map.set(v.user_id,x)}}return [...map.values()].map(x=>({...x,rate:100*x.good/(x.good+x.bad)}))}
 function pages(el,page,total,callback){$(el).innerHTML='<div class="bet-pagination"><button '+(page?'':'disabled')+' data-prev>← Précédent</button> Page '+(page+1)+' / '+Math.max(1,Math.ceil(total))+' <button '+((page+1)*1<total?'':'disabled')+' data-next>Suivant →</button></div>';$(el).querySelector('[data-prev]').onclick=()=>callback(page-1);$(el).querySelector('[data-next]').onclick=()=>callback(page+1)}
 function render(){if(!cards.length)return;
@@ -149,7 +182,7 @@ function render(){if(!cards.length)return;
  if(tab==='participants')$('bet-member-stats').innerHTML=statTiles(ms,'members')+'<div class="bet-stats-grid">'+ms.slice(memberPage*20,(memberPage+1)*20).map(x=>'<article class="bet-stat-tile"><div class="bet-stat-title"><span class="bet-stat-symbol">🎯</span><strong>'+esc(names().get(x.id)||'Membre supprimé')+'</strong><b>'+x.points+' pts</b></div><div class="bet-stat-big">'+x.rate.toFixed(1)+' % <small>de paris réussis</small></div>'+bar(x.good,0,x.bad)+'<div class="bet-stat-details"><span>✓ '+x.good+' justes</span><span>✕ '+x.bad+' ratés</span></div></article>').join('')+'</div>';if(tab==='participants')pages('bet-member-pagination',memberPage,ms.length/20,p=>{memberPage=p;render()});
  if(tab==='cartes'){
  let cs=cardScores($('bet-card-scoring-format').value),term=$('bet-card-search').value.trim().toLowerCase();cs=cs.filter(x=>(!playedCardsOnly||x.total>0)&&x.name.toLowerCase().includes(term));sort=$('bet-card-sort').value;dir=$('bet-card-direction').value==='asc'?1:-1;cs.sort((a,b)=>dir*(a[sort]-b[sort])||a.name.localeCompare(b.name,'fr'));cardPage=Math.min(cardPage,Math.max(0,Math.ceil(cs.length/50)-1));
- $('bet-card-stats').innerHTML=statTiles(cardScores($('bet-card-scoring-format').value),'cards')+'<p class="bet-stats-count">'+cs.length+' carte(s) trouvée(s)</p><div class="bet-stats-grid">'+cs.slice(cardPage*50,(cardPage+1)*50).map(x=>'<article class="bet-stat-tile"><div class="bet-stat-title"><span class="bet-stat-symbol">⚔️</span><a href="cartes-armee.html?carte='+encodeURIComponent(x.name)+'">'+esc(x.name)+'</a></div>'+(x.total?'<div class="bet-stat-big">'+x.rate.toFixed(1)+' % <small>de victoires</small></div>':'<div class="bet-stat-unused">Jamais jouée</div>')+bar(x.wins,x.draws,x.losses)+'<div class="bet-stat-details"><span>🟢 '+x.wins+' V</span><span>🟡 '+x.draws+' N</span><span>🔴 '+x.losses+' D</span></div></article>').join('')+'</div>';pages('bet-card-pagination',cardPage,cs.length/50,p=>{cardPage=p;render()});
+ $('bet-card-stats').innerHTML=statTiles(cardScores($('bet-card-scoring-format').value),'cards')+'<p class="bet-stats-count">'+cs.length+' carte(s) trouvée(s)</p><div class="bet-stats-grid">'+cs.slice(cardPage*50,(cardPage+1)*50).map(x=>'<article class="bet-stat-tile"><div class="bet-stat-title"><span class="bet-stat-symbol">⚔️</span>'+(x.is_hidden?'<span>'+esc(x.name)+'</span>':'<a href="cartes-armee.html?carte='+encodeURIComponent(x.name)+'">'+esc(x.name)+'</a>')+'</div>'+(x.total?'<div class="bet-stat-big">'+x.rate.toFixed(1)+' % <small>de victoires</small></div>':'<div class="bet-stat-unused">Jamais jouée</div>')+bar(x.wins,x.draws,x.losses)+'<div class="bet-stat-details"><span>🟢 '+x.wins+' V</span><span>🟡 '+x.draws+' N</span><span>🔴 '+x.losses+' D</span></div></article>').join('')+'</div>';pages('bet-card-pagination',cardPage,cs.length/50,p=>{cardPage=p;render()});
  }
  }
  $('bet-card-scoring-format').onchange=()=>{cardPage=0;render()};
