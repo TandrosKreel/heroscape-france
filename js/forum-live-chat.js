@@ -16,7 +16,7 @@ const rpc=(name,args)=>db.rpc(name,args);
 const heartbeat=async()=>{if(!me||document.hidden||Date.now()-activeAt>5*60*1000||Date.now()-heartbeatAt<18000)return;const {error}=await rpc('forum_chat_heartbeat',{p_token:token});if(!error)heartbeatAt=Date.now()};
 const refresh=async()=>{if(!me||requesting||document.hidden)return;requesting=true;try{
  await heartbeat();
- const {data,error}=await rpc('forum_chat_inbox',{p_token:token});if(error)return;
+ const {data,error}=await rpc('forum_chat_inbox',{p_token:token});if(error){status.textContent='Connexion au chat interrompue';return;}
  const msgs=data||[];
  if(!peer){const incoming=msgs.filter(m=>m.recipient_id===me);if(incoming.length){const m=incoming[incoming.length-1];const names=await db.from('profiles').select('username').eq('id',m.sender_id).maybeSingle();select(m.sender_id,names.data?.username||'Membre',false);unread=true;display()}}
  if(peer){
@@ -28,16 +28,17 @@ const refresh=async()=>{if(!me||requesting||document.hidden)return;requesting=tr
    if(latest>lastMessage&&subset.some(m=>m.sender_id===peer&&Number(m.id)>lastMessage)&&!opened){unread=true;display()}
    lastMessage=latest;
   }
-  const {data:isOnline}=await rpc('forum_chat_online',{p_user:peer});
-  online=!!isOnline;status.textContent=online?'En ligne':'Hors ligne';input.disabled=!online;form.querySelector('button').disabled=!online;
+  const {data:isOnline,error:onlineError}=await rpc('forum_chat_online',{p_user:peer});
+  if(!onlineError){online=!!isOnline;status.textContent=online?'En ligne':'Hors ligne';input.disabled=!online;form.querySelector('button').disabled=!online}else{status.textContent='Connexion instable';}
  }
  }finally{requesting=false}};
 host.querySelector('.forum-chat-close').onclick=()=>{opened=false;unread=false;display()};
-launch.onclick=()=>{opened=true;unread=false;display();input.focus()};
+launch.onclick=()=>{opened=true;unread=false;display();input.focus();refresh()};
 form.onsubmit=async e=>{e.preventDefault();const body=input.value.trim();if(!body||!peer||!online)return;const button=form.querySelector('button');button.disabled=true;const {error}=await rpc('forum_chat_send',{p_token:token,p_to:peer,p_body:body});button.disabled=false;if(error){status.textContent=error.message;return}input.value='';await refresh()};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-forum-chat-user]');if(b){e.preventDefault();select(b.dataset.forumChatUser,b.dataset.forumChatName)}});
 ['pointerdown','keydown','touchstart','scroll'].forEach(ev=>document.addEventListener(ev,()=>{activeAt=Date.now()},{passive:true}));
-window.addEventListener('focus',()=>{activeAt=Date.now();refresh()});
+window.addEventListener('focus',()=>{activeAt=Date.now();heartbeatAt=0;refresh()});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){activeAt=Date.now();heartbeatAt=0;refresh()}});
 db.auth.getUser().then(async({data:{user}})=>{if(!user)return;me=user.id;try{const saved=JSON.parse(sessionStorage.getItem('heroscape-chat-peer')||'null');if(saved?.id&&saved.id!==me){peer=saved.id;peerName=saved.name;opened=!!saved.opened;display()}}catch(e){}await heartbeat();await refresh()});
-setInterval(refresh,4500);
+setInterval(refresh,2500);
 })();
