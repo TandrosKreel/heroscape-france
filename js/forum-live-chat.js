@@ -11,7 +11,7 @@ document.body.appendChild(host);
 const launch=host.querySelector('.forum-chat-launch'),win=host.querySelector('.forum-chat-window'),log=host.querySelector('.forum-chat-messages'),form=host.querySelector('form'),input=host.querySelector('input'),status=host.querySelector('.forum-chat-status');
 const save=()=>{if(peer)sessionStorage.setItem('heroscape-chat-peer',JSON.stringify({id:peer,name:peerName,opened}));else sessionStorage.removeItem('heroscape-chat-peer')};
 const display=()=>{host.hidden=!peer;win.hidden=!peer||!opened;launch.hidden=!peer||opened;launch.textContent=(unread?'● Nouveau message · ':'Discussion avec ')+peerName;host.querySelector('.forum-chat-name').textContent=peerName;save()};
-const select=(id,name,expand=true)=>{if(!me||id===me||!id)return;peer=id;peerName=name||'Membre';opened=expand;unread=false;lastMessage=0;log.replaceChildren();display();if(expand)input.focus();refresh(true)};
+const select=(id,name,expand=true)=>{if(!me||id===me||!id)return;peer=id;peerName=name||'Membre';opened=expand;unread=false;lastMessage=0;lastOnlineAt=0;online=false;log.replaceChildren();display();if(expand)input.focus();refresh(true)};
 const rpc=(name,args)=>db.rpc(name,args);
 const heartbeat=async()=>{if(!me||document.hidden||Date.now()-activeAt>5*60*1000||Date.now()-heartbeatAt<18000)return;const {error}=await rpc('forum_chat_heartbeat',{p_token:token});if(!error)heartbeatAt=Date.now()};
 const refresh=async(force=false)=>{if(!me||document.hidden||Date.now()-activeAt>5*60*1000)return;if(requesting){refreshQueued=true;return}requesting=true;try{
@@ -44,7 +44,7 @@ const connectRealtime=()=>{if(!me||channel||document.hidden)return;
 };
 const disconnectRealtime=()=>{realtimeReady=false;if(channel){const old=channel;channel=null;db.removeChannel(old)}};
 window.addEventListener('focus',()=>{activeAt=Date.now();heartbeatAt=0;connectRealtime();refresh(true)});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)disconnectRealtime();else{activeAt=Date.now();heartbeatAt=0;connectRealtime();refresh()}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)disconnectRealtime();else{activeAt=Date.now();heartbeatAt=0;connectRealtime();refresh(true)}});
 db.auth.getUser().then(async({data:{user}})=>{if(!user)return;me=user.id;try{const saved=JSON.parse(sessionStorage.getItem('heroscape-chat-peer')||'null');if(saved?.id&&saved.id!==me){peer=saved.id;peerName=saved.name;opened=!!saved.opened;display()}}catch(e){}await heartbeat();connectRealtime();await refresh(true)});
 // Repli limité en cas de coupure Realtime et vérification de présence sans sollicitation permanente.
 setInterval(async()=>{if(!me||document.hidden||Date.now()-activeAt>5*60*1000)return;await heartbeat();if(!realtimeReady||Date.now()-lastInboxAt>120000)refresh();else if(peer&&Date.now()-lastOnlineAt>45000){const checkedPeer=peer;const {data,error}=await rpc('forum_chat_online',{p_user:checkedPeer});if(!error&&checkedPeer===peer){lastOnlineAt=Date.now();online=!!data;status.textContent=online?'En ligne':'Hors ligne';input.disabled=!online;form.querySelector('button').disabled=!online}}},20000);
