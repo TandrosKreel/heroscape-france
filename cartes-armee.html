@@ -19,6 +19,22 @@
     .army-actions span{opacity:.5}
     .section-count{font-weight:normal;font-size:.8em;opacity:.7}
     #cards-status{margin:12px 0}
+    /* Gestion du catalogue, visible uniquement aux administrateurs. */
+    .cards-admin-open{margin:0 0 12px;padding:10px 16px;border:1px solid #d6ac4f;border-radius:8px;background:#26384a;color:#f5d58c;font-weight:700;cursor:pointer}
+    .cards-admin-panel{margin:16px 0 24px;padding:20px;border:1px solid #c59d49;border-radius:12px;background:#182431;color:#edf2f6}
+    .cards-admin-panel[hidden],.cards-admin-open[hidden],.cards-admin-panel [hidden]{display:none!important}
+    .cards-admin-panel h3{margin:0 0 12px;color:#f5d58c}
+    .cards-admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .cards-admin-grid label{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:13px}
+    .cards-admin-grid input,.cards-admin-grid select{width:100%;min-width:0;box-sizing:border-box;padding:10px;border:1px solid #667688;border-radius:7px;background:#0d1721;color:#f5f6f7}
+    .cards-admin-wide{grid-column:1/-1}
+    .cards-admin-buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .cards-admin-buttons button,.cards-edit-btn{padding:8px 12px;border:1px solid #bd9853;border-radius:7px;background:#26384a;color:#f5d58c;cursor:pointer}
+    .cards-admin-buttons .cards-danger{border-color:#be6969;color:#ffcccc;background:#42272c}
+    .cards-edit-btn{display:block;margin-top:12px;font-size:12px}
+    #cards-admin-notice{min-height:1em;margin:10px 0 0}
+    @media(max-width:620px){.cards-admin-grid{grid-template-columns:minmax(0,1fr)}.cards-admin-panel{padding:14px}}
+
   </style>
 </head>
 <body>
@@ -48,35 +64,31 @@
       <option value="gte150">150 points et plus</option>
     </select>
   </div>
+
+  <button id="cards-admin-open" class="cards-admin-open" type="button" hidden>＋ Ajouter une carte armée</button>
+  <section id="cards-admin-panel" class="cards-admin-panel" hidden aria-label="Gestion des cartes armées">
+    <h3 id="cards-form-title">Ajouter une carte</h3>
+    <form id="cards-admin-form">
+      <div class="cards-admin-grid">
+        <label>Nom de la carte<input id="cards-name" maxlength="160" required placeholder="Nom de la figurine ou escouade"></label>
+        <label>Général<input id="cards-general" maxlength="80" list="cards-generals" required placeholder="Aquilla"><datalist id="cards-generals"><option value="Aquilla"><option value="Einar"><option value="Jandar"><option value="Ullar"><option value="Utgar"><option value="Vydar"><option value="Valkrill"><option value="Revna"><option value="Volarak"><option value="Marvel"></datalist></label>
+        <label>Coût en points<input id="cards-points" type="number" min="0" max="2000" step="1" required></label>
+        <label id="cards-place-label">Position souhaitée<select id="cards-place-after"><option value="">Classement automatique par points</option></select></label>
+        <label class="cards-admin-wide">Lien de la carte française (VF)<input id="cards-fr" type="url" maxlength="2048" placeholder="https://…"></label>
+        <label class="cards-admin-wide">Lien de la carte anglaise (VO)<input id="cards-en" type="url" maxlength="2048" placeholder="https://…"></label>
+      </div>
+      <div class="cards-admin-buttons">
+        <button id="cards-save" type="submit">Enregistrer la carte</button>
+        <button id="cards-cancel" type="button">Annuler</button>
+        <button id="cards-delete" class="cards-danger" type="button" hidden>Supprimer cette carte</button>
+      </div>
+      <p id="cards-admin-notice" role="status" aria-live="polite"></p>
+    </form>
+  </section>
   <div id="cards-status">Chargement des cartes…</div>
   <div id="cards"></div>
 </main>
 <footer><div class="container">Heroscape France — cartes armées françaises et anglaises.</div></footer>
-<script>
-const escCard=s=>String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
-fetch("data/cards.json").then(r=>{if(!r.ok)throw new Error("Catalogue introuvable");return r.json()}).then(data=>{
-  const q=document.getElementById("q"),g=document.getElementById("g"),band=document.getElementById("band"),box=document.getElementById("cards"),status=document.getElementById("cards-status");
-  data.sort((a,b)=>a.general.localeCompare(b.general,"fr")||a.points-b.points||a.points_order-b.points_order);
-  const generals=[...new Set(data.map(x=>x.general))];
-  g.innerHTML+=generals.map(x=>`<option value="${escCard(x)}">${escCard(x)}</option>`).join("");
-  function button(url,label){
-    return url?`<a class="btn" href="${escCard(url)}" target="_blank" rel="noopener noreferrer">${label}</a>`:`<span>${label} indisponible</span>`;
-  }
-  function render(){
-    const term=q.value.trim().toLowerCase();
-    const filtered=data.filter(x=>{
-      const costOk=!band.value||(band.value==="lt100"&&x.points<100)||(band.value==="100to149"&&x.points>=100&&x.points<150)||(band.value==="gte150"&&x.points>=150);
-      return (!term||x.name.toLowerCase().includes(term))&&(!g.value||x.general===g.value)&&costOk;
-    });
-    status.textContent=filtered.length+" carte"+(filtered.length>1?"s":"")+" affichée"+(filtered.length>1?"s":"")+".";
-    box.innerHTML=generals.map(general=>{
-      const list=filtered.filter(x=>x.general===general);
-      if(!list.length)return "";
-      return `<section class="general-section"><h2>${escCard(general)} <span class="section-count">(${list.length})</span></h2><div class="army-grid">${list.map(x=>`<article class="card army-card"><h3>${escCard(x.name)}</h3><p class="army-meta">${escCard(x.points)} points</p><div class="army-actions">${button(x.fr,"🇫🇷 VF")}${button(x.en,"🇬🇧 English")}</div></article>`).join("")}</div></section>`;
-    }).join("");
-  }
-  q.addEventListener("input",render);g.addEventListener("change",render);band.addEventListener("change",render);const requested=new URLSearchParams(location.search).get("carte");if(requested){q.value=requested;render();const card=[...document.querySelectorAll(".army-card")].find(el=>el.querySelector("h3")?.textContent===requested);if(card){card.id="carte-recherchee";card.scrollIntoView({block:"center"});card.style.outline="2px solid var(--gold)";}}else render();
-}).catch(err=>{console.error(err);document.getElementById("cards-status").textContent="Impossible de charger le catalogue.";});
-</script>
+<script src="js/cards-catalogue.js?v=20261020-admin1" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-1"></script></body>
 </html>
