@@ -19,7 +19,7 @@ const refresh=async()=>{
  if(!list||document.hidden)return;
  const {data,error}=await db.rpc('forum_online_members');
  if(error){list.textContent='Impossible de charger les membres actifs.';return}
- list.innerHTML=data?.length?'<div class="forum-online-list">'+data.map(p=>(p.user_id===currentUserId?'<span class="forum-online-member"><span class="forum-online-dot" aria-hidden="true"></span>'+esc(p.username)+' (vous)</span>':'<button type="button" class="forum-online-member" data-forum-chat-user="'+esc(p.user_id)+'" data-forum-chat-name="'+esc(p.username)+'" title="Discuter avec '+esc(p.username)+'"><span class="forum-online-dot" aria-hidden="true"></span>'+esc(p.username)+'</button>')).join('')+'</div>':'<p class="forum-online-empty">Aucun membre actif pour le moment.</p>';
+ list.innerHTML=data?.length?'<div class="forum-online-list">'+data.map(p=>(p.user_id===currentUserId?'<span class="forum-online-member"><span class="forum-online-dot" aria-hidden="true"></span>'+esc(p.username)+'</span>':'<button type="button" class="forum-online-member" data-forum-chat-user="'+esc(p.user_id)+'" data-forum-chat-name="'+esc(p.username)+'" title="Discuter avec '+esc(p.username)+'"><span class="forum-online-dot" aria-hidden="true"></span>'+esc(p.username)+'</button>')).join('')+'</div>':'<p class="forum-online-empty">Aucun membre actif pour le moment.</p>';
 };
 touch();refresh();
 setInterval(()=>{ping();refresh()},30*1000);
