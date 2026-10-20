@@ -1,7 +1,34 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Membres — Heroscape France</title><link rel="stylesheet" href="css/style.css?v=20261020-livechat1">
-<link rel="stylesheet" href="css/forum-background.css?v=20261016-mobilelogo1"></head>
+<link rel="stylesheet" href="css/forum-background.css?v=20261016-mobilelogo1">
+<style>
+/* Gestion des membres : commandes regroupées, sans multiplier les gros boutons. */
+.member-dashboard{margin:0 0 16px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:rgba(20,31,41,.93)}
+.member-dashboard[hidden]{display:none!important}
+.member-dashboard h3{margin:0 0 8px;color:var(--gold2)}
+.member-summary{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 15px}
+.member-summary span{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:rgba(255,255,255,.04);font-size:.88rem}
+.member-filterbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.member-filterbar input,.member-filterbar select{min-width:0;max-width:100%;padding:9px 11px;border-radius:8px;background:#151d25;color:var(--text);border:1px solid var(--line);font:inherit}
+.member-filterbar input{flex:1;min-width:160px}
+.member-row.member-manage-row{flex-wrap:wrap;gap:10px}
+.member-role-badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.member-role-badge{border-radius:20px;padding:3px 9px;border:1px solid var(--line);font-size:.77rem;font-weight:650;color:var(--gold2)}
+.member-role-badge.blocked{color:#ffb7b7;border-color:#ad5656}
+.member-row .member-management{width:100%;flex:0 0 100%;padding:15px 16px;margin-top:8px;border-top:1px solid var(--line);background:rgba(0,0,0,.13);border-radius:8px}
+.member-management[hidden]{display:none!important}
+.member-permission-choices{display:flex;gap:14px;flex-wrap:wrap;margin:10px 0}
+.member-permission-choices label{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.member-permission-choices input{width:17px;height:17px}
+.member-management-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.member-management-actions button{cursor:pointer}
+.member-danger{margin-top:15px;padding-top:12px;border-top:1px solid var(--line)}
+.member-danger summary{cursor:pointer;color:#f3b7b7;font-size:.86rem}
+.member-danger-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.member-danger-actions button{font-size:.82rem}
+@media(max-width:600px){.member-row.member-manage-row{align-items:center}.member-filterbar input{width:100%}}
+</style></head>
 <body><header><div class="container"><div class="brand home-brand">
       <img class="heroscape-main-logo" src="Logo%20Heroscape%20_%20bataille%20%C3%A9ternelle.png" alt="Heroscape">
       
@@ -9,104 +36,166 @@
 <nav><a href="index.html">Forum</a><a href="cartes-armee.html">Cartes Armées</a><a href="regles.html">Règles</a><a href="liens-utiles.html">Liens utiles</a><a class="active" href="membres.html">Membres</a><a href="pari-heroscape.html">Le Pari Heroscape</a></nav></div></header>
 <main class="container"><section class="hero"><h2>👥 Membres du forum</h2><p>Les membres sont classés selon leur nombre total de messages publiés.</p></section>
 <div id="admin-member-tabs" style="display:none;gap:8px;flex-wrap:wrap;margin:0 0 16px"><button class="btn" type="button" id="tab-active-members" aria-pressed="true">Membres actifs</button><button class="btn" type="button" id="tab-deleted-members" aria-pressed="false">Comptes supprimés</button></div>
+<section id="member-dashboard" class="member-dashboard" hidden>
+  <h3>Gestion des membres</h3>
+  <p id="member-dashboard-hint">Attribuez les autorisations et gérez les restrictions depuis la fiche d'un membre.</p>
+  <div class="member-summary" id="member-summary"></div>
+  <div class="member-filterbar">
+    <input id="member-search" type="search" placeholder="Rechercher un membre…" aria-label="Rechercher un membre">
+    <select id="member-filter" aria-label="Filtrer les membres">
+      <option value="all">Tous les membres</option>
+      <option value="staff">Responsables</option>
+      <option value="blocked">Publications bloquées</option>
+      <option value="ordinary">Membres ordinaires</option>
+    </select>
+  </div>
+</section>
 <section id="members-list" class="members-list"><div class="empty">Chargement des membres…</div></section>
 <section id="deleted-members-list" class="members-list" style="display:none"></section></main>
 <footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-staff2"></script>
 <script>
+
 (async()=>{
  const box=document.getElementById("members-list");
+ const db=window.supabaseClient;
  const user=await getCurrentUser();
  if(!user){
-   box.innerHTML='<div class="card"><h3>🔒 Liste réservée aux membres</h3><p>La liste des membres du forum est accessible uniquement aux membres connectés.</p><p><a class="btn" href="connexion.html">Connexion / Créer un compte</a></p></div>';
-   return;
+  box.innerHTML='<div class="card"><h3>🔒 Liste réservée aux membres</h3><p>La liste des membres du forum est accessible uniquement aux membres connectés.</p><p><a class="btn" href="connexion.html">Connexion / Créer un compte</a></p></div>';
+  return;
  }
  const currentProfile=await getCurrentProfile();
- const isAdmin=currentProfile?.role==="admin";
- const isCreator=isAdmin&&user.id==="a961f771-dd42-432d-827a-736d3958e5d5";
- const roleLabel={admin:"Créateur",cards_admin:"Administrateur des cartes",moderator:"Modérateur",member:"Membre"};
-
- if(isAdmin){
-   const tabs=document.getElementById("admin-member-tabs");
-   const activeTab=document.getElementById("tab-active-members");
-   const deletedTab=document.getElementById("tab-deleted-members");
-   const deletedBox=document.getElementById("deleted-members-list");
-   tabs.style.display="flex";
-   let deletedLoaded=false;
-   async function loadDeletedMembers(){
-     deletedBox.innerHTML='<div class="empty">Chargement des comptes supprimés…</div>';
-     const {data,error}=await window.supabaseClient.rpc("admin_list_deleted_forum_members");
-     if(error){deletedBox.innerHTML='<div class="empty">Impossible de charger les comptes supprimés : '+esc(error.message)+'</div>';return;}
-     deletedLoaded=true;
-     if(!data?.length){deletedBox.innerHTML='<div class="empty">Aucun compte supprimé enregistré depuis la mise en place de cet historique.</div>';return;}
-     deletedBox.innerHTML=data.map(m=>{
-       const date=new Date(m.deleted_at).toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"});
-       const count=Number(m.remaining_posts)||0;
-       return '<div class="card member-row"><div class="member-info"><strong>'+esc(m.username)+'</strong><div class="count">Compte supprimé le '+esc(date)+' — '+count+' message'+(count>1?'s':'')+' conservé'+(count>1?'s':'')+'</div></div>'+
-         (m.messages_preserved?'<button class="btn admin-purge-deleted" type="button" data-member-id="'+esc(m.id)+'" data-member-name="'+esc(m.username)+'">Supprimer ses messages</button>':'<span class="count">Messages déjà supprimés</span>')+'</div>';
-     }).join("");
-     deletedBox.querySelectorAll(".admin-purge-deleted").forEach(button=>button.addEventListener("click",async()=>{
-       const name=button.dataset.memberName;
-       if(!confirm('Supprimer les messages conservés de « '+name+' » ? Les premiers messages des sujets ayant des réponses d’autres membres resteront anonymisés. Cette action est irréversible.'))return;
-       button.disabled=true;
-       const {error}=await window.supabaseClient.rpc("admin_purge_deleted_forum_member_messages",{p_member_id:button.dataset.memberId});
-       if(error){alert("Suppression impossible : "+error.message);button.disabled=false;return;}
-       await loadDeletedMembers();
-     }));
-   }
-   activeTab.addEventListener("click",()=>{
-     box.style.display="";deletedBox.style.display="none";
-     activeTab.setAttribute("aria-pressed","true");deletedTab.setAttribute("aria-pressed","false");
-   });
-   deletedTab.addEventListener("click",async()=>{
-     box.style.display="none";deletedBox.style.display="";
-     activeTab.setAttribute("aria-pressed","false");deletedTab.setAttribute("aria-pressed","true");
-     if(!deletedLoaded)await loadDeletedMembers();
-   });
+ const isCreator=currentProfile?.role==="admin"&&user.id==="a961f771-dd42-432d-827a-736d3958e5d5";
+ const canModerate=isCreator||currentProfile?.can_moderate===true||currentProfile?.role==="moderator";
+ const dashboard=document.getElementById("member-dashboard");
+ const escText=v=>esc(String(v??""));
+ const badge=(label,blocked=false)=>'<span class="member-role-badge'+(blocked?' blocked':'')+'">'+escText(label)+'</span>';
+ if(isCreator){
+  const tabs=document.getElementById("admin-member-tabs");
+  const activeTab=document.getElementById("tab-active-members");
+  const deletedTab=document.getElementById("tab-deleted-members");
+  const deletedBox=document.getElementById("deleted-members-list");
+  tabs.style.display="flex";
+  let deletedLoaded=false;
+  async function loadDeletedMembers(){
+   deletedBox.innerHTML='<div class="empty">Chargement des comptes supprimés…</div>';
+   const {data,error}=await db.rpc("admin_list_deleted_forum_members");
+   if(error){deletedBox.innerHTML='<div class="empty">Impossible de charger les comptes supprimés : '+escText(error.message)+'</div>';return}
+   deletedLoaded=true;
+   if(!data?.length){deletedBox.innerHTML='<div class="empty">Aucun compte supprimé enregistré depuis la mise en place de cet historique.</div>';return}
+   deletedBox.innerHTML=data.map(m=>{
+    const date=new Date(m.deleted_at).toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"numeric"});
+    const count=Number(m.remaining_posts)||0;
+    return '<div class="card member-row"><div class="member-info"><strong>'+escText(m.username)+'</strong><div class="count">Compte supprimé le '+escText(date)+' — '+count+' message'+(count>1?'s':'')+' conservé'+(count>1?'s':'')+'</div></div>'+
+     (m.messages_preserved?'<button class="btn admin-purge-deleted" type="button" data-member-id="'+escText(m.id)+'" data-member-name="'+escText(m.username)+'">Supprimer ses messages</button>':'<span class="count">Messages déjà supprimés</span>')+'</div>';
+   }).join("");
+  }
+  deletedBox.addEventListener("click",async event=>{
+   const btn=event.target.closest(".admin-purge-deleted");
+   if(!btn)return;
+   if(!confirm('Supprimer les messages conservés de « '+btn.dataset.memberName+' » ? Cette action est irréversible.'))return;
+   btn.disabled=true;
+   const {error}=await db.rpc("admin_purge_deleted_forum_member_messages",{p_member_id:btn.dataset.memberId});
+   if(error){alert("Suppression impossible : "+error.message);btn.disabled=false;return}
+   await loadDeletedMembers();
+  });
+  activeTab.addEventListener("click",()=>{
+   box.style.display="";dashboard.hidden=false;deletedBox.style.display="none";
+   activeTab.setAttribute("aria-pressed","true");deletedTab.setAttribute("aria-pressed","false");
+  });
+  deletedTab.addEventListener("click",async()=>{
+   box.style.display="none";dashboard.hidden=true;deletedBox.style.display="";
+   activeTab.setAttribute("aria-pressed","false");deletedTab.setAttribute("aria-pressed","true");
+   if(!deletedLoaded)await loadDeletedMembers();
+  });
  }
  const [{data:profiles,error:pe},counts]=await Promise.all([
-   window.supabaseClient.from("profiles").select("id,username,avatar_url,role,created_at"),
-   getMessageCounts()
+  db.from("profiles").select("id,username,avatar_url,role,can_moderate,can_manage_cards,posting_blocked,created_at"),
+  getMessageCounts()
  ]);
- if(pe){console.error(pe);box.innerHTML='<div class="empty">Impossible de charger la liste des membres.</div>';return;}
+ if(pe){console.error(pe);box.innerHTML='<div class="empty">Impossible de charger la liste des membres.</div>';return}
  const members=(profiles||[]).map(p=>({...p,message_count:counts[p.id]||0}))
-   .sort((a,b)=>b.message_count-a.message_count||String(a.username).localeCompare(String(b.username),"fr"));
- if(!members.length){box.innerHTML='<div class="empty">Aucun membre pour le moment.</div>';return;}
- box.innerHTML=members.map((m,i)=>{
-   const avatar=m.avatar_url?'<img class="member-avatar" src="'+esc(m.avatar_url)+'" alt="" loading="lazy">':'<div class="member-avatar post-avatar-default">'+esc((m.username||"M").charAt(0).toUpperCase())+'</div>';
-   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div>'+
-     (m.role!=='member'?'<div class="count" style="font-weight:700;color:var(--gold2)">'+esc(roleLabel[m.role]||m.role)+'</div>':'')+
-     (isCreator&&m.id!==user.id?'<label class="member-role-picker" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px">Fonction : <select data-member-role="'+esc(m.id)+'" data-original-role="'+esc(m.role)+'" aria-label="Fonction de '+esc(m.username)+'" style="max-width:230px;padding:7px;background:#151c23;color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="member"'+(m.role==='member'?' selected':'')+'>Membre</option><option value="cards_admin"'+(m.role==='cards_admin'?' selected':'')+'>Administrateur des cartes</option><option value="moderator"'+(m.role==='moderator'?' selected':'')+'>Modérateur</option></select></label>':'')+
-     '</div><a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Envoyer un message</a>'+(isAdmin&&m.id!==currentProfile.id?'<button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'" data-keep-messages="false">Supprimer profil et messages</button><button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'" data-keep-messages="true">Supprimer profil, conserver messages</button>':'')+'</div>';
- }).join("");
- if(isCreator){
-   box.querySelectorAll("[data-member-role]").forEach(select=>select.addEventListener("change",async()=>{
-     const next=select.value,previous=select.dataset.originalRole;
-     const person=members.find(m=>m.id===select.dataset.memberRole);
-     if(!person){select.value=previous;return}
-     if(!confirm('Attribuer à « '+person.username+' » la fonction « '+(roleLabel[next]||next)+' » ?')){
-       select.value=previous;return;
-     }
-     select.disabled=true;
-     const {error}=await window.supabaseClient.rpc("creator_set_member_role",{p_member_id:person.id,p_role:next});
-     if(error){alert("Modification refusée : "+error.message);select.value=previous;select.disabled=false;return}
-     location.reload();
-   }));
+  .sort((a,b)=>b.message_count-a.message_count||String(a.username).localeCompare(String(b.username),"fr"));
+ const byId=new Map(members.map(m=>[m.id,m]));
+ const isStaff=m=>m.role==="admin"||m.role==="moderator"||m.role==="cards_admin"||m.can_moderate||m.can_manage_cards;
+ const canBlock=m=>canModerate&&m.id!==user.id&&!isStaff(m);
+ if(isCreator||canModerate){
+  dashboard.hidden=false;
+  if(!isCreator)document.getElementById("member-dashboard-hint").textContent="Vous pouvez bloquer ou rétablir la publication des membres ordinaires. La suppression des comptes est réservée au Créateur.";
+  document.getElementById("member-summary").innerHTML=[
+   badge(members.length+" membres"),badge(members.filter(m=>m.role==="admin"||m.can_moderate||m.role==="moderator").length+" modérateurs / créateur"),
+   badge(members.filter(m=>m.role==="admin"||m.can_manage_cards||m.role==="cards_admin").length+" responsables des cartes"),
+   badge(members.filter(m=>m.posting_blocked).length+" comptes bloqués",true)
+  ].join("");
  }
- if(isAdmin){
-   box.querySelectorAll(".admin-delete-member").forEach(button=>button.addEventListener("click",async()=>{
-     const keepMessages=button.dataset.keepMessages==="true";
-     const memberName=button.dataset.memberName;
-     const confirmation=keepMessages
-       ? 'Supprimer définitivement le compte de « '+memberName+' » ? Tous ses sujets et messages publics seront conservés sous « Membre supprimé ». Ses messages privés seront supprimés.'
-       : 'Supprimer définitivement le compte de « '+memberName+' » et ses messages ? Seuls les premiers messages de ses sujets ayant reçu des réponses d’autres membres seront conservés sous « Membre supprimé ».';
-     if(!confirm(confirmation))return;
-     box.querySelectorAll('.admin-delete-member').forEach(b=>b.disabled=true);
-     const rpcName=keepMessages?"admin_delete_forum_member_keep_messages":"admin_delete_forum_member";
-     const {error}=await window.supabaseClient.rpc(rpcName,{p_user_id:button.dataset.memberId});
-     if(error){alert("Suppression impossible : "+error.message);box.querySelectorAll('.admin-delete-member').forEach(b=>b.disabled=false);return;}
-     location.reload();
-   }));
+ function render(){
+  const q=(document.getElementById("member-search").value||"").trim().toLocaleLowerCase("fr");
+  const filter=document.getElementById("member-filter").value;
+  const visible=members.filter(m=>(!q||String(m.username).toLocaleLowerCase("fr").includes(q))&&
+   (filter==="all"||(filter==="staff"&&isStaff(m))||(filter==="blocked"&&m.posting_blocked)||(filter==="ordinary"&&!isStaff(m))));
+  if(!visible.length){box.innerHTML='<div class="empty">Aucun membre ne correspond à cette recherche.</div>';return}
+  box.innerHTML=visible.map(m=>{
+   const avatar=m.avatar_url?'<img class="member-avatar" src="'+escText(m.avatar_url)+'" alt="" loading="lazy">':'<div class="member-avatar post-avatar-default">'+escText((m.username||"M").charAt(0).toUpperCase())+'</div>';
+   const creator=m.role==="admin";
+   const mod=creator||m.can_moderate||m.role==="moderator";
+   const cards=creator||m.can_manage_cards||m.role==="cards_admin";
+   const labels=(creator?badge("★ Créateur"):((mod?badge("🛡️ Modérateur"):"")+(cards?badge("🃏 Cartes d'armée"):""))) +
+    (m.posting_blocked?badge("⛔ Publication bloquée",true):"");
+   const manage=(isCreator&&m.id!==user.id)||canBlock(m);
+   const tools=manage?'<button class="btn member-manage-toggle" type="button" data-member-id="'+escText(m.id)+'" aria-expanded="false">⚙ Gérer</button>':'';
+   const permissions=isCreator&&m.id!==user.id?'<div class="member-permission-choices"><label><input type="checkbox" data-permission="moderator"'+(mod?' checked':'')+'> 🛡️ Modérateur</label><label><input type="checkbox" data-permission="cards"'+(cards?' checked':'')+'> 🃏 Administrateur des cartes</label></div><button type="button" class="btn member-save-permissions" data-member-id="'+escText(m.id)+'">Enregistrer les autorisations</button>':'';
+   const block=canBlock(m)?'<button type="button" class="btn member-toggle-block" data-member-id="'+escText(m.id)+'">'+(m.posting_blocked?'🔓 Autoriser à publier':'⛔ Bloquer les publications')+'</button>':'';
+   const deletion=isCreator&&m.id!==user.id?'<details class="member-danger"><summary>Suppression définitive du compte — Créateur uniquement</summary><div class="member-danger-actions"><button class="btn member-delete" type="button" data-member-id="'+escText(m.id)+'" data-keep-messages="false">Supprimer compte et messages</button><button class="btn member-delete" type="button" data-member-id="'+escText(m.id)+'" data-keep-messages="true">Supprimer compte, conserver messages</button></div></details>':'';
+   return '<article class="card member-row member-manage-row" data-member="'+escText(m.id)+'"><div class="member-rank">'+(members.indexOf(m)+1)+'</div>'+avatar+
+    '<div class="member-info"><strong>'+escText(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div><div class="member-role-badges">'+labels+'</div></div>'+
+    (m.id!==user.id?'<a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Message</a>':'')+tools+
+    (manage?'<div class="member-management" hidden>'+permissions+(block?'<div class="member-management-actions">'+block+'</div>':'')+deletion+'</div>':'')+
+    '</article>';
+  }).join("");
  }
+ document.getElementById("member-search").addEventListener("input",render);
+ document.getElementById("member-filter").addEventListener("change",render);
+ box.addEventListener("click",async event=>{
+  const toggle=event.target.closest(".member-manage-toggle");
+  if(toggle){
+   const panel=toggle.closest(".member-manage-row").querySelector(".member-management");
+   panel.hidden=!panel.hidden;toggle.setAttribute("aria-expanded",String(!panel.hidden));toggle.textContent=panel.hidden?"⚙ Gérer":"Fermer";return;
+  }
+  const save=event.target.closest(".member-save-permissions");
+  if(save&&isCreator){
+   const m=byId.get(save.dataset.memberId),panel=save.closest(".member-management");
+   if(!m||!panel)return;
+   const moderator=panel.querySelector('[data-permission="moderator"]').checked;
+   const cards=panel.querySelector('[data-permission="cards"]').checked;
+   if(!confirm('Enregistrer les autorisations de « '+m.username+' » ?'))return;
+   save.disabled=true;
+   const {error}=await db.rpc("creator_set_member_permissions",{p_member_id:m.id,p_moderator:moderator,p_cards_admin:cards});
+   if(error){alert("Modification refusée : "+error.message);save.disabled=false;return}
+   location.reload();return;
+  }
+  const block=event.target.closest(".member-toggle-block");
+  if(block){
+   const m=byId.get(block.dataset.memberId);
+   if(!m||!canBlock(m))return;
+   const next=!m.posting_blocked;
+   if(!confirm((next?'Bloquer la publication de':'Autoriser à nouveau la publication pour')+' « '+m.username+' » ?'+(next?' Ses messages existants resteront visibles.':'')))return;
+   block.disabled=true;
+   const {error}=await db.rpc("moderator_set_posting_blocked",{p_member_id:m.id,p_blocked:next});
+   if(error){alert("Action refusée : "+error.message);block.disabled=false;return}
+   location.reload();return;
+  }
+  const del=event.target.closest(".member-delete");
+  if(del&&isCreator){
+   const m=byId.get(del.dataset.memberId);if(!m)return;
+   const keep=del.dataset.keepMessages==="true";
+   const question=keep?'Supprimer définitivement le compte de « '+m.username+' » tout en conservant ses messages publics anonymisés ?':'Supprimer définitivement le compte de « '+m.username+' » et ses messages ? Cette action est irréversible.';
+   if(!confirm(question))return;
+   del.disabled=true;
+   const {error}=await db.rpc(keep?"admin_delete_forum_member_keep_messages":"admin_delete_forum_member",{p_user_id:m.id});
+   if(error){alert("Suppression impossible : "+error.message);del.disabled=false;return}
+   location.reload();
+  }
+ });
+ render();
 })();
 </script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body></html>
