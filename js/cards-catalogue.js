@@ -126,6 +126,7 @@ async function init(){
  try{
   const response=await fetch('data/cards.json');if(!response.ok)throw Error('Catalogue introuvable');
   base=await response.json();
+  merge();render(); // Le catalogue local apparaît immédiatement, sans attendre l'authentification.
   await loadEdits();
   if(db){
    try{
