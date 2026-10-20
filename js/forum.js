@@ -813,6 +813,7 @@ async function renderGlobalAccount() {
     refreshNotificationBadge();
     document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshNotificationBadge()});
     window.addEventListener("focus",refreshNotificationBadge);
+    window.addEventListener("notifications-read",refreshNotificationBadge);
   }
 account.querySelector("[data-global-logout]")?.addEventListener("click", logout);
   account.querySelector("[data-mark-all-read]")?.addEventListener("click", async () => {
