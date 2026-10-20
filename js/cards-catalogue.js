@@ -132,7 +132,7 @@ async function refreshAdmin(){
    if(uid){
     const {data:profile,error:profileError}=await db.from('profiles').select('role').eq('id',uid).maybeSingle();
     if(profileError)throw profileError;
-    allowed=profile?.role==='admin';
+    allowed=profile?.role==='admin'||profile?.role==='cards_admin';
    }
   }catch(err){console.warn('Droits de gestion des cartes non vérifiés :',err)}
  }
