@@ -13,4 +13,4 @@
  b.innerHTML=data.length?data.map(n=>{const link=n.link&&/^pari-heroscape\.html\?match=\d+#(?:terminees|encours)$/.test(n.link);return '<div class="notification-row" style="padding:10px 0;border-bottom:1px solid #46505b">'+(n.is_read?'':'<strong style="color:#e8ba53">● Nouvelle notification</strong>')+'<p>'+(link?'<a href="'+esc(n.link)+'">':'')+esc(n.content)+(link?'</a>':'')+'</p><small>'+new Date(n.created_at).toLocaleString("fr-FR")+'</small></div>'}).join(""):"<p>Aucune notification pour le moment.</p>";
  const unread=data.filter(n=>!n.is_read).map(n=>n.id);
  if(unread.length){const {error:readError}=await db.from("notifications").update({is_read:true}).eq("user_id",user.id).in("id",unread);if(readError)console.error("Lecture des notifications :",readError)}
-})();</script><footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer></body></html>
+})();</script><footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer><script src="js/forum-presence.js?v=20261020-1"></script></body></html>
