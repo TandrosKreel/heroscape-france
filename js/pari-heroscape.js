@@ -87,7 +87,7 @@ $('bet-save').onclick=async()=>{try{
  if(build.length<2||build.some(a=>!a.cards.length||a.cards.some(c=>c.index===null)))throw Error('Sélectionne une figurine valide dans chaque ligne de chaque armée.');
  if(photos.some(x=>!/^https:\/\//i.test(x)))throw Error('Les photos doivent avoir une URL HTTPS.');
 
- await call('bet_create_with_scoring',{p_scoring_format:$('bet-scoring-format').value,p_format:format,p_map:$('bet-map').value,p_photos:photos,p_armies:build.map(a=>({member_id:a.member_id,army_name:(a.army_name||'').trim(),cards:a.cards.map(c=>({name:cards[c.index].name,points:cards[c.index].points,quantity:c.quantity}))}))});
+ await call('bet_create_with_scoring',{p_scoring_format:$('bet-scoring-format').value,p_format:format,p_map:$('bet-map').value,p_photos:photos,p_armies:build.map(a=>({member_id:a.member_id,army_name:(a.army_name||'').trim(),cards:a.cards.map(c=>({name:cards[c.index].name,points:isDeltaBuild()?0:cards[c.index].points,quantity:c.quantity}))}))});
  $('bet-form').hidden=true;mapPhotos=[];renderMapPhotos();msg('Partie créée.');await load();
  }catch(e){msg(e.message)}};
 $('bet-scoring-format').addEventListener('change',()=>{$('bet-scoring-hint').textContent=isDeltaBuild()?'Point Delta : les coûts des figurines et le total des armées ne sont pas affichés.':'Standard : coûts et totaux des armées affichés.';buildRender()});
