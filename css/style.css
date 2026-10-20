@@ -2204,3 +2204,15 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .forum-chat-form button{padding:8px 10px;font-size:12px}
 .forum-chat-launch{width:100%;padding:12px;border:1px solid #d6ac4f;border-radius:10px;background:#26384a;color:#f5d58c;cursor:pointer;box-shadow:0 5px 20px #0008;text-align:left;font-weight:700}
 @media(max-width:600px){.forum-chat{right:8px;bottom:8px;width:min(350px,calc(100vw - 16px))}.forum-chat-messages{height:205px}}
+
+/* Correctif mobile : le chat ne doit jamais élargir la page Notifications. */
+@media(max-width:700px){
+  .forum-chat{position:fixed!important;left:8px!important;right:8px!important;bottom:8px!important;width:auto!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important;margin:0!important;transform:none!important}
+  .forum-chat-window,.forum-chat-launch{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+  .forum-chat-head,.forum-chat-form{min-width:0!important;box-sizing:border-box!important}
+  .forum-chat-form{display:flex!important;align-items:stretch;gap:6px}
+  .forum-chat-input{flex:1 1 0!important;width:0!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+  .forum-chat-form button{flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:95px!important;box-sizing:border-box!important}
+  .forum-chat-messages{height:min(205px,32dvh);min-height:100px}
+  body:has(.notification-row){overflow-x:clip}
+}
