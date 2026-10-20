@@ -2283,3 +2283,17 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     }
   }
 }
+
+/* Notifications : fenêtre de chat plus étroite et centrée sur téléphone. */
+@media(max-width:700px){
+  body.notifications-page .forum-chat:not([hidden]){
+    left:50%!important;right:auto!important;
+    width:min(340px,calc(100vw - 48px))!important;
+    max-width:calc(100vw - 48px)!important;
+    transform:translateX(-50%)!important;
+  }
+  body.notifications-page .forum-chat-window:not([hidden]){
+    width:100%!important;max-width:100%!important;
+    box-sizing:border-box!important;
+  }
+}
