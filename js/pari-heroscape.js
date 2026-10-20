@@ -88,8 +88,8 @@ $('bet-save').onclick=async()=>{try{
  if(photos.some(x=>!/^https:\/\//i.test(x)))throw Error('Les photos doivent avoir une URL HTTPS.');
 
  await call('bet_create_with_scoring',{p_scoring_format:$('bet-scoring-format').value,p_format:format,p_map:$('bet-map').value,p_photos:photos,p_armies:build.map(a=>({member_id:a.member_id,army_name:(a.army_name||'').trim(),cards:a.cards.map(c=>({name:cards[c.index].name,points:isDeltaBuild()?0:cards[c.index].points,quantity:c.quantity}))}))});
- $('bet-form').hidden=true;mapPhotos=[];renderMapPhotos();msg('Partie créée.');await load();
- }catch(e){msg(e.message)}};
+ $('bet-form').hidden=true;mapPhotos=[];renderMapPhotos();msg('Partie créée.');openPage=0;window.scrollTo({top:0,behavior:'smooth'});await load();
+ }catch(e){msg(e.message);window.scrollTo({top:0,behavior:'smooth'})}};
 $('bet-scoring-format').addEventListener('change',()=>{$('bet-scoring-hint').textContent=isDeltaBuild()?'Point Delta : les coûts des figurines et le total des armées ne sont pas affichés.':'Standard : coûts et totaux des armées affichés.';buildRender()});
 const pointsOf=a=>byArmy(a.id).reduce((s,c)=>s+c.points*c.quantity,0);
 const matchHTML=(m,openNumber=null)=>{const aa=byMatch(m.id),vv=voteFor(m.id),mine=vv.find(v=>v.user_id===user?.id),participant=aa.some(a=>a.member_id===user?.id),winner=aa.filter(a=>a.is_winner),maxVote=Math.floor(aa.length/2),score=m.status==='finished';
