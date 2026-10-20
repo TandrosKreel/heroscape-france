@@ -5,6 +5,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const safeUrl=s=>{try{const u=new URL(String(s||''));return /^https?:$/.test(u.protocol)?u.href:''}catch{return ''}};
 const db=window.supabaseClient;
 let base=[],edits=[],all=[],admin=false,editing=null;
+let adminCheckSerial=0;
 const q=$('q'),g=$('g'),band=$('band'),box=$('cards'),status=$('cards-status'),panel=$('cards-admin-panel'),form=$('cards-admin-form'),notice=$('cards-admin-notice');
 const sortCards=(a,b)=>a.general.localeCompare(b.general,'fr')||a.points-b.points||Number(a.points_order||0)-Number(b.points_order||0)||a.name.localeCompare(b.name,'fr');
 const valid=s=>String(s??'').trim();
@@ -122,24 +123,45 @@ async function deleteEdit(){
  }catch(err){inform('Impossible de supprimer : '+(err.message||'erreur'),true)}
  finally{$('cards-delete').disabled=false}
 }
+async function refreshAdmin(){
+ const check=++adminCheckSerial;
+ let allowed=false;
+ if(db){
+  try{
+   // Lire la session locale sans bloquer l'interface ni le chargement des cartes.
+   const {data:sessionData,error:sessionError}=await db.auth.getSession();
+   if(sessionError)throw sessionError;
+   const uid=sessionData?.session?.user?.id;
+   if(uid){
+    const {data:profile,error:profileError}=await db.from('profiles').select('role').eq('id',uid).maybeSingle();
+    if(profileError)throw profileError;
+    allowed=profile?.role==='admin';
+   }
+  }catch(err){console.warn('Droits de gestion des cartes non vérifiés :',err)}
+ }
+ if(check!==adminCheckSerial)return;
+ admin=allowed;
+ $('cards-admin-open').hidden=!admin;
+ if(!admin&&editing)closeForm();
+ if(all.length)render();
+}
 async function init(){
  try{
   const response=await fetch('data/cards.json');if(!response.ok)throw Error('Catalogue introuvable');
   base=await response.json();
-  merge();render(); // Le catalogue local apparaît immédiatement, sans attendre l'authentification.
-  await loadEdits();
-  if(db){
-   try{
-    const {data:{user}}=await db.auth.getUser();
-    if(user){const {data:p}=await db.from('profiles').select('role').eq('id',user.id).maybeSingle();admin=p?.role==='admin'}
-   }catch(err){console.warn('Vérification administrateur impossible',err)}
-  }
-  $('cards-admin-open').hidden=!admin;
   merge();render();
+  // Les commandes administrateur ne doivent pas attendre la requête du catalogue Supabase.
+  void refreshAdmin();
+  void loadEdits().then(()=>{merge();render()}).catch(err=>console.warn('Catalogue Supabase indisponible :',err));
   const requested=new URLSearchParams(location.search).get('carte');
   if(requested){q.value=requested;render();const card=[...document.querySelectorAll('.army-card')].find(el=>el.querySelector('h3')?.textContent===requested);if(card){card.id='carte-recherchee';card.scrollIntoView({block:'center'});card.style.outline='2px solid var(--gold)'}}
  }catch(err){console.error(err);status.textContent='Impossible de charger le catalogue.'}
 }
+if(db){
+ // Si la session arrive après le catalogue, réévaluer les droits sans recharger la page.
+ db.auth.onAuthStateChange(()=>{setTimeout(()=>{void refreshAdmin()},0)});
+}
+
 q.addEventListener('input',render);g.addEventListener('change',render);band.addEventListener('change',render);
 $('cards-admin-open').addEventListener('click',()=>openForm());
 $('cards-cancel').addEventListener('click',closeForm);
