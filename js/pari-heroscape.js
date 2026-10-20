@@ -4,17 +4,22 @@ let cards=[],members=[],user=null,admin=false,matches=[],armies=[],items=[],vote
 const msg=s=>$('bet-status').textContent=s;
 const call=async(name,args)=>{const {data,error}=await db.rpc(name,args);if(error)throw error;return data};
 const names=()=>new Map(members.map(m=>[m.id,m.username]));
-const byMatch=id=>armies.filter(a=>a.match_id===id).sort((a,b)=>a.position-b.position);
-const byArmy=id=>items.filter(c=>c.army_id===id);
-const voteFor=id=>votes.filter(v=>v.match_id===id);
+const byMatch=id=>armiesByMatch.get(id)||[];
+const byArmy=id=>itemsByArmy.get(id)||[];
+const voteFor=id=>votesByMatch.get(id)||[];
 const matchPoints=m=>m.format;
+let armiesByMatch=new Map(),itemsByArmy=new Map(),votesByMatch=new Map();
+const indexRows=()=>{armiesByMatch=new Map();itemsByArmy=new Map();votesByMatch=new Map();for(const a of armies){if(!armiesByMatch.has(a.match_id))armiesByMatch.set(a.match_id,[]);armiesByMatch.get(a.match_id).push(a)}for(const a of armiesByMatch.values())a.sort((x,y)=>x.position-y.position);for(const c of items){if(!itemsByArmy.has(c.army_id))itemsByArmy.set(c.army_id,[]);itemsByArmy.get(c.army_id).push(c)}for(const v of votes){if(!votesByMatch.has(v.match_id))votesByMatch.set(v.match_id,[]);votesByMatch.get(v.match_id).push(v)}};
+
 function showTab(t){tab=t;document.querySelectorAll('.bet-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));document.querySelectorAll('.bet-panel').forEach(p=>p.hidden=p.id!=='bet-'+t);location.hash=t;render()}
 document.querySelectorAll('.bet-tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
 async function load(){
- const [u,c,m,ms,as,cs,vs]=await Promise.all([db.auth.getUser(),fetch('data/cards.json').then(x=>x.json()),db.from('profiles').select('id,username,role'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
+ const [u,c,m,ms,as,cs,vs]=await Promise.all([user?Promise.resolve({data:{user}}):db.auth.getUser(),cards.length?Promise.resolve(cards):fetch('data/cards.json').then(x=>x.json()),members.length?Promise.resolve({data:members}):db.from('profiles').select('id,username,role'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
  for(const x of [m,ms,as,cs,vs])if(x.error)throw x.error;
- user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&x.role==='admin');cards=c;matches=ms.data||[];armies=as.data||[];items=cs.data||[];votes=vs.data||[];render();
+ user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&x.role==='admin');cards=c;matches=ms.data||[];armies=as.data||[];items=cs.data||[];votes=vs.data||[];indexRows();render();
 }
+async function reloadVotes(){const {data,error}=await db.from('bet_votes').select('*');if(error)throw error;votes=data||[];indexRows();render()}
+
 const canonicalCardName=name=>name==='10th Regiment of Footh'?'10th Regiment of Foot':name;
 const cardOptions=()=>cards.map((c,i)=>'<option value="'+i+'">'+esc(c.name)+' ('+c.points+' pts)</option>').join('');
 function buildRender(){
@@ -34,7 +39,7 @@ function buildRender(){
  document.querySelectorAll('[data-qty]').forEach(e=>e.onchange=()=>{const [i,j]=e.dataset.qty.split(':').map(Number);build[i].cards[j].quantity=Math.max(1,Math.min(50,+e.value||1));buildRender()});
  document.querySelectorAll('[data-add-card]').forEach(e=>e.onclick=()=>{build[+e.dataset.addCard].cards.push({index:null,quantity:1});buildRender();document.querySelector('[data-card-search="'+e.dataset.addCard+':'+(build[+e.dataset.addCard].cards.length-1)+'"]')?.focus()});
  document.querySelectorAll('[data-remove-card]').forEach(e=>e.onclick=()=>{const [i,j]=e.dataset.removeCard.split(':').map(Number);build[i].cards.splice(j,1);buildRender()});
- document.querySelectorAll('[data-remove-army]').forEach(e=>e.onclick=()=>{build.splice(+e.dataset.removeArmy,1);buildRender()});
+ document.querySelectorAll('[data-remove-army]').forEach(e=>e.onclick=()=>{if(build.length<=2)return;build.splice(+e.dataset.removeArmy,1);$('bet-format-choice').value='custom';$('bet-custom-format-row').hidden=false;$('bet-format').value=Array(build.length).fill('1').join('vs');buildRender()});
 }
 function renderMapPhotos(){
  $('bet-photo-preview').innerHTML=mapPhotos.map((p,i)=>'<div class="bet-photo-thumb"><img src="'+esc(p.url)+'" alt="Photo de la map"><button type="button" data-remove-photo="'+i+'" aria-label="Retirer cette photo">×</button></div>').join('');
@@ -64,9 +69,15 @@ $('bet-photo-file').addEventListener('change',async event=>{
  }catch(error){msg('Envoi impossible : '+error.message)}
  finally{photoUploading=false;$('bet-upload-photo').disabled=false}
 });
-$('bet-add').onclick=()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}$('bet-form').hidden=false;mapPhotos=[];renderMapPhotos();build=[{member_id:'',army_name:'',cards:[{index:null,quantity:1}]},{member_id:'',army_name:'',cards:[{index:null,quantity:1}]}];buildRender()};
+const emptyArmy=()=>({member_id:'',army_name:'',cards:[{index:null,quantity:1}]});
+const formatCounts=value=>{if(!/^\\d+(vs\\d+)+$/i.test(value))return null;const counts=value.toLowerCase().split('vs').map(Number);const total=counts.reduce((a,b)=>a+b,0);return counts.every(n=>n>=1)&&total>=2&&total<=20?counts:null};
+const applyFormat=(value,resize=true)=>{const counts=formatCounts(value);if(!counts){msg('Format invalide : utilise par exemple 1vs1, 2vs2 ou 2vs3 (20 armées maximum).');return false}
+ $('bet-format').value=counts.join('vs');if(resize){const total=counts.reduce((a,b)=>a+b,0);while(build.length<total)build.push(emptyArmy());if(build.length>total)build.length=total;buildRender()}msg('');return true};
+$('bet-format-choice').onchange=()=>{const custom=$('bet-format-choice').value==='custom';$('bet-custom-format-row').hidden=!custom;if(custom){$('bet-format').focus();return}applyFormat($('bet-format-choice').value)};
+$('bet-format').addEventListener('change',()=>{if($('bet-format-choice').value==='custom')applyFormat($('bet-format').value)});
+$('bet-add').onclick=()=>{if(!user){msg('Connecte-toi pour créer une partie.');return}$('bet-form').hidden=false;mapPhotos=[];renderMapPhotos();build=[emptyArmy(),emptyArmy()];$('bet-format-choice').value='1vs1';$('bet-custom-format-row').hidden=true;applyFormat('1vs1')};
 $('bet-cancel-form').onclick=()=>$('bet-form').hidden=true;
-$('bet-army-add').onclick=()=>{if(build.length>=20)return;build.push({member_id:'',army_name:'',cards:[{index:null,quantity:1}]});buildRender()};
+$('bet-army-add').onclick=()=>{if(build.length>=20)return;build.push(emptyArmy());const format=Array(build.length).fill('1').join('vs');$('bet-format-choice').value='custom';$('bet-custom-format-row').hidden=false;$('bet-format').value=format;buildRender()};
 $('bet-save').onclick=async()=>{try{
  const format=$('bet-format').value.trim(),photos=mapPhotos.map(p=>p.url);if(photoUploading)throw Error('Attends la fin de l’envoi de la photo.');
  if(!/^\d+(vs\d+)+$/i.test(format))throw Error('Format attendu : 1vs1, 2vs2, 1vs1vs1…');
@@ -135,8 +146,8 @@ function render(){if(!cards.length)return;
  document.querySelectorAll('[data-card-filter]').forEach(b=>b.onclick=()=>{const next=b.dataset.cardFilter==='played';if(playedCardsOnly!==next){playedCardsOnly=next;cardPage=0;render()}});
  document.querySelectorAll('[data-vote-view]').forEach(button=>button.onclick=()=>{const match=button.dataset.voteMatch,view=button.dataset.voteView;document.querySelectorAll('[data-vote-view][data-vote-match="'+match+'"]').forEach(b=>b.classList.toggle('active',b.dataset.voteView===view));document.querySelectorAll('[data-vote-panel][data-vote-match="'+match+'"]').forEach(panel=>panel.hidden=panel.dataset.votePanel!==view)});
  document.querySelectorAll('.bet-vote-tile input[data-vote]').forEach(input=>input.addEventListener('change',()=>{if(!input.checked)return;const id=+input.dataset.vote;const limit=Math.floor(byMatch(id).length/2);const selected=[...document.querySelectorAll('.bet-vote-tile input[data-vote="'+id+'"]:checked')];if(selected.length>limit){for(const other of selected){if(other!==input){other.checked=false;if([...document.querySelectorAll('.bet-vote-tile input[data-vote="'+id+'"]:checked')].length<=limit)break}}}}));
- document.querySelectorAll('[data-save-vote]').forEach(b=>b.onclick=async()=>{const id=+b.dataset.saveVote,aa=byMatch(id),chosen=[...document.querySelectorAll('[data-vote="'+id+'"]:checked')].map(x=>+x.value);if(chosen.length>Math.floor(aa.length/2)){msg('Trop de votes sélectionnés.');return}try{await call('bet_cast_vote',{p_match:id,p_armies:chosen});msg('Vote enregistré.');await load()}catch(e){msg(e.message)}});
- document.querySelectorAll('[data-clear-vote]').forEach(b=>b.onclick=async()=>{try{await call('bet_cast_vote',{p_match:+b.dataset.clearVote,p_armies:[]});msg('Vote retiré.');await load()}catch(e){msg(e.message)}});
+ document.querySelectorAll('[data-save-vote]').forEach(b=>b.onclick=async()=>{const id=+b.dataset.saveVote,aa=byMatch(id),chosen=[...document.querySelectorAll('[data-vote="'+id+'"]:checked')].map(x=>+x.value);if(chosen.length>Math.floor(aa.length/2)){msg('Trop de votes sélectionnés.');return}try{await call('bet_cast_vote',{p_match:id,p_armies:chosen});msg('Vote enregistré.');await reloadVotes()}catch(e){msg(e.message)}});
+ document.querySelectorAll('[data-clear-vote]').forEach(b=>b.onclick=async()=>{try{await call('bet_cast_vote',{p_match:+b.dataset.clearVote,p_armies:[]});msg('Vote retiré.');await reloadVotes()}catch(e){msg(e.message)}});
  document.querySelectorAll('[data-delete]').forEach(b=>b.onclick=async()=>{if(!confirm('Supprimer définitivement cette partie et ses statistiques ?'))return;try{await call('bet_delete',{p_match:+b.dataset.delete});msg('Partie supprimée.');await load()}catch(e){msg(e.message)}});
  document.querySelectorAll('[data-finish]').forEach(b=>b.onclick=()=>finishEditor(+b.dataset.finish));
 }
