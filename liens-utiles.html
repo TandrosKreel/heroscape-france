@@ -6,6 +6,32 @@
   <title>Liens utiles — Heroscape France</title>
   <link rel="stylesheet" href="css/style.css?v=20261020-livechat1">
 <link rel="stylesheet" href="css/forum-background.css?v=20261016-mobilelogo1">
+
+<style>
+/* Mise en page propre à la page Liens utiles ; trois liens par ligne sur ordinateur. */
+.useful-links-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch;margin:14px 0 50px}
+.useful-links-grid>.useful-link{box-sizing:border-box;min-width:0;min-height:180px}
+.useful-link-entry{display:flex;flex-direction:column;overflow-wrap:anywhere}
+.useful-link-entry .link-cta{margin-top:auto;padding-top:16px}
+.useful-link-admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.useful-link-admin-actions button{background:#28333b;border:1px solid var(--line);border-radius:6px;color:var(--text);padding:7px 10px;cursor:pointer}
+.useful-link-admin-actions .useful-link-delete{color:#ffb8b8}
+.useful-link-add{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;border:2px dashed var(--gold)!important;color:var(--gold2);font:inherit;font-weight:700;cursor:pointer;text-align:center}
+.useful-link-add-icon{font-size:42px;line-height:1}
+.useful-links-admin-panel{margin:14px 0 24px;padding:22px;border:1px solid var(--gold);border-radius:10px;background:var(--panel)}
+.useful-links-admin-panel h3{margin:0 0 14px;color:var(--gold2)}
+.useful-links-admin-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.useful-links-admin-fields label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+.useful-links-admin-fields label.useful-links-full{grid-column:1/-1}
+.useful-links-admin-fields input,.useful-links-admin-fields textarea{box-sizing:border-box;width:100%;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:#151c23;color:var(--text);font:inherit}
+.useful-links-admin-fields textarea{resize:vertical;min-height:90px}
+.useful-links-form-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.useful-links-form-actions button{cursor:pointer}
+#useful-links-status{color:var(--muted);font-size:13px}
+#useful-links-notice:not(:empty){margin-top:10px}
+@media(max-width:850px){.useful-links-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.useful-links-grid{grid-template-columns:minmax(0,1fr)}.useful-links-admin-fields{grid-template-columns:minmax(0,1fr)}}
+</style>
 </head>
 <body>
 <header><div class="container">
@@ -26,7 +52,32 @@
     <h2>🔗 Liens utiles</h2>
     <p>Quelques sites et outils utiles pour la communauté Heroscape. Cette page sera enrichie progressivement.</p>
   </section>
-  <section class="useful-links-grid">
+  <section id="useful-links-admin-panel" class="useful-links-admin-panel" hidden aria-label="Gestion des liens utiles">
+    <h3 id="useful-links-form-heading">Ajouter un lien utile</h3>
+    <form id="useful-links-form">
+      <div class="useful-links-admin-fields">
+        <label>Nom du site ou de la ressource
+          <input id="useful-links-title" type="text" maxlength="100" minlength="2" required placeholder="Ex. Heroscape France">
+        </label>
+        <label>Adresse du site (URL)
+          <input id="useful-links-url" type="url" maxlength="2000" required placeholder="https://exemple.fr">
+        </label>
+        <label class="useful-links-full">Description
+          <textarea id="useful-links-description" maxlength="600" rows="3" placeholder="À quoi sert ce site ?"></textarea>
+        </label>
+        <label class="useful-links-full">Texte du lien
+          <input id="useful-links-cta" type="text" maxlength="100" minlength="2" required value="Ouvrir le lien ↗">
+        </label>
+      </div>
+      <div class="useful-links-form-actions">
+        <button class="btn" type="submit" id="useful-links-submit">Enregistrer le lien</button>
+        <button class="btn secondary" type="button" id="useful-links-cancel">Annuler</button>
+      </div>
+      <div id="useful-links-notice" role="status" aria-live="polite"></div>
+    </form>
+  </section>
+  <p id="useful-links-status" role="status" aria-live="polite"></p>
+  <section class="useful-links-grid" id="useful-links-grid" aria-label="Sites et ressources Heroscape">
     <a class="card useful-link" href="https://heroscape.org/builder/" target="_blank" rel="noopener noreferrer">
       <h3>⚔️ Heroscape Autobuilder</h3>
       <p>Ce site permet de créer ses armées Heroscape, de rechercher les unités et de calculer automatiquement les points.</p>
@@ -37,12 +88,8 @@
       <p>Le grand site communautaire américain consacré à Heroscape : forums, discussions, ressources et communauté anglophone.</p>
       <span class="link-cta">Ouvrir Heroscapers ↗</span>
     </a>
-    <div class="card useful-link placeholder-link"><h3>＋ Futur lien</h3><p>Emplacement réservé pour une prochaine ressource Heroscape.</p></div>
-    <div class="card useful-link placeholder-link"><h3>＋ Futur lien</h3><p>Emplacement réservé pour une prochaine ressource Heroscape.</p></div>
-    <div class="card useful-link placeholder-link"><h3>＋ Futur lien</h3><p>Emplacement réservé pour une prochaine ressource Heroscape.</p></div>
-    <div class="card useful-link placeholder-link"><h3>＋ Futur lien</h3><p>Emplacement réservé pour une prochaine ressource Heroscape.</p></div>
   </section>
 </main>
 <footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/useful-links-admin.js?v=20261020-admin1"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
 </html>
