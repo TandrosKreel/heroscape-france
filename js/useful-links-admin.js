@@ -29,8 +29,13 @@ function render(){
    (url?'<a class="link-cta" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(item.cta)+'</a>':'')+
    (admin?'<div class="useful-link-admin-actions"><button type="button" data-edit="'+item.id+'">Modifier</button><button type="button" class="useful-link-delete" data-delete="'+item.id+'">Supprimer</button></div>':'')+
    '</article>';
- }).join('')+
- (admin?'<button type="button" id="useful-links-add" class="card useful-link useful-link-add" aria-label="Ajouter un lien utile"><span class="useful-link-add-icon">＋</span><span>Ajouter un lien utile</span></button>':'');
+ }).join('');
+ // Conserver les quatre emplacements "Futur lien" d'origine tant que les six premières places ne sont pas occupées.
+ // Pour les administrateurs, le premier emplacement libre est le bouton d'ajout.
+ const remaining=Math.max(0,6-links.length);
+ if(admin)grid.innerHTML+='<button type="button" id="useful-links-add" class="card useful-link useful-link-add" aria-label="Ajouter un lien utile"><span class="useful-link-add-icon">＋</span><span>Ajouter un lien utile</span></button>';
+ const placeholderCount=admin?Math.max(0,remaining-1):remaining;
+ for(let i=0;i<placeholderCount;i++)grid.innerHTML+='<div class="card useful-link placeholder-link"><h3>＋ Futur lien</h3><p>Emplacement réservé pour une prochaine ressource Heroscape.</p></div>';
  status.textContent=links.length+' lien'+(links.length>1?'s':'')+' utile'+(links.length>1?'s':'')+'.';
 }
 async function load(){
