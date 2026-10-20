@@ -2216,3 +2216,25 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
   .forum-chat-messages{height:min(205px,32dvh);min-height:100px}
   body:has(.notification-row){overflow-x:clip}
 }
+
+/* Notifications mobile : panneau de chat compact au-dessus du clavier virtuel. */
+@media(max-width:700px){
+  body:has(#notifications-list) .forum-chat:has(.forum-chat-window:not([hidden])){
+    left:8px!important;right:8px!important;width:auto!important;
+    bottom:calc(8px + env(safe-area-inset-bottom,0px))!important;
+  }
+  body:has(#notifications-list) .forum-chat-window:not([hidden]){
+    display:flex!important;flex-direction:column;
+    max-height:min(360px,calc(100dvh - 95px))!important;
+  }
+  body:has(#notifications-list) .forum-chat-head,
+  body:has(#notifications-list) .forum-chat-form{flex:0 0 auto}
+  body:has(#notifications-list) .forum-chat-messages{
+    flex:1 1 auto;min-height:72px;height:180px;max-height:180px;
+    overflow-y:auto;
+  }
+  @media(max-height:550px){
+    body:has(#notifications-list) .forum-chat-window:not([hidden]){max-height:190px!important}
+    body:has(#notifications-list) .forum-chat-messages{height:80px;max-height:80px;min-height:48px}
+  }
+}
