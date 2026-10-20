@@ -20,4 +20,4 @@
  if(unread.length){const {error:readError}=await db.from("notifications").update({is_read:true,read_at:new Date().toISOString()}).eq("user_id",user.id).in("id",unread);if(readError)console.error("Lecture des notifications :",readError);else window.dispatchEvent(new Event("notifications-read"))}
  // Supprime les anciennes notifications consultées sans ralentir leur affichage.
  db.from("notifications").delete().eq("user_id",user.id).eq("is_read",true).lt("read_at",cutoff).then(({error})=>{if(error)console.warn("Nettoyage notifications :",error.message)});
-})();</script><footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-1"></script></body></html>
+})();</script><footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls2"></script></body></html>
