@@ -2257,3 +2257,29 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
   #topics .topic-title{font-size:17.5px}
   #latest-topics .latest-post-text{font-size:14px!important}
 }
+
+/* Fenêtre de discussion sur Notifications : taille mobile réellement bornée. */
+@media(max-width:700px){
+  body.notifications-page .forum-chat:not([hidden]){
+    position:fixed!important;left:10px!important;right:10px!important;
+    bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;
+    top:auto!important;width:auto!important;max-width:none!important;
+    height:auto!important;max-height:calc(100dvh - 24px)!important;
+  }
+  body.notifications-page .forum-chat-window:not([hidden]){
+    display:flex!important;flex-direction:column!important;
+    height:250px!important;max-height:min(250px,calc(100dvh - 90px))!important;
+    min-height:0!important;overflow:hidden!important;
+  }
+  body.notifications-page .forum-chat-head{flex:0 0 auto!important}
+  body.notifications-page .forum-chat-messages{
+    flex:1 1 0!important;height:auto!important;min-height:0!important;
+    max-height:none!important;overflow-y:auto!important;
+  }
+  body.notifications-page .forum-chat-form{flex:0 0 auto!important}
+  @media(max-height:500px){
+    body.notifications-page .forum-chat-window:not([hidden]){
+      height:175px!important;max-height:calc(100dvh - 35px)!important;
+    }
+  }
+}
