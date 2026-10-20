@@ -23,6 +23,9 @@
  }
  const currentProfile=await getCurrentProfile();
  const isAdmin=currentProfile?.role==="admin";
+ const isCreator=isAdmin&&user.id==="a961f771-dd42-432d-827a-736d3958e5d5";
+ const roleLabel={admin:"Créateur",cards_admin:"Administrateur des cartes",moderator:"Modérateur",member:"Membre"};
+
  if(isAdmin){
    const tabs=document.getElementById("admin-member-tabs");
    const activeTab=document.getElementById("tab-active-members");
@@ -71,8 +74,25 @@
  if(!members.length){box.innerHTML='<div class="empty">Aucun membre pour le moment.</div>';return;}
  box.innerHTML=members.map((m,i)=>{
    const avatar=m.avatar_url?'<img class="member-avatar" src="'+esc(m.avatar_url)+'" alt="" loading="lazy">':'<div class="member-avatar post-avatar-default">'+esc((m.username||"M").charAt(0).toUpperCase())+'</div>';
-   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div></div><a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Envoyer un message</a>'+(isAdmin&&m.id!==currentProfile.id?'<button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'" data-keep-messages="false">Supprimer profil et messages</button><button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'" data-keep-messages="true">Supprimer profil, conserver messages</button>':'')+'</div>';
+   return '<div class="card member-row"><div class="member-rank">'+(i+1)+'</div>'+avatar+'<div class="member-info"><strong>'+esc(m.username||"Membre")+'</strong><div class="count">'+m.message_count+' message'+(m.message_count>1?'s':'')+'</div>'+
+     (m.role!=='member'?'<div class="count" style="font-weight:700;color:var(--gold2)">'+esc(roleLabel[m.role]||m.role)+'</div>':'')+
+     (isCreator&&m.id!==user.id?'<label class="member-role-picker" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px">Fonction : <select data-member-role="'+esc(m.id)+'" data-original-role="'+esc(m.role)+'" aria-label="Fonction de '+esc(m.username)+'" style="max-width:230px;padding:7px;background:#151c23;color:var(--text);border:1px solid var(--line);border-radius:6px"><option value="member"'+(m.role==='member'?' selected':'')+'>Membre</option><option value="cards_admin"'+(m.role==='cards_admin'?' selected':'')+'>Administrateur des cartes</option><option value="moderator"'+(m.role==='moderator'?' selected':'')+'>Modérateur</option></select></label>':'')+
+     '</div><a class="btn member-message-btn" href="messages.html?to='+encodeURIComponent(m.id)+'">✉ Envoyer un message</a>'+(isAdmin&&m.id!==currentProfile.id?'<button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'" data-keep-messages="false">Supprimer profil et messages</button><button class="btn admin-delete-member" type="button" data-member-id="'+m.id+'" data-member-name="'+esc(m.username||"Membre")+'" data-keep-messages="true">Supprimer profil, conserver messages</button>':'')+'</div>';
  }).join("");
+ if(isCreator){
+   box.querySelectorAll("[data-member-role]").forEach(select=>select.addEventListener("change",async()=>{
+     const next=select.value,previous=select.dataset.originalRole;
+     const person=members.find(m=>m.id===select.dataset.memberRole);
+     if(!person){select.value=previous;return}
+     if(!confirm('Attribuer à « '+person.username+' » la fonction « '+(roleLabel[next]||next)+' » ?')){
+       select.value=previous;return;
+     }
+     select.disabled=true;
+     const {error}=await window.supabaseClient.rpc("creator_set_member_role",{p_member_id:person.id,p_role:next});
+     if(error){alert("Modification refusée : "+error.message);select.value=previous;select.disabled=false;return}
+     location.reload();
+   }));
+ }
  if(isAdmin){
    box.querySelectorAll(".admin-delete-member").forEach(button=>button.addEventListener("click",async()=>{
      const keepMessages=button.dataset.keepMessages==="true";
