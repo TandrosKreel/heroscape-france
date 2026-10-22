@@ -1,0 +1,532 @@
+site_index;nom_carte_site;general;points;images_candidates;nombre_images_candidates;statut;vf_existant;vo_existant
+1;Bol (SoV);Aquilla;10;bol;1;candidate_unique_a_verifier;OUI;OUI
+2;Kira Jax (C3V);Aquilla;30;kira-jax;1;candidate_unique_a_verifier;OUI;OUI
+3;Water Elemental;Aquilla;30;elementaldeau;1;candidate_unique_a_verifier;OUI;OUI
+4;Blue Wyrmling;Aquilla;35;wyrmling-bleu;1;candidate_unique_a_verifier;OUI;OUI
+5;Makwa Tribesman (C3V);Aquilla;35;makwa-tribesman-vf;1;candidate_unique_a_verifier;OUI;OUI
+6;Maltis Tez (SoV);Aquilla;35;maltis-tez;1;candidate_unique_a_verifier;OUI;OUI
+7;Fyorlag Spiders;Aquilla;40;araignees-fyorlag;1;candidate_unique_a_verifier;OUI;OUI
+8;Amberhive Protectors (C3V);Aquilla;50;protecteurs-de-la-ruche-d-ambre;1;candidate_unique_a_verifier;OUI;OUI
+9;Brave Arrow;Aquilla;50;brave-arrow;1;candidate_unique_a_verifier;OUI;OUI
+10;Soontir Van (SoV);Aquilla;50;soontir-van-vf;1;candidate_unique_a_verifier;OUI;OUI
+11;Xualtiaca Fire Ants (C3V);Aquilla;55;fourmis-de-feu-xualtiaca;1;candidate_unique_a_verifier;OUI;OUI
+12;Darrak Ambershard;Aquilla;60;darrak-ambershard;1;candidate_unique_a_verifier;OUI;OUI
+13;Louis "Mad Dog" Malone (C3V);Aquilla;60;lous-mad-dog-malone-vf;1;candidate_unique_a_verifier;OUI;OUI
+14;M-43 Resistance Fighters (C3V);Aquilla;65;combattants-de-la-resistance-m-43;1;candidate_unique_a_verifier;OUI;OUI
+15;Axegrinders of Burning Forge;Aquilla;70;axegrinders;1;candidate_unique_a_verifier;OUI;OUI
+16;Mohican River Tribe;Aquilla;70;tribu-mohican-des-rivieres;1;candidate_unique_a_verifier;OUI;OUI
+17;Teeth of the Makwa (C3V);Aquilla;70;dents-de-makwa;1;candidate_unique_a_verifier;OUI;OUI
+18;Red Mantis Blade Dancers (C3V);Aquilla;80;lames-dansantes-de-la-mante-rouge;1;candidate_unique_a_verifier;OUI;OUI
+19;Shieldsmiths of Granite Keep (C3V);Aquilla;80;shieldsmiths-du-donjon-de-granite;1;candidate_unique_a_verifier;OUI;OUI
+20;Varkaanan Blade Dancers (C3V);Aquilla;80;lames-dansantes-varkaanan;1;candidate_unique_a_verifier;OUI;OUI
+21;Varkaanan Swiftfangs (C3V);Aquilla;80;varkaanan-swiftfangs;1;candidate_unique_a_verifier;OUI;OUI
+22;Rendar Fy (SoV);Aquilla;85;rendar-fy;1;candidate_unique_a_verifier;OUI;OUI
+23;Myrddin (C3V);Aquilla;90;myrddin;1;candidate_unique_a_verifier;OUI;OUI
+24;Arktos (C3V);Aquilla;95;arktos;1;candidate_unique_a_verifier;OUI;OUI
+25;Himmelskralle (C3V);Aquilla;100;himmelskralle-vf;1;candidate_unique_a_verifier;OUI;OUI
+26;Jarek Guy (SoV);Aquilla;100;jarek-guy;1;candidate_unique_a_verifier;OUI;OUI
+27;Mellifera (C3V);Aquilla;100;mellifera;1;candidate_unique_a_verifier;OUI;OUI
+28;Quasatch Hunters;Aquilla;100;chasseurs-quasatch;1;candidate_unique_a_verifier;OUI;OUI
+29;Varkaanan Quickblades (C3V);Aquilla;100;varkaanan-quickblades;1;candidate_unique_a_verifier;OUI;OUI
+30;Wyvern;Aquilla;100;wyverne;1;candidate_unique_a_verifier;OUI;OUI
+31;Van Nessing (C3V);Aquilla;105;van-nessing;1;candidate_unique_a_verifier;OUI;OUI
+32;B-11 Resistance Corps (C3V);Aquilla;110;corps-de-la-resistance-b-11;1;candidate_unique_a_verifier;OUI;OUI
+33;Manauvi (C3V);Aquilla;110;manauvi;1;candidate_unique_a_verifier;OUI;OUI
+34;Migol Ironwill;Aquilla;110;migol-ironwill;1;candidate_unique_a_verifier;OUI;OUI
+35;Rhogar Dragonspine;Aquilla;110;rhogar-dragonspine;1;candidate_unique_a_verifier;OUI;OUI
+36;Varkaanan Greyspears (C3V);Aquilla;110;varkaanan-greyspears;1;candidate_unique_a_verifier;OUI;OUI
+37;Bahadur (C3V);Aquilla;120;bahadur;1;candidate_unique_a_verifier;OUI;OUI
+38;Mogrimm Forgehammer;Aquilla;120;morgrimm-forgehammer;1;candidate_unique_a_verifier;OUI;OUI
+39;Varkaanan Darkclaws (C3V);Aquilla;120;varkaanan-darkclaws;1;candidate_unique_a_verifier;OUI;OUI
+40;Kozil (C3V);Aquilla;130;kozil;1;candidate_unique_a_verifier;OUI;OUI
+41;Master Win Chiu Woo;Aquilla;140;maitre-win-chiu-woo;1;candidate_unique_a_verifier;OUI;OUI
+42;Sujoah;Aquilla;185;sujoah;1;candidate_unique_a_verifier;OUI;OUI
+43;Quahon (C3V);Aquilla;190;quahon;1;candidate_unique_a_verifier;OUI;OUI
+44;Mok (C3V);Aquilla;220;mok;1;candidate_unique_a_verifier;OUI;OUI
+45;Beakface Rogue (SoV);Einar;25;beakface-rogue-vf;1;candidate_unique_a_verifier;OUI;OUI
+46;Beakface Sneaks (SoV);Einar;30;beakface-glisseurs;1;candidate_unique_a_verifier;OUI;OUI
+47;Guilty McCreech;Einar;30;guilty-mc-creech|guilty-mccreech;2;plusieurs_images_a_departager;OUI;OUI
+48;Red Wyrmling;Einar;30;wyrmling-rouge;1;candidate_unique_a_verifier;OUI;OUI
+49;Earth Elemental;Einar;35;elementalde-terre;1;candidate_unique_a_verifier;OUI;OUI
+50;Achillean Gladiatrix (C3V);Einar;40;gladiatrice-achileenne;1;candidate_unique_a_verifier;OUI;OUI
+51;Ashigaru Yari;Einar;40;ashigaru-yari;1;candidate_unique_a_verifier;OUI;OUI
+52;Patrick Ferguson (C3V);Einar;40;patrick-ferguson;1;candidate_unique_a_verifier;OUI;OUI
+53;Red Ants of Aunstrom (SoV);Einar;40;fourmis-rouges-daunstrom;1;candidate_unique_a_verifier;OUI;OUI
+54;General Simon Fraser (C3V);Einar;45;general-simon-fraser;1;candidate_unique_a_verifier;OUI;OUI
+55;Roman Legionnaires;Einar;50;legionnaires-romains;1;candidate_unique_a_verifier;OUI;OUI
+56;Sacred Band;Einar;50;bataillon-sacre;1;candidate_unique_a_verifier;OUI;OUI
+57;Roman Archers;Einar;55;archers-romains;1;candidate_unique_a_verifier;OUI;OUI
+58;Izumi Samourai;Einar;60;samourais-izumi;1;candidate_unique_a_verifier;OUI;OUI
+59;Shiori;Einar;60;shiori;1;candidate_unique_a_verifier;OUI;OUI
+60;Dreadgul Raiders (C3V);Einar;65;pillards-dreadguls;1;candidate_unique_a_verifier;OUI;OUI
+61;Honor Guard of the Blasted Lands (C3V);Einar;65;gardes-d-honneur-des-terres-devastees;1;candidate_unique_a_verifier;OUI;OUI
+62;Tagawa Samourai Archers;Einar;65;samourais-archers-tagawa;1;candidate_unique_a_verifier;OUI;OUI
+63;Capuan Gladiators;Einar;70;gladiateurs-de-capoue;1;candidate_unique_a_verifier;OUI;OUI
+64;Lee Jun (SoV);Einar;70;lee-jun;1;candidate_unique_a_verifier;NON;OUI
+65;Martial la Hire (C3V);Einar;70;martial-la-hire;1;candidate_unique_a_verifier;OUI;OUI
+66;Cathar Spearmen (C3V);Einar;75;lanciers-cathares;1;candidate_unique_a_verifier;OUI;OUI
+67;Count Raymond (C3V);Einar;90;comte-raymond;1;candidate_unique_a_verifier;OUI;OUI
+68;Crixus;Einar;90;crixus;1;candidate_unique_a_verifier;OUI;OUI
+69;Empress Kiova;Einar;90;imperatrice-kiova;1;candidate_unique_a_verifier;OUI;OUI
+70;Parmenio;Einar;90;parmenio;1;candidate_unique_a_verifier;OUI;OUI
+71;Retiarius;Einar;90;retiarius;1;candidate_unique_a_verifier;OUI;OUI
+72;Gurei-Oni;Einar;100;gurei-oni;1;candidate_unique_a_verifier;OUI;OUI
+73;Kozuke Samourai;Einar;100;samourais-kozuke;1;candidate_unique_a_verifier;OUI;OUI
+74;Marcus Decimus Gallus;Einar;100;marcus-decimus-gallus;1;candidate_unique_a_verifier;OUI;OUI
+75;Priscus (SoV);Einar;100;priscus;1;candidate_unique_a_verifier;OUI;OUI
+76;Sentinels of Grax (C3V);Einar;100;sentinellesde-grax;1;candidate_unique_a_verifier;OUI;OUI
+77;Masha Shingai (SoV);Einar;110;masha-shingai;1;candidate_unique_a_verifier;OUI;OUI
+78;Ninjas of the Northern Wind;Einar;110;ninjas-du-vent-nordique;1;candidate_unique_a_verifier;OUI;OUI
+79;Quorik Warwitch (C3V);Einar;110;sorciere-de-guerre-quorik;1;candidate_unique_a_verifier;OUI;OUI
+80;Tomoe Gozen (C3V);Einar;110;tomoe-gozen;1;candidate_unique_a_verifier;OUI;OUI
+81;Valguard;Einar;110;valguard;1;candidate_unique_a_verifier;OUI;OUI
+82;Asterios (SoV);Einar;120;asterios;1;candidate_unique_a_verifier;OUI;OUI
+83;Kaemon Awa;Einar;120;kaemon-awa;1;candidate_unique_a_verifier;OUI;OUI
+84;Tagawa Samourai;Einar;120;samourais-tagawa;1;candidate_unique_a_verifier;OUI;OUI
+85;Tandros Kreel;Einar;120;tandros-kreel;1;candidate_unique_a_verifier;OUI;OUI
+86;Ebon Armor (C3V);Einar;125;armures-debene;1;candidate_unique_a_verifier;OUI;OUI
+87;Hatamoto Taro;Einar;130;hatamoto-taro;1;candidate_unique_a_verifier;OUI;OUI
+88;Einar Imperium;Einar;140;imperium-deinar;1;candidate_unique_a_verifier;OUI;OUI
+89;Master of the Hunt;Einar;140;maitre-chasseur;1;candidate_unique_a_verifier;OUI;OUI
+90;Ranjit Singh (C3V);Einar;140;ranjit-singh;1;candidate_unique_a_verifier;OUI;OUI
+91;Arashara Goshiri (C3V);Einar;200;arashara-goshiri;1;candidate_unique_a_verifier;OUI;OUI
+92;Kato Katsuro;Einar;200;kato-katsuro;1;candidate_unique_a_verifier;OUI;OUI
+93;Spartacus;Einar;200;spartacus;1;candidate_unique_a_verifier;OUI;OUI
+94;Air Elemental;Jandar;30;elementaldair;1;candidate_unique_a_verifier;OUI;OUI
+95;Eldgrim the Viking Champion;Jandar;30;eldgrim-le-champion-viking;1;candidate_unique_a_verifier;OUI;OUI
+96;White Wyrmling;Jandar;30;wyrmling-blanc;1;candidate_unique_a_verifier;OUI;OUI
+97;8th Infantry Pathfinder (C3V);Jandar;35;8-division-dinfanterie-pathfinder;1;candidate_unique_a_verifier;OUI;OUI
+98;Omnicron Repulsors;Jandar;40;repulseurs-omnicrons;1;candidate_unique_a_verifier;OUI;OUI
+99;Clayfoot Interceptor (C3V);Jandar;50;;0;sans_image_candidate;OUI;OUI
+100;Sir Orrick (C3V);Jandar;50;sir-orrick;1;candidate_unique_a_verifier;OUI;OUI
+101;Tarn Viking Warriors;Jandar;50;guerriers-vikings-de-tarn;1;candidate_unique_a_verifier;OUI;OUI
+102;20th Maine Volunteers (C3V);Jandar;60;20-regiment-des-volontaires-du-maine;1;candidate_unique_a_verifier;OUI;OUI
+103;Morgan's Riflemen (C3V);Jandar;60;fusiliers-de-morgan;1;candidate_unique_a_verifier;OUI;OUI
+104;Samuel Brown;Jandar;60;samuel-brown;1;candidate_unique_a_verifier;OUI;OUI
+105;Zetacron;Jandar;60;zetacron;1;candidate_unique_a_verifier;OUI;OUI
+106;Johnny "Shotgun" Sullivan;Jandar;65;johnny-shotgun-sullivan;1;candidate_unique_a_verifier;OUI;OUI
+107;4th Massachusetts Line;Jandar;70;4-colonne-du-massachusetts;1;candidate_unique_a_verifier;OUI;OUI
+108;Knights of Weston;Jandar;70;chevaliers-de-laulne|chevaliers-de-weston;2;plusieurs_images_a_departager;OUI;OUI
+109;Dzu-Teh;Jandar;75;dzu-teh;1;candidate_unique_a_verifier;OUI;OUI
+110;Captain John Varan (C3V);Jandar;80;;0;sans_image_candidate;OUI;OUI
+111;Concan the Kyrie Warrior;Jandar;80;concan-le-guerrier-kyrie;1;candidate_unique_a_verifier;OUI;OUI
+112;Erevan Sunshadow;Jandar;80;erevan-sunshadow;1;candidate_unique_a_verifier;OUI;OUI
+113;Finn the Viking Champion;Jandar;80;finn-le-champion-viking;1;candidate_unique_a_verifier;OUI;OUI
+114;Kelda the Kyrie Warrior;Jandar;80;kelda-la-guerriere-kyrie;1;candidate_unique_a_verifier;OUI;OUI
+115;Kumiko;Jandar;80;kumiko;1;candidate_unique_a_verifier;OUI;OUI
+116;MacDirk Warriors;Jandar;80;guerriers-macdirk;1;candidate_unique_a_verifier;OUI;OUI
+117;Prince Al'Kahora (SoV);Jandar;80;prince-alkahora;1;candidate_unique_a_verifier;OUI;OUI
+118;Raelin the Kyrie Warrior V1;Jandar;80;raelin-la-guerriere-kyrie-rotv;1;candidate_unique_a_verifier;OUI;OUI
+119;Thorgrim the Viking Champion;Jandar;80;thorgrim-le-champion-viking;1;candidate_unique_a_verifier;OUI;OUI
+120;Chen Tang (C3V);Jandar;90;chen-tang;1;candidate_unique_a_verifier;OUI;OUI
+121;Clayton Pierce (SoV);Jandar;90;clayton-pierce;1;candidate_unique_a_verifier;OUI;OUI
+122;Deltacron;Jandar;90;deltacron;1;candidate_unique_a_verifier;OUI;OUI
+123;Sir Denrick;Jandar;100;sir-denrick;1;candidate_unique_a_verifier;OUI;OUI
+124;Ulfrid Hornwrangler (C3V);Jandar;100;ulfrid-hornwrangler;1;candidate_unique_a_verifier;OUI;OUI
+125;Sir Gilbert;Jandar;105;sir-gilbert;1;candidate_unique_a_verifier;OUI;OUI
+126;Airborne Elite;Jandar;110;elite-aeroportee;1;candidate_unique_a_verifier;OUI;OUI
+127;Alastair MacDirk;Jandar;110;alastair-macdirk;1;candidate_unique_a_verifier;OUI;OUI
+128;Sentinels of Jandar;Jandar;110;sentinelles-de-jandar;1;candidate_unique_a_verifier;OUI;OUI
+129;Sergent Drake Alexander V1;Jandar;110;sgt-drake-alexander-rotv;1;candidate_unique_a_verifier;OUI;OUI
+130;Tyrian the Kyrie Warrior (SoV);Jandar;110;tyrian-le-guerrier-kyrie;1;candidate_unique_a_verifier;OUI;OUI
+131;Boreos (C3V);Jandar;115;boreos;1;candidate_unique_a_verifier;OUI;OUI
+132;Lilja (SoV);Jandar;115;lilja;1;candidate_unique_a_verifier;OUI;OUI
+133;Maekor (C3V);Jandar;115;maekor;1;candidate_unique_a_verifier;OUI;OUI
+134;Raelin the Kyrie Warrior V2;Jandar;120;raelin-la-guerriere-kyrie-sotm;1;candidate_unique_a_verifier;OUI;OUI
+135;Templar Cavalry;Jandar;120;cavaliers-templier;1;candidate_unique_a_verifier;OUI;OUI
+136;Greater Ice Elemental;Jandar;130;grand-elemental-de-glace;1;candidate_unique_a_verifier;OUI;OUI
+137;Eltahale;Jandar;140;eltahale;1;candidate_unique_a_verifier;OUI;OUI
+138;Sergent Drake Alexander V2;Jandar;170;sgt-drake-alexander-sotm;1;candidate_unique_a_verifier;OUI;OUI
+139;Axentia (C3V);Jandar;180;axentia-vf;1;candidate_unique_a_verifier;OUI;OUI
+140;Omegacron (C3V);Jandar;180;omegacron;1;candidate_unique_a_verifier;OUI;OUI
+141;Nilfheim;Jandar;185;nilfheim;1;candidate_unique_a_verifier;OUI;OUI
+142;Heracles (C3V);Jandar;200;heracles;1;candidate_unique_a_verifier;OUI;OUI
+143;Kyntela Gwyn;Ullar;20;kyntela-gwyn;1;candidate_unique_a_verifier;OUI;OUI
+144;Nottingham Brigand (C3V);Ullar;35;brigand-de-nottingham;1;candidate_unique_a_verifier;OUI;OUI
+145;Eilan Sidhe (C3V);Ullar;40;eilan-sidhe;1;candidate_unique_a_verifier;OUI;OUI
+146;Kate Crawford (SoV);Ullar;40;kate-crawford;1;candidate_unique_a_verifier;OUI;OUI
+147;Theracus;Ullar;40;theracus;1;candidate_unique_a_verifier;OUI;OUI
+148;Venoc Vipers;Ullar;40;viperes-venoc;1;candidate_unique_a_verifier;OUI;OUI
+149;Wildwood Runner (C3V);Ullar;40;wildwood-runner;1;candidate_unique_a_verifier;OUI;OUI
+150;Arkmer;Ullar;50;arkmer;1;candidate_unique_a_verifier;OUI;OUI
+151;Swaysil (SoV);Ullar;50;swaysil-vf;1;candidate_unique_a_verifier;OUI;OUI
+152;Warriors of Ashra;Ullar;50;guerrieres-dashra;1;candidate_unique_a_verifier;OUI;OUI
+153;Deadeye Dan;Ullar;60;dan-oeil-mortel;1;candidate_unique_a_verifier;OUI;OUI
+154;Greenscale Warriors;Ullar;60;guerriers-greenscale;1;candidate_unique_a_verifier;OUI;OUI
+155;Armoc Vipers;Ullar;65;viperes-armoc;1;candidate_unique_a_verifier;OUI;OUI
+156;Arthur of Sherwood (C3V);Ullar;70;arthur-de-sherwood;1;candidate_unique_a_verifier;OUI;OUI
+157;Aubrien Archers;Ullar;70;archers-aubrien;1;candidate_unique_a_verifier;OUI;OUI
+158;Kha (SoV);Ullar;75;kha;1;candidate_unique_a_verifier;OUI;OUI
+159;Emiroon;Ullar;80;;0;sans_image_candidate;OUI;OUI
+160;Saylind the Kyrie Warrior;Ullar;80;saylind-la-guerriere-kyrie;1;candidate_unique_a_verifier;OUI;OUI
+161;Shaolin Monks;Ullar;80;moines-shaolin;1;candidate_unique_a_verifier;OUI;OUI
+162;Atlaga the Kyrie Warrior;Ullar;90;atlaga-le-guerrier-kyrie;1;candidate_unique_a_verifier;OUI;OUI
+163;Brandis Skyhunter;Ullar;90;brandis-skyhunter;1;candidate_unique_a_verifier;OUI;OUI
+164;Chardris;Ullar;90;chardris;1;candidate_unique_a_verifier;OUI;OUI
+165;Haduc (C3V);Ullar;100;haduc;1;candidate_unique_a_verifier;OUI;OUI
+166;Johrdawn;Ullar;100;;0;sans_image_candidate;OUI;OUI
+167;Morsbane;Ullar;100;morsbane;1;candidate_unique_a_verifier;OUI;OUI
+168;Syvarris;Ullar;100;syvarris;1;candidate_unique_a_verifier;OUI;OUI
+169;Wildwood Sentinel (C3V);Ullar;100;wildwood-sentinel;1;candidate_unique_a_verifier;OUI;OUI
+170;Millerson (C3V);Ullar;105;millerson-vf;1;candidate_unique_a_verifier;OUI;OUI
+171;Acolarh;Ullar;110;acolarh;1;candidate_unique_a_verifier;OUI;OUI
+172;Moriko;Ullar;110;moriko;1;candidate_unique_a_verifier;OUI;OUI
+173;Protectors of Ullar;Ullar;110;protecteurs-dullar;1;candidate_unique_a_verifier;OUI;OUI
+174;Sharwin Wildborn;Ullar;110;sharwin-wildborn;1;candidate_unique_a_verifier;OUI;OUI
+175;Venoc Warlord;Ullar;120;seigneur-de-guerre-venoc;1;candidate_unique_a_verifier;OUI;OUI
+176;Zogross Hardscale (C3V);Ullar;120;zogross-hardscale;1;candidate_unique_a_verifier;OUI;OUI
+177;Locksley (C3V);Ullar;130;locksley;1;candidate_unique_a_verifier;OUI;OUI
+178;Master Lao Xin (C3V);Ullar;130;maitre-lao-xin;1;candidate_unique_a_verifier;OUI;OUI
+179;Wildwood Monarch (C3V);Ullar;140;wildwood-monarque;1;candidate_unique_a_verifier;OUI;OUI
+180;Azurite Warlord (C3V);Ullar;145;seigneur-de-guerre-azurite;1;candidate_unique_a_verifier;OUI;OUI
+181;Sonlen;Ullar;160;sonlen;1;candidate_unique_a_verifier;OUI;OUI
+182;Kalagrith (C3V);Ullar;190;kalagrith;1;candidate_unique_a_verifier;OUI;OUI
+183;Charos;Ullar;210;charos;1;candidate_unique_a_verifier;OUI;OUI
+184;Jotun;Ullar;225;jotun;1;candidate_unique_a_verifier;OUI;OUI
+185;Isamu;Utgar;10;isamu|isamu-2;2;plusieurs_images_a_departager;OUI;OUI
+186;Marcu Esenwein;Utgar;20;marcu-esenwein;1;candidate_unique_a_verifier;OUI;OUI
+187;Drow Chainfighter;Utgar;25;assassin-drow|combattant-a-chaine-drow;2;plusieurs_images_a_departager;OUI;OUI
+188;Dumutef Guard;Utgar;25;garde-dumutef;1;candidate_unique_a_verifier;OUI;OUI
+189;Sahuagin Raider;Utgar;25;pillard-sahuagin;1;candidate_unique_a_verifier;OUI;OUI
+190;Swog Rider;Utgar;25;chevaucheur-de-swog;1;candidate_unique_a_verifier;OUI;OUI
+191;Marrden Nagrubs;Utgar;30;marrden-nagrubs;1;candidate_unique_a_verifier;OUI;OUI
+192;Fire Elemental;Utgar;35;elementalde-feu;1;candidate_unique_a_verifier;OUI;OUI
+193;Arrow Gruts;Utgar;40;archers-gruts;1;candidate_unique_a_verifier;OUI;OUI
+194;Blade  Gruts;Utgar;40;gruts-a-epee;1;candidate_unique_a_verifier;OUI;OUI
+195;Deathreavers;Utgar;40;deathreavers;1;candidate_unique_a_verifier;OUI;OUI
+196;Koggo (C3V);Utgar;45;koggo;1;candidate_unique_a_verifier;OUI;OUI
+197;Otar (C3V);Utgar;45;otar;1;candidate_unique_a_verifier;OUI;OUI
+198;Sonya Esenwein;Utgar;45;sonya-esenwein;1;candidate_unique_a_verifier;OUI;OUI
+199;Beorn Boltcutter (C3V);Utgar;50;beorn-boltcutter;1;candidate_unique_a_verifier;OUI;OUI
+200;Goblin Cutters;Utgar;50;gobelins-coupeurs;1;candidate_unique_a_verifier;OUI;OUI
+201;Iskra Esenwein;Utgar;50;iskra-esenwein;1;candidate_unique_a_verifier;OUI;OUI
+202;Marro Dividers;Utgar;50;diviseurs-marro;1;candidate_unique_a_verifier;OUI;OUI
+203;Marro Drones;Utgar;50;drones-marro;1;candidate_unique_a_verifier;OUI;OUI
+204;Marro Drudge;Utgar;50;marro-drudges;1;candidate_unique_a_verifier;OUI;OUI
+205;Marro Gnids;Utgar;50;marro-gnids;1;candidate_unique_a_verifier;OUI;OUI
+206;Marro Warriors;Utgar;50;guerriers-marro;1;candidate_unique_a_verifier;OUI;OUI
+207;Me-Burq-Sa;Utgar;50;me-burq-sa;1;candidate_unique_a_verifier;OUI;OUI
+208;Nerak the Glacian Swog Rider;Utgar;50;nerak-le-chevaucheur-de-swog-polaire;1;candidate_unique_a_verifier;OUI;OUI
+209;Rechets of Bogdan;Utgar;50;rechets-de-bogdan;1;candidate_unique_a_verifier;OUI;OUI
+210;Zettian Deathwings (C3V);Utgar;50;deathwings-zettiens;1;candidate_unique_a_verifier;OUI;OUI
+211;Goblin Slashers (C3V);Utgar;55;gobelins-trancheurs;1;candidate_unique_a_verifier;OUI;OUI
+212;Elaria the Pale (C3V);Utgar;60;elaria-la-pale;1;candidate_unique_a_verifier;OUI;OUI
+213;Hrognak V1 (C3V);Utgar;60;hrognak;1;candidate_unique_a_verifier;OUI;OUI
+214;Marro Stingers;Utgar;60;marro-stingers;1;candidate_unique_a_verifier;OUI;OUI
+215;Zombie Hulk (SoV);Utgar;60;zombie-hulk;1;candidate_unique_a_verifier;OUI;OUI
+216;Zombies of Morindan;Utgar;60;zombies-de-morindan;1;candidate_unique_a_verifier;OUI;OUI
+217;Brute Gruts (C3V);Utgar;65;brutes-grut;1;candidate_unique_a_verifier;OUI;OUI
+218;Urk (SoV);Utgar;65;urk;1;candidate_unique_a_verifier;OUI;OUI
+219;Zettian Infantry (C3V);Utgar;65;infanterie-zetienne;1;candidate_unique_a_verifier;OUI;OUI
+220;Garrett Burns (C3V);Utgar;70;garrett-burns;1;candidate_unique_a_verifier;OUI;OUI
+221;Heavy Gruts;Utgar;70;gruts-lourds;1;candidate_unique_a_verifier;OUI;OUI
+222;Kuthnak (C3V);Utgar;70;;0;sans_image_candidate;OUI;OUI
+223;Phantom Knights;Utgar;70;chevaliers-fantomes;1;candidate_unique_a_verifier;OUI;OUI
+224;Zettian Guards;Utgar;70;gardes-zettiens;1;candidate_unique_a_verifier;OUI;OUI
+225;Zhen Huan (C3V);Utgar;70;;0;sans_image_candidate;OUI;OUI
+226;Anubian Wolves;Utgar;75;loups-anubiens;1;candidate_unique_a_verifier;OUI;OUI
+227;Cormin the Dark (SoV);Utgar;75;cormin-le-sombre;1;candidate_unique_a_verifier;OUI;OUI
+228;Khosumet the Darklord;Utgar;75;khosumet-seigneur-des-tenebres;1;candidate_unique_a_verifier;OUI;OUI
+229;Estivara;Utgar;80;estivara;1;candidate_unique_a_verifier;OUI;OUI
+230;Re-Tak-Shi (C3V);Utgar;80;retakshi-vf;1;candidate_unique_a_verifier;OUI;OUI
+231;Wolves of Badru;Utgar;80;loups-de-badru;1;candidate_unique_a_verifier;OUI;OUI
+232;Ice Troll Berserker;Utgar;85;troll-de-glace-berserk;1;candidate_unique_a_verifier;OUI;OUI
+233;Suskra (C3V);Utgar;85;suskra;1;candidate_unique_a_verifier;OUI;OUI
+234;Feral Troll;Utgar;90;troll-sauvage;1;candidate_unique_a_verifier;OUI;OUI
+235;Marrden Hounds;Utgar;90;chiens-de-meute-marrden;1;candidate_unique_a_verifier;OUI;OUI
+236;Ne-Gok-Sa;Utgar;90;ne-gok-sa;1;candidate_unique_a_verifier;OUI;OUI
+237;Sir Hawthorne;Utgar;90;sir-hawthorne;1;candidate_unique_a_verifier;OUI;OUI
+238;Warden 816;Utgar;90;gardien-816;1;candidate_unique_a_verifier;OUI;OUI
+239;Wastewalker Gage (C3V);Utgar;90;gage-wastewalker;1;candidate_unique_a_verifier;OUI;OUI
+240;Pel the Hill Giant (C3V);Utgar;95;pel-le-geant-des-collines;1;candidate_unique_a_verifier;OUI;OUI
+241;Deathwalker 7000;Utgar;100;marchemort-7000;1;candidate_unique_a_verifier;OUI;OUI
+242;Mind Flayer Mastermind;Utgar;100;maitre-flagelleur-mental;1;candidate_unique_a_verifier;OUI;OUI
+243;Obsidian Guards;Utgar;100;gardes-dobsidienne;1;candidate_unique_a_verifier;OUI;OUI
+244;Ogre Pulverizer;Utgar;100;ogre-pulveriseur;1;candidate_unique_a_verifier;OUI;OUI
+245;Ornak;Utgar;100;ornak;1;candidate_unique_a_verifier;OUI;OUI
+246;Pelloth;Utgar;100;pelloth;1;candidate_unique_a_verifier;OUI;OUI
+247;Shades of Bleakewoode;Utgar;100;ombres-de-bleakwoode;1;candidate_unique_a_verifier;OUI;OUI
+248;Talingul (C3V);Utgar;100;talingul;1;candidate_unique_a_verifier;OUI;OUI
+249;Tornak;Utgar;100;tornak;1;candidate_unique_a_verifier;OUI;OUI
+250;Skeletons of Annellintia (C3V);Utgar;105;squelettes-dannellintia;1;candidate_unique_a_verifier;OUI;OUI
+251;Akumaken (C3V);Utgar;110;akumaken;1;candidate_unique_a_verifier;OUI;OUI
+252;Brunak;Utgar;110;brunak;1;candidate_unique_a_verifier;OUI;OUI
+253;Minions of Utgar;Utgar;110;serviteurs-dutgar;1;candidate_unique_a_verifier;OUI;OUI
+254;Tetraites (SoV);Utgar;110;tetraites;1;candidate_unique_a_verifier;OUI;OUI
+255;Executioner 616 (SoV);Utgar;115;executeur-616;1;candidate_unique_a_verifier;OUI;OUI
+256;Fen Hydra;Utgar;120;hydre-des-marais;1;candidate_unique_a_verifier;OUI;OUI
+257;Grimnak;Utgar;120;grimnak;1;candidate_unique_a_verifier;OUI;OUI
+258;Knights of Blackgaard (C3V);Utgar;120;chevaliers-de-blackgaard;1;candidate_unique_a_verifier;OUI;OUI
+259;Krug;Utgar;120;krug;1;candidate_unique_a_verifier;OUI;OUI
+260;Kurrok the Elementalist;Utgar;120;kurrok-lelementaliste;1;candidate_unique_a_verifier;OUI;OUI
+261;Runa;Utgar;120;runa;1;candidate_unique_a_verifier;OUI;OUI
+262;Torin;Utgar;120;torin;1;candidate_unique_a_verifier;OUI;OUI
+263;Deathcommander Mark 3 (C3V);Utgar;130;deathcommander-mark-3;1;candidate_unique_a_verifier;OUI;OUI
+264;Deathwalker 8000;Utgar;130;marchemort-8000;1;candidate_unique_a_verifier;OUI;OUI
+265;Grok Riders;Utgar;130;chevaucheurs-de-grok;1;candidate_unique_a_verifier;OUI;OUI
+266;Kee-Mo-Shi;Utgar;130;kee-mo-shi;1;candidate_unique_a_verifier;OUI;OUI
+267;Tul-Bak-Ra;Utgar;130;tul-bak-ra;1;candidate_unique_a_verifier;OUI;OUI
+268;Viceron the Blood Knight (SoV);Utgar;130;viceron-le-chevalier-de-sang;1;candidate_unique_a_verifier;OUI;OUI
+269;Avernus (C3V);Utgar;135;avernus;1;candidate_unique_a_verifier;OUI;OUI
+270;Wo-Sa-Ga;Utgar;135;wo-sa-ga;1;candidate_unique_a_verifier;OUI;OUI
+271;Cxurg'gyath (SoV);Utgar;140;cxurggyath;1;candidate_unique_a_verifier;OUI;OUI
+272;Deathwalker 9000;Utgar;140;marchemort-9000;1;candidate_unique_a_verifier;OUI;OUI
+273;Frost Giant of Morh;Utgar;140;geant-de-givre-de-morh;1;candidate_unique_a_verifier;OUI;OUI
+274;Othkurik the Black Dragon;Utgar;140;othkurik-le-dragon-noir;1;candidate_unique_a_verifier;OUI;OUI
+275;Werewolf Lord;Utgar;140;seigneur-loup-garou;1;candidate_unique_a_verifier;OUI;OUI
+276;Kon-Tar-Na (SoV);Utgar;150;kon-tar-na;1;candidate_unique_a_verifier;OUI;OUI
+277;Mimring;Utgar;150;mimring;1;candidate_unique_a_verifier;OUI;OUI
+278;Ogre Warhulk;Utgar;150;ogre-warhulk;1;candidate_unique_a_verifier;OUI;OUI
+279;Ataraxis the Starlich (C3V);Utgar;160;ataraxis;1;candidate_unique_a_verifier;OUI;OUI
+280;Marro Hive;Utgar;160;ruche-marro;1;candidate_unique_a_verifier;OUI;OUI
+281;Shurrak;Utgar;160;shurrak;1;candidate_unique_a_verifier;OUI;OUI
+282;Su-Bak-Na;Utgar;160;su-bak-na;1;candidate_unique_a_verifier;OUI;OUI
+283;Grigor & Rogirg (C3V);Utgar;170;grigor-rogirg;1;candidate_unique_a_verifier;OUI;OUI
+284;Moltenclaw;Utgar;170;moltenclaw;1;candidate_unique_a_verifier;OUI;OUI
+285;Taelord the Kyrie Warrior;Utgar;180;taelord-le-guerrier-kyrie;1;candidate_unique_a_verifier;OUI;OUI
+286;Hrognak V2;Utgar;205;hrognakmonte;1;candidate_unique_a_verifier;OUI;OUI
+287;Tor-Kul-Na;Utgar;220;tor-kul-na;1;candidate_unique_a_verifier;OUI;OUI
+288;Bramcephys (C3V);Utgar;230;bramcephys;1;candidate_unique_a_verifier;OUI;OUI
+289;Bloodburst Thrall (C3V);Valkrill;30;thrall-bloodburst;1;candidate_unique_a_verifier;OUI;OUI
+290;Darkprowl Thrall (C3V);Valkrill;30;thrall-darkprowl;1;candidate_unique_a_verifier;OUI;OUI
+291;Deathstrike Thrall (C3V);Valkrill;30;thrall-deathstrike;1;candidate_unique_a_verifier;OUI;OUI
+292;Preyblood Thrall (C3V);Valkrill;30;thrall-preyblood;1;candidate_unique_a_verifier;OUI;OUI
+293;Tomb Skeleton Archers (C3V);Valkrill;30;archers-squelettes-des-tombes;1;candidate_unique_a_verifier;OUI;OUI
+294;Olog (SoV);Valkrill;35;olog;1;candidate_unique_a_verifier;OUI;OUI
+295;Siiv (SoV);Valkrill;40;siiv;1;candidate_unique_a_verifier;OUI;OUI
+296;Tomb Skeletons (C3V);Valkrill;40;squelettes-des-tombes;1;candidate_unique_a_verifier;OUI;OUI
+297;Acolytes of Vorganund (C3V);Valkrill;50;acolytes-de-vorganund;1;candidate_unique_a_verifier;OUI;OUI
+298;Death Chasers of Thesk;Valkrill;55;chasseurs-mortels-de-thesk;1;candidate_unique_a_verifier;OUI;OUI
+299;Father Caylus (C3V);Valkrill;55;father-caylus;1;candidate_unique_a_verifier;OUI;OUI
+300;Death Knights of Valkrill;Valkrill;60;death-knights-de-valkrill;1;candidate_unique_a_verifier;OUI;OUI
+301;Bugbear Basher (C3V);Valkrill;65;gobelours-fonceur;1;candidate_unique_a_verifier;OUI;OUI
+302;Durgeth Ravagers (C3V);Valkrill;65;ravageurs-durgeths;1;candidate_unique_a_verifier;OUI;OUI
+303;Mezzodemon Warmongers;Valkrill;65;mezzodemons-de-la-discorde;1;candidate_unique_a_verifier;OUI;OUI
+304;Skull Demon (C3V);Valkrill;65;demon-crane-1|demon-crane-2|demon-crane-3|demon-crane-4;4;plusieurs_images_a_departager;OUI;OUI
+305;Banshees of Durgeth Swamp (C3V);Valkrill;70;banshees-of-durgeth-swamp;1;candidate_unique_a_verifier;OUI;OUI
+306;Horned Skull Brutes;Valkrill;75;brutes-a-cranes-cornus;1;candidate_unique_a_verifier;OUI;OUI
+307;Nhah Scirh Cultists (C3V);Valkrill;80;cultistes-nhah-scirh;1;candidate_unique_a_verifier;OUI;OUI
+308;Havech Eradicators (C3V);Valkrill;90;havech-eradicators;1;candidate_unique_a_verifier;OUI;OUI
+309;Uzog (SoV);Valkrill;110;uzog;1;candidate_unique_a_verifier;OUI;OUI
+310;Ashi-Dhulu (SoV);Valkrill;115;ashi-dhulu;1;candidate_unique_a_verifier;OUI;OUI
+311;Emperor Andask (C3V);Valkrill;130;empereur-andask;1;candidate_unique_a_verifier;OUI;OUI
+312;Gothlok (C3V);Valkrill;130;gothlok;1;candidate_unique_a_verifier;OUI;OUI
+313;Motley Max (C3V);Valkrill;135;motley-max-vf;1;candidate_unique_a_verifier;OUI;OUI
+314;Azazel the Kyrie Warrior (C3V);Valkrill;140;azazel;1;candidate_unique_a_verifier;OUI;OUI
+315;Morgoloth (C3V);Valkrill;140;morgoloth;1;candidate_unique_a_verifier;OUI;OUI
+316;Nicholas Esenwein (C3V);Valkrill;140;nicholas-esenwein;1;candidate_unique_a_verifier;OUI;OUI
+317;Racheim (C3V);Valkrill;140;racheim;1;candidate_unique_a_verifier;OUI;OUI
+318;Z'Thoth, Mouth of the Abyss (C3V);Valkrill;140;zthoth-vf;1;candidate_unique_a_verifier;OUI;OUI
+319;Corvor the Tainted One (C3V);Valkrill;175;corvor-vf;1;candidate_unique_a_verifier;OUI;OUI
+320;Vulcanmech Incendiborgs (C3V);Valkrill;180;vulcanmech-incendiborgs;1;candidate_unique_a_verifier;OUI;OUI
+321;Marutuk (C3V);Valkrill;195;marutuk;1;candidate_unique_a_verifier;OUI;OUI
+322;Otonashi;Vydar;10;otonashi;1;candidate_unique_a_verifier;OUI;OUI
+323;Shadow Binder (C3V);Vydar;25;shadow-binder-vf;1;candidate_unique_a_verifier;OUI;OUI
+324;Tombstone Gunslinger (C3V);Vydar;25;tombstonegunslinger-vf;1;candidate_unique_a_verifier;OUI;OUI
+325;Black Wyrmling;Vydar;30;wyrmling-noir;1;candidate_unique_a_verifier;OUI;OUI
+326;Command Courier (C3V);Vydar;35;coursier-de-commandement;1;candidate_unique_a_verifier;OUI;OUI
+327;Hoplitron (SoV);Vydar;35;hoplitron;1;candidate_unique_a_verifier;OUI;OUI
+328;Seleena (C3V);Vydar;35;seleena;1;candidate_unique_a_verifier;OUI;OUI
+329;Shadow Fiend (C3V);Vydar;35;shadow-fiend-vf;1;candidate_unique_a_verifier;OUI;OUI
+330;Shadow Hound (C3V);Vydar;35;shadow-hound-vf;1;candidate_unique_a_verifier;OUI;OUI
+331;53rd North Carolina Sharpshooters (C3V);Vydar;55;53-des-snipers-de-caroline-du-nord;1;candidate_unique_a_verifier;OUI;OUI
+332;Kursus (C3V);Vydar;55;kursus;1;candidate_unique_a_verifier;OUI;OUI
+333;12th Caucasus Rifles (C3V);Vydar;60;12-fusilliers-du-caucase;1;candidate_unique_a_verifier;OUI;OUI
+334;Blastatrons;Vydar;60;blastatrons;1;candidate_unique_a_verifier;OUI;OUI
+335;Cal the Smuggler (C3V);Vydar;60;cal-the-smuggler-vf;1;candidate_unique_a_verifier;OUI;OUI
+336;Crypt Guardian (C3V);Vydar;60;gardien-des-cryptes;1;candidate_unique_a_verifier;OUI;OUI
+337;Specters of Aldorn (SoV);Vydar;60;specters-of-aldorn-vf;1;candidate_unique_a_verifier;OUI;OUI
+338;Yi Feng (C3V);Vydar;60;yi-feng;1;candidate_unique_a_verifier;OUI;OUI
+339;Buccaneers of Tortuga (C3V);Vydar;70;flibustiers-de-lile-de-la-tortue;1;candidate_unique_a_verifier;OUI;OUI
+340;Josie Whistlestop (C3V);Vydar;70;josie-whistlestop;1;candidate_unique_a_verifier;OUI;OUI
+341;Agent Nora (C3V);Vydar;75;agent-nora;1;candidate_unique_a_verifier;OUI;OUI
+342;James Murphy;Vydar;75;james-murphy;1;candidate_unique_a_verifier;OUI;OUI
+343;Gladiatrons;Vydar;80;gladiatrons;1;candidate_unique_a_verifier;OUI;OUI
+344;Microcorp Troopers (C3V);Vydar;80;microcorps-troopers;1;candidate_unique_a_verifier;OUI;OUI
+345;Warforged Soldiers;Vydar;80;soldats-forgeliers;1;candidate_unique_a_verifier;OUI;OUI
+346;Gorillinators;Vydar;90;gorillinators;1;candidate_unique_a_verifier;OUI;OUI
+347;Heirloom;Vydar;90;heirloom;1;candidate_unique_a_verifier;OUI;OUI
+348;Rygarn (C3V);Vydar;90;rygarn;1;candidate_unique_a_verifier;OUI;OUI
+349;Major J15 (C3V);Vydar;95;major-j15;1;candidate_unique_a_verifier;OUI;OUI
+350;Iron Golem;Vydar;100;golem-de-fer;1;candidate_unique_a_verifier;OUI;OUI
+351;Krav Maga Agents;Vydar;100;agents-de-krav-maga;1;candidate_unique_a_verifier;OUI;OUI
+352;Gorillitroopers (C3V);Vydar;105;gorillitroopers;1;candidate_unique_a_verifier;OUI;OUI
+353;Dünd;Vydar;110;dund;1;candidate_unique_a_verifier;OUI;OUI
+354;Evar Scarcarver;Vydar;110;evar-scarcarver;1;candidate_unique_a_verifier;OUI;OUI
+355;Laglor;Vydar;110;laglor;1;candidate_unique_a_verifier;OUI;OUI
+356;Mika Connour;Vydar;110;mika-connour;1;candidate_unique_a_verifier;OUI;OUI
+357;Agent Skahen;Vydar;120;agent-skahen;1;candidate_unique_a_verifier;OUI;OUI
+358;Kantono Daishi (SoV);Vydar;120;kantono-daishi;1;candidate_unique_a_verifier;OUI;OUI
+359;Nakita Agents;Vydar;120;agents-nakita;1;candidate_unique_a_verifier;OUI;OUI
+360;Siege;Vydar;120;siege;1;candidate_unique_a_verifier;OUI;OUI
+361;Calibrax the Kyrie Warrior (C3V);Vydar;130;calibrax-le-guerrier-kyrie;1;candidate_unique_a_verifier;OUI;OUI
+362;Zaeus (C3V);Vydar;130;zaeus;1;candidate_unique_a_verifier;OUI;OUI
+363;Sudema;Vydar;140;sudema|sudema-2;2;plusieurs_images_a_departager;OUI;OUI
+364;Breach (C3V);Vydar;145;breach;1;candidate_unique_a_verifier;OUI;OUI
+365;Xundar (SoV);Vydar;150;xundar-vf;1;candidate_unique_a_verifier;OUI;OUI
+366;Augamo (C3V);Vydar;155;augamo;1;candidate_unique_a_verifier;OUI;OUI
+367;The Varja (C3V);Vydar;160;le-varja;1;candidate_unique_a_verifier;OUI;OUI
+368;Major Q9;Vydar;180;major-q9;1;candidate_unique_a_verifier;OUI;OUI
+369;Braxas;Vydar;210;braxas;1;candidate_unique_a_verifier;OUI;OUI
+370;Chana the Zenithwing;Ullar;30;chana-the-zenithwing;1;candidate_unique_a_verifier;NON;OUI
+371;Kita the Springrunner;Aquilla;30;kita-the-springrunner;1;candidate_unique_a_verifier;NON;OUI
+372;Vrono the Brambletooth;Utgar;45;vrono-the-brambletooth;1;candidate_unique_a_verifier;NON;OUI
+373;Misaerx the Kyrie Warrior;Revna;50;misaerx-la-guerriere-kyrie;1;candidate_unique_a_verifier;NON;OUI
+374;Oathbound Legionnaires;Revna;50;;0;sans_image_candidate;NON;OUI
+375;Onshu the Welkineye;Aquilla;50;onshu-le-welkineye;1;candidate_unique_a_verifier;NON;OUI
+376;Festering Honor Guard;Revna;60;garde-d-honneur-purulente;1;candidate_unique_a_verifier;NON;OUI
+377;Wing Commander Tuck Harrigan;Volarak;60;tuck-harrigan;1;candidate_unique_a_verifier;NON;OUI
+378;Knaves of the Silver Scimitar;Revna;65;knaves-of-the-silver-scimitar;1;candidate_unique_a_verifier;NON;OUI
+379;Vorid Glide Strikers;Volarak;65;vorid-glide-strikers;1;candidate_unique_a_verifier;NON;OUI
+380;Exiles of the Sundered Sea;Utgar;75;exiles-of-the-sundered-sea;1;candidate_unique_a_verifier;NON;OUI
+381;Cornelius Breech, the Derelict Prince;Utgar;80;cornelius-breech;1;candidate_unique_a_verifier;NON;OUI
+382;Dreadnoughts of Caraway Cavern;Utgar;80;cuirasses-de-la-grotte-de-carvi;1;candidate_unique_a_verifier;NON;OUI
+383;Fia Bonny, the Void Siren;Einar;80;fia-bonny;1;candidate_unique_a_verifier;NON;OUI
+384;Killian Vane III;Revna;80;killian-vane-iii;1;candidate_unique_a_verifier;NON;OUI
+385;Loviatäk the Kyrie Warrior;Utgar;80;loviatak-la-guerriere-kyrie;1;candidate_unique_a_verifier;NON;OUI
+386;Oathbound Phalanx;Revna;80;;0;sans_image_candidate;NON;OUI
+387;Xiamara the Kyrie Warrior;Ullar;80;xiamara-la-guerriere-kyrie;1;candidate_unique_a_verifier;NON;OUI
+388;Girushia, Grove Keeper;Aquilla;90;girushia-grove-keeper;1;candidate_unique_a_verifier;NON;OUI
+389;Glinerva the Kyrie Warrior;Aquilla;90;glinerva-la-guerriere-kyrie;1;candidate_unique_a_verifier;NON;OUI
+390;Necrotech Wraithriders;Revna;90;necrotech-wraithriders;1;candidate_unique_a_verifier;NON;OUI
+391;Kilkorax the Kyrie Warrior;Revna;95;kilkorax-la-guerriere-kyrie;1;candidate_unique_a_verifier;NON;OUI
+392;Dorim the Bulkhead Brawler;Aquilla;100;dorim-the-bulkhead-brawler;1;candidate_unique_a_verifier;NON;OUI
+393;Mielki the Kyrie Warrior;Ullar;100;mielki-la-guerriere-kyrie;1;candidate_unique_a_verifier;NON;OUI
+394;Raakchott, Steward of Death;Revna;100;raakchott-l-intendant-de-la-mort;1;candidate_unique_a_verifier;NON;OUI
+395;Raelin the Kyrie Warrior (3.0);Utgar;100;raelin-la-guerriere-kyrie-aoa;1;candidate_unique_a_verifier;NON;OUI
+396;Marachott, Mind Whisperer;Ullar;110;marachott-la-murmureuse-desprit;1;candidate_unique_a_verifier;NON;OUI
+397;Ordo Borealis;Jandar;110;ordo-borealis;1;candidate_unique_a_verifier;NON;OUI
+398;Queen Qhyrion;Vydar;110;reine-qhyrion;1;candidate_unique_a_verifier;NON;OUI
+399;Shiori (2.0);Einar;110;shiori-aoa;1;candidate_unique_a_verifier;NON;OUI
+400;Ewashia, Master of Tides;Aquilla;115;ewashia-maitre-des-marees;1;candidate_unique_a_verifier;NON;OUI
+401;Frostclaw Paladins;Jandar;120;frostclaw-paladins;1;candidate_unique_a_verifier;NON;OUI
+402;Halushia, Scion of the Wild;Ullar;120;halushia-descendant-de-la-nature;1;candidate_unique_a_verifier;NON;OUI
+403;Bok-Bur-Na;Utgar;125;bok-bur-na;1;candidate_unique_a_verifier;NON;OUI
+404;Hellforge Mandukor;Revna;130;hellforge-mandukor;1;candidate_unique_a_verifier;NON;OUI
+405;Imperator Kayne;Volarak;130;imperator-kayne;1;candidate_unique_a_verifier;NON;OUI
+406;Sgt. Drake Alexander (3.0);Jandar;135;sgt-drake-alexander-aoa;1;candidate_unique_a_verifier;NON;OUI
+407;Air Marshal Zed Nesbitt;Volarak;140;air-marshal-zed-nesbitt;1;candidate_unique_a_verifier;NON;OUI
+408;Crimson Widow;Einar;150;crimson-widow;1;candidate_unique_a_verifier;NON;OUI
+409;Iron Lich Viscerot;Revna;150;seigneur-liche-de-fer-viscerot;1;candidate_unique_a_verifier;NON;OUI
+410;Knight Primus Adelbern;Jandar;150;chevalier-primus-adelbern;1;candidate_unique_a_verifier;NON;OUI
+411;Major Q11;Vydar;160;major-q11;1;candidate_unique_a_verifier;NON;OUI
+412;Queen Maladrix the Conqueror;Revna;160;reine-maladrix-la-conquerante;1;candidate_unique_a_verifier;NON;OUI
+413;Admiral EJ-1M;Vydar;170;amiral-ej-1m;1;candidate_unique_a_verifier;NON;OUI
+414;Sonlen (2.0);Ullar;170;sonlen-aoa;1;candidate_unique_a_verifier;NON;OUI
+415;Scavorith, lord of Ruin;Revna;185;scavorith-le-seigneur-de-la-ruine;1;candidate_unique_a_verifier;NON;OUI
+416;Thyraxis Dragoon;Revna;195;thyraxis-dragoon;1;candidate_unique_a_verifier;NON;OUI
+417;Xenithrax the Vineweaver;Aquilla;200;xenithrax-le-tisseur-de-ronces;1;candidate_unique_a_verifier;NON;OUI
+418;Venom;Marvel;150;;0;sans_image_candidate;OUI;OUI
+419;Spider-Man;Marvel;160;;0;sans_image_candidate;OUI;OUI
+420;Red Skull;Marvel;190;;0;sans_image_candidate;OUI;OUI
+421;Captain America;Marvel;220;;0;sans_image_candidate;OUI;OUI
+422;Iron Man;Marvel;240;;0;sans_image_candidate;OUI;OUI
+423;Doctor Doom;Marvel;245;;0;sans_image_candidate;OUI;OUI
+424;Abomination;Marvel;320;;0;sans_image_candidate;OUI;OUI
+425;Silver Surfer;Marvel;320;;0;sans_image_candidate;OUI;OUI
+426;Thanos;Marvel;360;;0;sans_image_candidate;OUI;OUI
+427;Incredible Hulk;Marvel;370;;0;sans_image_candidate;OUI;OUI
+428;Agent Carr (1.0);Vydar;100;agent-carr;1;candidate_unique_a_verifier;NON;OUI
+429;Deathstalkers;Utgar;100;deathstalkers;1;candidate_unique_a_verifier;NON;OUI
+430;Izumi Samurai;Einar;60;;0;sans_image_candidate;NON;OUI
+431;Major Q10;Vydar;150;major-q10;1;candidate_unique_a_verifier;NON;OUI
+432;Omnicron Snipers;Jandar;100;snipers-omnicrons;1;candidate_unique_a_verifier;NON;OUI
+433;Zelrig;Einar;185;zelrig;1;candidate_unique_a_verifier;NON;OUI
+434;Ulginesh;Ullar;150;ulginesh;1;candidate_unique_a_verifier;NON;OUI
+435;The Einar Imperium;Einar;140;;0;sans_image_candidate;NON;OUI
+436;The Axegrinders of Burning Forge;Aquilla;70;;0;sans_image_candidate;NON;OUI
+437;Tagawa Samurai;Einar;120;;0;sans_image_candidate;NON;OUI
+438;Tagawa Samurai Archers;Einar;65;;0;sans_image_candidate;NON;OUI
+439;M.A.R.S.;Valkrill;110;mars;1;candidate_unique_a_verifier;NON;OUI
+440;Sir Dupuis;Jandar;150;sir-dupuis;1;candidate_unique_a_verifier;NON;OUI
+441;Microcorp Agents;Vydar;100;agents-microcorp;1;candidate_unique_a_verifier;NON;OUI
+442;Major X17;Vydar;100;major-x17;1;candidate_unique_a_verifier;NON;OUI
+443;Kozuke Samurai;Einar;100;;0;sans_image_candidate;NON;OUI
+444;Jorhdawn;Ullar;100;jorhdawn;1;candidate_unique_a_verifier;NON;OUI
+445;Granite Guardians;Aquilla;100;gardiens-de-granite;1;candidate_unique_a_verifier;NON;OUI
+446;Emirroon;Ullar;80;emirroon;1;candidate_unique_a_verifier;NON;OUI
+447;Elite Onyx Vipers;Ullar;100;viperes-delite-onyx;1;candidate_unique_a_verifier;NON;OUI
+448;Deepwyrm Drow;Utgar;70;deepwyrm-drow;1;candidate_unique_a_verifier;NON;OUI
+449;Cyprien Esenwein;Utgar;150;cyprien-esenwein;1;candidate_unique_a_verifier;NON;OUI
+450;Ashigaru Harquebus;Einar;60;arquebusiers-ashigaru;1;candidate_unique_a_verifier;NON;OUI
+451;Ana Karithon;Jandar;100;ana-karithon;1;candidate_unique_a_verifier;NON;OUI
+452;10th Regiment of Foot;Einar;75;10eme-regiment-dinfanterie;1;candidate_unique_a_verifier;NON;OUI
+453;Knight Irene;Jandar;110;chevalier-irene;1;candidate_unique_a_verifier;NON;OUI
+454;Brontos;Aquilla;175;brontos;1;candidate_unique_a_verifier;NON;OUI
+455;Capt. John Varan;Jandar;80;capt-john-varan;1;candidate_unique_a_verifier;NON;OUI
+456;Clawfoot Interceptor;Jandar;50;clawfoot-interceptor-vf;1;candidate_unique_a_verifier;NON;OUI
+457;Gen. Simon Fraser;Einar;45;;0;sans_image_candidate;NON;OUI
+458;Zhen Yuan;Utgar;70;zhen-yuan;1;candidate_unique_a_verifier;NON;OUI
+459;Brimstone;Valkrill;150;brimstone;1;candidate_unique_a_verifier;NON;OUI
+460;Deflectatron;Vydar;25;deflectatron;1;candidate_unique_a_verifier;NON;OUI
+461;Decker the Burrowbreaker;Volarak;65;decker-the-burrowbreaker;1;candidate_unique_a_verifier;NON;OUI
+462;Gelryie Vanguards;Vydar;65;gelryie-vanguards;1;candidate_unique_a_verifier;NON;OUI
+463;Grave Grim;Revna;40;grave-grim;1;candidate_unique_a_verifier;NON;OUI
+464;Greatbow Archers;Jandar;80;greatbow-archers;1;candidate_unique_a_verifier;NON;OUI
+465;Haluchott, Corruptor of Beasts;Utgar;125;haluchott-corroptor-of-beasts;1;candidate_unique_a_verifier;NON;OUI
+466;Krakenling;Ullar;85;krakenling;1;candidate_unique_a_verifier;NON;OUI
+467;Molten Crustaceans;Aquilla;45;molten-crustaceans;1;candidate_unique_a_verifier;NON;OUI
+468;Revnan Acolytes;Revna;40;acolytes-de-revna;1;candidate_unique_a_verifier;NON;OUI
+469;Scions of Icaria;Utgar;75;rejetons-dicaria;1;candidate_unique_a_verifier;NON;OUI
+470;Tanuki Tricksters;Volarak;45;tanuki-tricksters;1;candidate_unique_a_verifier;NON;OUI
+471;Ramosaur Rider;Volarak;35;chevaucheur-de-ramosaur;1;candidate_unique_a_verifier;NON;OUI
+472;Ranoc Vipers;Ullar;50;viperes-ranoc;1;candidate_unique_a_verifier;NON;OUI
+473;Bursting Hive Soldier;Einar;30;soldat-de-la-ruche-eclatant;1;candidate_unique_a_verifier;NON;OUI
+474;"Blink" Dawson;Volarak;20;dawson-clin-doeil;1;candidate_unique_a_verifier;NON;OUI
+475;Agent SI-4X;Vydar;80;agent-si-4x;1;candidate_unique_a_verifier;NON;OUI
+476;Baroness;COBRA;120;baronne;1;candidate_unique_a_verifier;NON;OUI
+477;Battle Copter;G.I. JOE;35;helicoptere-de-combat;1;candidate_unique_a_verifier;NON;OUI
+478;COBRA Commander;COBRA;110;commandant-cobra;1;candidate_unique_a_verifier;NON;OUI
+479;COBRA Flight Pod;COBRA;35;capsule-de-vol-cobra;1;candidate_unique_a_verifier;NON;OUI
+480;COBRA Troopers;COBRA;70;cobra-troopers;1;candidate_unique_a_verifier;NON;OUI
+481;Cainak, Private Eye;Volarak;85;cainak-detective-prive;1;candidate_unique_a_verifier;NON;OUI
+482;Chain Gruts;Volarak;75;gruts-a-chaines;1;candidate_unique_a_verifier;NON;OUI
+483;Corvynn the Rotbeak;Revna;30;corvynn-le-bec-pourri;1;candidate_unique_a_verifier;NON;OUI
+484;Crimson Twins;COBRA;70;jumeaux-pourpres;1;candidate_unique_a_verifier;NON;OUI
+485;Deathwalker 10000;Utgar;120;;0;sans_image_candidate;NON;OUI
+486;Destro;COBRA;120;destro;1;candidate_unique_a_verifier;NON;OUI
+487;Doctor Mindbender;COBRA;70;docteur-mindbender;1;candidate_unique_a_verifier;NON;OUI
+488;Dr. Torvik Morinstein;Revna;40;;0;sans_image_candidate;NON;OUI
+489;Duke;G.I. JOE;140;duke;1;candidate_unique_a_verifier;NON;OUI
+490;Durnipia;Volarak;75;durnipia;1;candidate_unique_a_verifier;NON;OUI
+491;Eel & F'Fuoh;Volarak;155;eel-ffuoh;1;candidate_unique_a_verifier;NON;OUI
+492;Elites of Ullar;Ullar;105;elite-dullar;1;candidate_unique_a_verifier;NON;OUI
+493;Frizzt Galagan;Jandar;35;;0;sans_image_candidate;NON;OUI
+494;Gimbal;Volarak;150;gimbal;1;candidate_unique_a_verifier;NON;OUI
+495;Gnarlfur Raiders;Utgar;90;pillards-gnarlfur;1;candidate_unique_a_verifier;NON;OUI
+496;Greenshirts;G.I. JOE;85;greenshirts;1;candidate_unique_a_verifier;NON;OUI
+497;Jeanne d'Arc;Jandar;40;jeanne-darc;1;candidate_unique_a_verifier;NON;OUI
+498;Jinx and Kamakura;G.I. JOE;90;jinx-et-kamakura;1;candidate_unique_a_verifier;NON;OUI
+499;Kha-Re-Ga;Utgar;140;kha-re-ga;1;candidate_unique_a_verifier;NON;OUI
+500;Krampus;Utgar;90;;0;sans_image_candidate;NON;OUI
+501;Lady Jaye;G.I. JOE;60;lady-jaye;1;candidate_unique_a_verifier;NON;OUI
+502;Lurking Hive Soldier;Einar;30;soldat-de-la-ruche-embusque;1;candidate_unique_a_verifier;NON;OUI
+503;Morinstein's Masterpiece;Revna;20;;0;sans_image_candidate;NON;OUI
+504;Necrotech Geistfire;Revna;30;necrotech-espritfeu;1;candidate_unique_a_verifier;NON;OUI
+505;Necrotech Ghastblade;Revna;30;necrotech-epeefantome;1;candidate_unique_a_verifier;NON;OUI
+506;Necrotech Ghoulgrip;Revna;30;necrotech-emprisedegoule;1;candidate_unique_a_verifier;NON;OUI
+507;Necrotech Reavers;Revna;65;ravageurs-necrotech;1;candidate_unique_a_verifier;NON;OUI
+508;Nishi Souta;Einar;75;nishi-souta;1;candidate_unique_a_verifier;NON;OUI
+509;Nuckelavee;Revna;50;nuckelavee;1;candidate_unique_a_verifier;NON;OUI
+510;Revenants of Revna;Revna;70;revenants-de-revna;1;candidate_unique_a_verifier;NON;OUI
+511;Roadblock;G.I. JOE;100;roadblock;1;candidate_unique_a_verifier;NON;OUI
+512;Scarlett;G.I. JOE;80;scarlett;1;candidate_unique_a_verifier;NON;OUI
+513;Serpentor;COBRA;130;serpentor;1;candidate_unique_a_verifier;NON;OUI
+514;Skordyre Infantry;Einar;45;infanterie-skordyre;1;candidate_unique_a_verifier;NON;OUI
+515;Snake Eyes;G.I. JOE;70;snake-eyes;1;candidate_unique_a_verifier;NON;OUI
+516;Spitting Hive Soldier;Einar;30;soldat-de-la-ruche-crachant;1;candidate_unique_a_verifier;NON;OUI
+517;Storm Shadow;G.I. JOE;80;storm-shadow;1;candidate_unique_a_verifier;NON;OUI
+518;Students of Kalari Payatt;Ullar;70;;0;sans_image_candidate;NON;OUI
+519;Takanawa Kaiga;Einar;90;takanawa-kaiga;1;candidate_unique_a_verifier;NON;OUI
+520;The Eisen Expedition;Volarak;75;lexpedition-eisen;1;candidate_unique_a_verifier;NON;OUI
+521;The Kraken;Sans général;100;le-kraken;1;candidate_unique_a_verifier;NON;OUI
+522;Thormun;Sans général;180;thormun;1;candidate_unique_a_verifier;NON;OUI
+523;Twilight Clan Riders;Utgar;55;;0;sans_image_candidate;NON;OUI
+524;Agent Carr (2.0);Vydar;130;agent-carr-v2;1;candidate_unique_a_verifier;NON;OUI
+525;Concan the Kyrie Warrior (2.0);Jandar;100;;0;sans_image_candidate;NON;OUI
+526;Guilty McCreech (2.0);Einar;50;;0;sans_image_candidate;NON;OUI
+527;Isamu (2.0);Utgar;10;;0;sans_image_candidate;NON;OUI
+528;Raelin the Kyrie Warrior (4.0);Jandar;105;raelin-la-guerriere-kyrie-bt;1;candidate_unique_a_verifier;NON;OUI
+529;Sudema (2.0);Vydar;110;;0;sans_image_candidate;NON;OUI
+530;Syvarris (2.0);Ullar;110;syvarris-aoa;1;candidate_unique_a_verifier;NON;OUI
+531;Taelord the Kyrie Warrior (2.0);Utgar;120;;0;sans_image_candidate;NON;OUI
