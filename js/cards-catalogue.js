@@ -47,7 +47,7 @@ function render(){
    const selected=variants.length?selectedVariant(x.name,variants):0;
    const vf=variants.length?variants[selected].fr:x.fr;
    const picker=variants.length?'<div class="vf-variants"><p class="vf-variants-title">Choisir une illustration VF</p><div class="vf-variants-list" role="group" aria-label="Illustrations VF de '+esc(x.name)+'">'+variants.map((v,i)=>'<button type="button" class="vf-variant-option'+(i===selected?' is-selected':'')+'" data-variant-name="'+esc(x.name)+'" data-variant-index="'+i+'" aria-pressed="'+(i===selected?'true':'false')+'" aria-label="'+esc(x.name+' — '+v.label)+'"><img src="'+esc(safeUrl(v.miniature))+'" alt="" loading="lazy" decoding="async"><span>'+esc(v.label)+'</span></button>').join('')+'</div></div>':'';
-   return '<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.points)+' points</p><div class="army-actions">'+link(vf,'🇫🇷 VF',!!variants.length)+link(x._source?(base.find(c=>c.name===x._source)?.en||''):(String(x.en||'').startsWith('https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/')?x.en:''),'🇬🇧 English')+'</div>'+picker+(admin?'<button class="cards-edit-btn" type="button" data-card-key="'+esc(key)+'">Modifier / supprimer</button>':'')+'</article>';
+   return '<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.points)+' points</p><div class="army-actions">'+link(vf,'🇫🇷 VF',!!variants.length)+link(x.en,'🇬🇧 English')+'</div>'+picker+(admin?'<button class="cards-edit-btn" type="button" data-card-key="'+esc(key)+'">Modifier / supprimer</button>':'')+'</article>';
   }).join('')+'</div></section>';
  }).join('')+(specialFiltered.length?'<section class="general-section"><h2>Sans Général <span class="section-count">('+specialFiltered.length+')</span></h2><div class="army-grid">'+specialFiltered.map(x=>'<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.type||'Objet de terrain')+'</p><div class="army-actions">'+link(x.fr,'🇫🇷 VF')+'</div></article>').join('')+'</div></section>':'');
 }
@@ -100,7 +100,7 @@ function openForm(card=null){
  $('cards-fr').value=card?.fr||'';
  $('cards-en').value=card?.en||'';
  $('cards-fr-url-row').hidden=true;
- $('cards-en-url-row').hidden=true;
+ $('cards-en-url-row').hidden=false;
  $('cards-place-after').hidden=!!card;
  $('cards-place-label').hidden=!!card;
  $('cards-delete').hidden=!card;
