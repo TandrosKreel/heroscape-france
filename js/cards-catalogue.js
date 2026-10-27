@@ -85,7 +85,10 @@ function updateRestore(){
  if(!hidden.length){tools.hidden=true;$('cards-hidden-open').setAttribute('aria-expanded','false');}
  updateManageList();
  $('cards-restore-list').innerHTML=hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join('');
- $('cards-permanent-delete').disabled=!hidden.some(e=>!e.source_name);
+ $('cards-restore-empty').hidden=hidden.length>0;
+ $('cards-restore-list').hidden=hidden.length===0;
+ $('cards-restore').disabled=hidden.length===0;
+ $('cards-permanent-delete').disabled=hidden.length===0||!hidden.some(e=>!e.source_name);
 }
 function openForm(card=null){
  editing=card;
