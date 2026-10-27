@@ -1,0 +1,66 @@
+{
+  "description": "Images WebP restantes après ajout de 13 unités, conservées hors du catalogue des cartes d'armée tant que leur nature ou version n'est pas confirmée.",
+  "glyphes_ou_equipements": [
+    {
+      "file": "a-i-l-e-s.webp",
+      "name": "A.I.L.E.S.",
+      "status": "glyphe confirmé dans l'inventaire préparatoire"
+    },
+    {
+      "file": "g-r-i-f-f-e-s.webp",
+      "name": "G.R.I.F.F.E.S.",
+      "status": "glyphe ou équipement à confirmer"
+    },
+    {
+      "file": "s-o-u-f-f-l-e.webp",
+      "name": "S.O.U.F.F.L.E.",
+      "status": "glyphe ou équipement à confirmer"
+    },
+    {
+      "file": "lame-maudite.webp",
+      "name": "Lame maudite",
+      "status": "glyphe ou équipement à confirmer"
+    }
+  ],
+  "terrain_ou_objets": [
+    {
+      "file": "porte-de-la-forteresse.webp",
+      "name": "Porte de la forteresse",
+      "status": "objet destructible, pas une unité d'armée"
+    }
+  ],
+  "visuels_alternatifs": [
+    {
+      "file": "cultistes-nhah-scirh-2.webp",
+      "name": "Cultistes Nhah Scirh, illustration 2",
+      "existing": "Nhah Scirh Cultists (C3V)",
+      "status": "version à comparer avant éventuel ajout V2"
+    },
+    {
+      "file": "demon-crane-2.webp",
+      "name": "Démon Crâne 2",
+      "existing": "Skull Demon (C3V)",
+      "status": "illustration ou version à comparer"
+    },
+    {
+      "file": "demon-crane-3.webp",
+      "name": "Démon Crâne 3",
+      "existing": "Skull Demon (C3V)",
+      "status": "illustration ou version à comparer"
+    },
+    {
+      "file": "demon-crane-4.webp",
+      "name": "Démon Crâne 4",
+      "existing": "Skull Demon (C3V)",
+      "status": "illustration ou version à comparer"
+    }
+  ],
+  "carte_a_identifier": [
+    {
+      "file": "maitre-ecorcheur-desprit.webp",
+      "name": "Maître Écorcheur d'esprit",
+      "status": "nécessite vérification des caractéristiques et de la différence éventuelle avec Mind Flayer Mastermind"
+    }
+  ],
+  "regle": "Ne pas créer de doublon dans le catalogue; conserver les images HD et miniatures intactes et disponibles pour intégration ultérieure."
+}
