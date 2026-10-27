@@ -9,6 +9,13 @@
 
   <link rel="stylesheet" href="css/style.css?v=20261020-forumreadability1">
   <link rel="stylesheet" href="css/forum-background.css?v=20261016-mobilelogo1">
+<style>
+/* Actions de message : MP et Citer, sans modifier la disposition des publications. */
+.forum-post-head-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.forum-mp-action{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;white-space:nowrap}
+.forum-mp-action:hover{text-decoration:none}
+@media(max-width:600px){.forum-post-head-actions{gap:6px}.forum-mp-action{min-width:0}}
+</style>
 </head>
 
 <body>
@@ -692,7 +699,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
           Par <strong>${esc(post.author || "Membre")}</strong>
           ${post.created_at ? " — " + esc(formatDate(post.created_at)) : ""}
         </div>
-        <button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button>
+        <div class="forum-post-head-actions">${viewerId && post.user_id && viewerId !== post.user_id ? `<a class="btn forum-mp-action" href="messages.html?to=${encodeURIComponent(post.user_id)}" aria-label="Envoyer un message privé à ${esc(post.author || "ce membre")}">MP</a>` : ""}<button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button></div>
       </div>
 
       <div class="forum-message-body">${renderForumMessage(post.body)}</div>\n      ${post.updated_at && new Date(post.updated_at).getTime() > new Date(post.created_at).getTime() + 2000 ? `<div class="forum-edited-date">Modifié le ${esc(formatDate(post.updated_at))}</div>` : ""}\n      ${viewerId && viewerId === post.user_id ? `<div class="forum-edit-actions"><button type="button" class="forum-edit-post" data-edit-post="${post.id}">Éditer</button></div>` : ""}
