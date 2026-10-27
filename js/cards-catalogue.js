@@ -101,6 +101,12 @@ function openForm(card=null){
  $('cards-en').value=card?.en||'';
  $('cards-fr-url-row').hidden=true;
  $('cards-en-url-row').hidden=false;
+ $('cards-fr-remove-row').hidden=!card;
+ $('cards-en-remove-row').hidden=!card;
+ $('cards-remove-fr').checked=false;
+ $('cards-remove-en').checked=false;
+ $('cards-fr').disabled=false;$('cards-en').disabled=false;
+ $('cards-fr-file').disabled=false;$('cards-en-file').disabled=false;
  $('cards-place-after').hidden=!!card;
  $('cards-place-label').hidden=!!card;
  $('cards-delete').hidden=!card;
@@ -167,11 +173,15 @@ async function saveEdit(e){
    }
   }else{const same=all.filter(x=>x.general===general&&x.points===points);points_order=same.length?Math.max(...same.map(x=>Number(x.points_order)||0))+1:9999}
  }
- const row={name,general,points,points_order,fr,en,is_hidden:false};
+ const removeFr=!!editing&&$('cards-remove-fr').checked,removeEn=!!editing&&$('cards-remove-en').checked;
+ if(removeFr&&$('cards-fr-file').files[0]||removeEn&&$('cards-en-file').files[0]){inform('Décoche le retrait du lien avant de choisir une nouvelle image pour cette langue.',true);return}
+ const row={name,general,points,points_order,fr:removeFr?null:fr,en:removeEn?null:en,is_hidden:false};
  if(editing?._source)row.source_name=editing._source;
  else if(!editing)row.source_name=null;
  $('cards-save').disabled=true;inform('Enregistrement…');
  try{
+  if(removeFr)row.fr=null;
+  if(removeEn)row.en=null;
   if($('cards-fr-file').files[0])row.fr=await uploadCardFile($('cards-fr-file').files[0]);
   if($('cards-en-file').files[0])row.en=await uploadCardFile($('cards-en-file').files[0]);
   const query=editing?db.from('army_card_edits')[editing._editId?'update':'insert'](row):db.from('army_card_edits').insert(row);
@@ -354,6 +364,9 @@ $('cards-hidden-open').addEventListener('click',()=>{
  $('cards-hidden-open').setAttribute('aria-expanded',String(show));
  if(show)tools.scrollIntoView({behavior:'smooth',block:'nearest'});
 });
+for(const [checkbox,urlId,fileId] of [['cards-remove-fr','cards-fr','cards-fr-file'],['cards-remove-en','cards-en','cards-en-file']]){
+ $(checkbox).addEventListener('change',()=>{if($(checkbox).checked){$(urlId).value='';$(fileId).value='';}$(urlId).disabled=$(checkbox).checked;$(fileId).disabled=$(checkbox).checked;});
+}
 $('cards-cancel').addEventListener('click',closeForm);
 form.addEventListener('submit',saveEdit);
 $('cards-delete').addEventListener('click',deleteEdit);
