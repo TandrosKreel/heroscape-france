@@ -105,6 +105,8 @@ function openForm(card=null){
  $('cards-en-remove-row').hidden=!card;
  $('cards-remove-fr').checked=false;
  $('cards-remove-en').checked=false;
+ $('cards-remove-fr').disabled=!card;
+ $('cards-remove-en').disabled=!card;
  $('cards-fr').disabled=false;$('cards-en').disabled=false;
  $('cards-fr-file').disabled=false;$('cards-en-file').disabled=false;
  $('cards-place-after').hidden=!!card;
