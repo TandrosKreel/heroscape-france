@@ -90,6 +90,7 @@ function openForm(card=null){
  fillPlacement();
  updateRestore();
  inform('');
+ $('cards-fr-file').value='';$('cards-en-file').value='';$('cards-history').hidden=!card;if(card)void showCardHistory(card);
  panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function closeForm(){panel.hidden=true;editing=null;inform('')}
@@ -99,7 +100,31 @@ async function loadEdits(){
  if(error){console.warn('Cartes : modifications indisponibles',error);return}
  edits=data||[];
 }
-async function saveEdit(e){
+async function uploadCardFile(file){
+ if(!file)return null;
+ if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>15*1024*1024)throw Error('Image invalide ou supérieure à 15 Mo.');
+ const {data:{user},error:userError}=await db.auth.getUser();if(userError||!user)throw Error('Connexion requise.');
+ const bitmap=await createImageBitmap(file);
+ const canvas=document.createElement('canvas'),scale=Math.min(1,2400/Math.max(bitmap.width,bitmap.height));
+ canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+ canvas.getContext('2d').drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close();
+ const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/webp',0.88));
+ if(!blob||blob.size>5*1024*1024)throw Error('Image trop volumineuse après conversion.');
+ const path=user.id+'/'+crypto.randomUUID()+'.webp';
+ const {error}=await db.storage.from('army-cards').upload(path,blob,{contentType:'image/webp',upsert:false});
+ if(error)throw error;
+ return db.storage.from('army-cards').getPublicUrl(path).data.publicUrl;
+}
+async function showCardHistory(card){
+ const el=$('cards-history');el.hidden=false;el.textContent='Chargement de l’historique…';
+ if(!card?._editId){el.textContent='Aucune modification enregistrée pour cette carte.';return}
+ const {data,error}=await db.from('army_card_history').select('action,changed_at,actor_id,old_data,new_data').eq('card_id',card._editId).order('changed_at',{ascending:false}).limit(30);
+ if(error){el.textContent='Historique indisponible : '+error.message;return}
+ const ids=[...new Set((data||[]).map(x=>x.actor_id).filter(Boolean))];
+ let names={};if(ids.length){const result=await db.from('profiles').select('id,username').in('id',ids);if(!result.error)names=Object.fromEntries((result.data||[]).map(x=>[x.id,x.username]));}
+ el.innerHTML='<h4>Historique des modifications</h4>'+(data||[]).map(x=>'<p>'+esc(new Date(x.changed_at).toLocaleString('fr-FR'))+' — '+esc(names[x.actor_id]||'Compte inconnu')+' — '+esc(({INSERT:'Ajout',UPDATE:'Modification',DELETE:'Suppression'})[x.action]||x.action)+'</p>').join('')||'Aucun historique.';
+}
+\nasync function saveEdit(e){
  e.preventDefault();
  if(!admin||!db)return;
  const name=valid($('cards-name').value),general=valid($('cards-general').value),points=Number($('cards-points').value),fr=valid($('cards-fr').value)||null,en=valid($('cards-en').value)||null;
