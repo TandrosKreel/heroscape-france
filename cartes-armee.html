@@ -41,6 +41,14 @@
     .cards-admin-grid label{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:13px}
     .cards-admin-grid input,.cards-admin-grid select{width:100%;min-width:0;box-sizing:border-box;padding:10px;border:1px solid #667688;border-radius:7px;background:#0d1721;color:#f5f6f7}
     .cards-admin-wide{grid-column:1/-1}
+    /* Afficher les contrôles d'édition même si un ancien script a conservé l'attribut hidden. */
+    #cards-admin-panel:not([hidden]) #cards-fr-url-row,
+    #cards-admin-panel:not([hidden]) #cards-en-url-row,
+    #cards-admin-panel:not([hidden]) #cards-fr-remove-row,
+    #cards-admin-panel:not([hidden]) #cards-en-remove-row{display:flex!important;visibility:visible!important}
+    #cards-admin-panel:not([hidden]) #cards-fr-url-row,
+    #cards-admin-panel:not([hidden]) #cards-en-url-row{flex-direction:column}
+
     .cards-admin-grid label.cards-remove-link{display:flex;flex-direction:row;align-items:center;gap:12px;padding:12px 14px;border:1px solid #bd9853;border-radius:8px;background:#223448;color:#f5d58c;font-size:15px;font-weight:700;cursor:pointer}
     .cards-admin-grid label.cards-remove-link input[type=checkbox]{appearance:auto;width:20px;height:20px;min-width:20px;margin:0;accent-color:#d6ac4f;cursor:pointer}
     .cards-admin-grid label.cards-remove-link:has(input:checked){border-color:#e8b45b;background:#423324}
@@ -119,6 +127,6 @@
   </section>
 </main>
 <footer><div class="container">Heroscape France — cartes armées françaises et anglaises.</div></footer>
-<script src="js/army-cards-data.js?v=20261020-sync1" defer></script><script src="js/cards-catalogue.js?v=20261027-edit-fields-visible-5" defer></script>
+<script src="js/army-cards-data.js?v=20261020-sync1" defer></script><script src="js/cards-catalogue.js?v=20261027-visible-controls-6" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
 </html>
