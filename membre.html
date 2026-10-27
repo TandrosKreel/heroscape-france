@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Profil d'un membre — Heroscape France</title>
+<link rel="stylesheet" href="css/style.css?v=20261020-chatmobile2"><link rel="stylesheet" href="css/forum-background.css?v=20261016-mobilelogo1">
+<style>
+.member-public-card{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.member-public-avatar{width:115px;height:115px;border-radius:50%;border:2px solid var(--gold);object-fit:cover}
+.member-public-card h2{margin:0;color:var(--gold2)}
+.member-public-signature{white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted)}
+.member-public-post{display:block;margin:10px 0;padding:15px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);text-decoration:none}
+.member-public-post:hover{border-color:var(--gold);text-decoration:none}
+.member-public-post strong{color:var(--gold2)}
+.member-public-post p{margin:7px 0 0;overflow-wrap:anywhere;color:var(--muted)}
+.member-public-nav{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}
+.member-public-nav button{min-width:0}
+@media(max-width:700px){main.container{width:100%;min-width:0;max-width:100%;padding:0 13px}.member-public-card{gap:12px}.member-public-avatar{width:82px;height:82px}}
+</style></head><body>
+<header><div class="container"><div class="brand home-brand"><img class="heroscape-main-logo" src="Logo%20Heroscape%20_%20bataille%20%C3%A9ternelle.png" alt="Heroscape"></div><nav><a href="index.html">Forum</a><a href="cartes-armee.html">Cartes Armées</a><a href="regles.html">Règles</a><a href="liens-utiles.html">Liens utiles</a><a href="membres.html">Membres</a><a href="pari-heroscape.html">Le Pari Heroscape</a></nav></div></header>
+<main class="container"><section class="hero"><a href="javascript:history.back()" id="member-back">← Retour</a><h2>Profil d'un membre</h2></section>
+<section class="card" id="member-public-profile"><p>Chargement du profil…</p></section>
+<section id="member-public-posts" hidden><h2 id="member-public-posts-heading"></h2><p id="member-public-posts-count"></p><div id="member-public-post-list"></div><nav class="member-public-nav" id="member-public-pagination" aria-label="Pagination des messages"></nav></section></main>
+<footer><div class="container">Heroscape France — communauté francophone Heroscape.</div></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script>
+<script>
+(async()=>{
+ const db=window.supabaseClient;
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const params=new URLSearchParams(location.search),id=params.get('id');
+ const box=document.getElementById('member-public-profile'),section=document.getElementById('member-public-posts');
+ const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+ if(!id||!uuid.test(id)){box.textContent='Profil introuvable.';return}
+ const {data:{user}}=await db.auth.getUser();
+ if(!user){box.innerHTML='<p>Connecte-toi pour consulter les profils et les messages des membres.</p><a class="btn" href="connexion.html">Connexion</a>';return}
+ const {data:profile,error}=await db.from('profiles').select('id,username,avatar_url,signature').eq('id',id).maybeSingle();
+ if(error||!profile){box.textContent='Ce profil n’est plus disponible.';return}
+ const name=profile.username||'Membre', avatar=profile.avatar_url?'<img class="member-public-avatar" src="'+esc(profile.avatar_url)+'" alt="Avatar de '+esc(name)+'">':'<div class="member-public-avatar post-avatar-default" aria-hidden="true">'+esc(name.charAt(0).toUpperCase())+'</div>';
+ document.title='Profil de '+name+' — Heroscape France';
+ box.innerHTML='<div class="member-public-card">'+avatar+'<div><h2>'+esc(name)+'</h2><p class="member-public-signature">'+(profile.signature?esc(profile.signature):'Aucune signature renseignée.')+'</p><p><a class="btn" href="messages.html?to='+encodeURIComponent(id)+'">Envoyer un MP</a> <a class="btn" href="#member-public-posts" id="member-public-show">Voir tous les messages de '+esc(name)+'</a></p></div></div>';
+ const heading=document.getElementById('member-public-posts-heading'),list=document.getElementById('member-public-post-list'),counter=document.getElementById('member-public-posts-count'),nav=document.getElementById('member-public-pagination');
+ heading.textContent='Messages de '+name;
+ let page=1;
+ const fmt=date=>new Date(date).toLocaleString('fr-FR',{dateStyle:'medium',timeStyle:'short'});
+ const excerpt=text=>String(text||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,240);
+ async function loadPage(){
+  list.textContent='Chargement des messages…';
+  const from=(page-1)*20;
+  const [countResult,result]=await Promise.all([
+   db.from('posts').select('id',{count:'exact',head:true}).eq('user_id',id),
+   db.from('posts').select('id,thread_id,content,created_at,threads(title)').eq('user_id',id).order('created_at',{ascending:false}).order('id',{ascending:false}).range(from,from+19)
+  ]);
+  if(countResult.error||result.error){list.textContent='Impossible de charger les messages.';return}
+  const total=countResult.count||0,maxPage=Math.max(1,Math.ceil(total/20));
+  if(page>maxPage){page=maxPage;return loadPage()}
+  counter.textContent=total+' message'+(total>1?'s':'')+' publié'+(total>1?'s':'')+' — 20 par page maximum';
+  const rows=result.data||[];
+  const links=await Promise.all(rows.map(async post=>{
+   const [earlier,sameTime]=await Promise.all([
+    db.from('posts').select('id',{count:'exact',head:true}).eq('thread_id',post.thread_id).lt('created_at',post.created_at),
+    db.from('posts').select('id',{count:'exact',head:true}).eq('thread_id',post.thread_id).eq('created_at',post.created_at).lt('id',post.id)
+   ]);
+   if(earlier.error||sameTime.error)return null;
+   const topicPage=Math.floor(((earlier.count||0)+(sameTime.count||0))/25)+1;
+   return 'sujet.html?id='+encodeURIComponent(post.thread_id)+'&page='+topicPage+'&post='+encodeURIComponent(post.id)+'#post-'+encodeURIComponent(post.id);
+  }));
+  list.innerHTML=rows.map((post,i)=>'<a class="member-public-post" href="'+esc(links[i]||'sujet.html?id='+encodeURIComponent(post.thread_id))+'"><strong>'+esc(post.threads?.title||'Sujet du forum')+'</strong><small> — '+esc(fmt(post.created_at))+'</small><p>'+esc(excerpt(post.content))+'</p><small>Voir ce message dans son sujet →</small></a>').join('')||'<p>Aucun message publié.</p>';
+  nav.innerHTML='<button class="btn" id="member-prev" '+(page===1?'disabled':'')+'>← Précédent</button><span>Page '+page+' / '+maxPage+'</span><button class="btn" id="member-next" '+(page>=maxPage?'disabled':'')+'>Suivant →</button>';
+  nav.querySelector('#member-prev').onclick=()=>{page--;void loadPage()};
+  nav.querySelector('#member-next').onclick=()=>{page++;void loadPage()};
+ }
+ document.getElementById('member-public-show').onclick=()=>{section.hidden=false;void loadPage()};
+ if(location.hash==='#member-public-posts'){section.hidden=false;void loadPage()}
+})();
+</script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body></html>
