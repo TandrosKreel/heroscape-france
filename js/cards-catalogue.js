@@ -124,7 +124,8 @@ async function showCardHistory(card){
  let names={};if(ids.length){const result=await db.from('profiles').select('id,username').in('id',ids);if(!result.error)names=Object.fromEntries((result.data||[]).map(x=>[x.id,x.username]));}
  el.innerHTML='<h4>Historique des modifications</h4>'+(data||[]).map(x=>'<p>'+esc(new Date(x.changed_at).toLocaleString('fr-FR'))+' — '+esc(names[x.actor_id]||'Compte inconnu')+' — '+esc(({INSERT:'Ajout',UPDATE:'Modification',DELETE:'Suppression'})[x.action]||x.action)+'</p>').join('')||'Aucun historique.';
 }
-\nasync function saveEdit(e){
+
+async function saveEdit(e){
  e.preventDefault();
  if(!admin||!db)return;
  const name=valid($('cards-name').value),general=valid($('cards-general').value),points=Number($('cards-points').value),fr=valid($('cards-fr').value)||null,en=valid($('cards-en').value)||null;
@@ -152,6 +153,8 @@ async function showCardHistory(card){
  else if(!editing)row.source_name=null;
  $('cards-save').disabled=true;inform('Enregistrement…');
  try{
+  if($('cards-fr-file').files[0])row.fr=await uploadCardFile($('cards-fr-file').files[0]);
+  if($('cards-en-file').files[0])row.en=await uploadCardFile($('cards-en-file').files[0]);
   const query=editing?db.from('army_card_edits')[editing._editId?'update':'insert'](row):db.from('army_card_edits').insert(row);
   const res=editing&&editing._editId?await query.eq('id',editing._editId):await query;
   if(res.error)throw res.error;
