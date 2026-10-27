@@ -236,7 +236,7 @@ if(db){
 }
 
 
-let vfMigrationCreator=false,vfMigrationBusy=false;
+let vfMigrationCreator=false,vfMigrationBusy=false,vfMigrationStop=false;
 const vfMigrationFailed=new Set();
 const vfMigrationLog=[];
 const vfMigrationPrefix='https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/';
@@ -251,14 +251,17 @@ function vfMigrationStatus(message){
  const el=$('cards-vf-migration-status');
  if(el)el.textContent=message;
 }
-async function vfMigrationBatch(){
+async function vfMigrationBatch(automatic=false){
  if(!vfMigrationCreator||vfMigrationBusy||!db)return;
  vfMigrationBusy=true;const button=$('cards-vf-migration-run');button.disabled=true;
  let completed=0,failed=0;
  try{
-  const candidates=vfMigrationCandidates().slice(0,10);
+  const candidates=vfMigrationCandidates().slice(0,automatic?Infinity:10);
+  const progress=$('cards-vf-migration-progress');
+  progress.hidden=!automatic;progress.max=Math.max(1,candidates.length);progress.value=0;
   if(!candidates.length){vfMigrationStatus('Toutes les images VF référencées sont migrées ou déjà hébergées dans Supabase. Les références sans VF restent à traiter séparément.');return}
   for(const card of candidates){
+   if(vfMigrationStop)break;
    const previous=edits.find(e=>e.source_name===card.name);
    const source=previous?previous.fr:card.fr;
    vfMigrationStatus('Migration '+(completed+failed+1)+'/'+candidates.length+' : '+card.name);
@@ -282,11 +285,19 @@ async function vfMigrationBatch(){
    }catch(err){
     failed++;vfMigrationFailed.add(card.name);vfMigrationLog.push({name:card.name,status:'échec',previous:source,error:String(err.message||err)});
    }
+   progress.value=completed+failed;
   }
   render();notifyCatalogueChange();
-  vfMigrationStatus('Lot terminé : '+completed+' migrées, '+failed+' échecs. '+vfMigrationCandidates().length+' VF restantes. Exporter le rapport pour les erreurs. Aucun original supprimé.');
- }finally{vfMigrationBusy=false;button.disabled=false}
+  vfMigrationStatus((vfMigrationStop?'Traitement arrêté. ':'Lot terminé. ')+completed+' migrées, '+failed+' échecs. '+vfMigrationCandidates().length+' VF restantes (hors échecs). Aucun original supprimé.');
+ }finally{vfMigrationBusy=false;button.disabled=false;$('cards-vf-migration-auto').disabled=false;$('cards-vf-migration-stop').hidden=true;vfMigrationStop=false;}
 }
+$('cards-vf-migration-auto').addEventListener('click',()=>{
+ if(vfMigrationBusy||!vfMigrationCreator)return;
+ if(!confirm('Migrer automatiquement toutes les VF restantes ? Les originaux seront conservés et chaque image vérifiée.'))return;
+ vfMigrationStop=false;$('cards-vf-migration-auto').disabled=true;$('cards-vf-migration-stop').hidden=false;
+ void vfMigrationBatch(true).catch(err=>vfMigrationStatus('Migration interrompue : '+err.message));
+});
+$('cards-vf-migration-stop').addEventListener('click',()=>{vfMigrationStop=true;vfMigrationStatus('Arrêt demandé : fin de la carte en cours…')});
 $('cards-vf-migration-run').addEventListener('click',()=>{void vfMigrationBatch().catch(err=>vfMigrationStatus('Migration interrompue : '+err.message))});
 $('cards-vf-migration-report').addEventListener('click',()=>{
  const blob=new Blob([JSON.stringify(vfMigrationLog,null,2)],{type:'application/json'});
