@@ -19,7 +19,7 @@
     "name": "Water Elemental",
     "general": "Aquilla",
     "points_order": 4,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2774_Waterelementalcard.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/elementaldeau.webp",
     "points": 30
   },
@@ -115,7 +115,7 @@
     "name": "Axegrinders of Burning Forge",
     "general": "Aquilla",
     "points_order": 18,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2617_axegrinders_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/axegrinders.webp",
     "points": 70
   },
@@ -123,7 +123,7 @@
     "name": "Mohican River Tribe",
     "general": "Aquilla",
     "points_order": 19,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1974_mohican_river_tribe_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/tribu-mohican-des-rivieres.webp",
     "points": 70
   },
@@ -219,7 +219,7 @@
     "name": "Quasatch Hunters",
     "general": "Aquilla",
     "points_order": 36,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2190_hs_sew10_quasatchhunter_4.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/chasseurs-quasatch.webp",
     "points": 100
   },
@@ -235,7 +235,7 @@
     "name": "Wyvern",
     "general": "Aquilla",
     "points_order": 38,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2810_Wyverncard.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/wyverne.webp",
     "points": 100
   },
@@ -267,7 +267,7 @@
     "name": "Migol Ironwill",
     "general": "Aquilla",
     "points_order": 42,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1926_migol_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/migol-ironwill.webp",
     "points": 110
   },
@@ -275,7 +275,7 @@
     "name": "Rhogar Dragonspine",
     "general": "Aquilla",
     "points_order": 43,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2274_rhogar_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/rhogar-dragonspine.webp",
     "points": 110
   },
@@ -299,7 +299,7 @@
     "name": "Mogrimm Forgehammer",
     "general": "Aquilla",
     "points_order": 47,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1968_morgrimm_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/morgrimm-forgehammer.webp",
     "points": 120
   },
@@ -331,7 +331,7 @@
     "name": "Sujoah",
     "general": "Aquilla",
     "points_order": 52,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2533_lew3_sujoah.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sujoah.webp",
     "points": 185
   },
@@ -379,7 +379,7 @@
     "name": "Red Wyrmling",
     "general": "Einar",
     "points_order": 6,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2250_red_wyrmling_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/wyrmling-rouge.webp",
     "points": 30
   },
@@ -435,7 +435,7 @@
     "name": "Roman Legionnaires",
     "general": "Einar",
     "points_order": 17,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2299_rmlegion.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/legionnaires-romains.webp",
     "points": 50
   },
@@ -451,7 +451,7 @@
     "name": "Roman Archers",
     "general": "Einar",
     "points_order": 19,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2293_rmarcher.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/archers-romains.webp",
     "points": 55
   },
@@ -491,7 +491,7 @@
     "name": "Tagawa Samurai Archers",
     "general": "Einar",
     "points_order": 26,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2581_tagaarch.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/samourais-archers-tagawa.webp",
     "points": 65
   },
@@ -563,7 +563,7 @@
     "name": "Retiarius",
     "general": "Einar",
     "points_order": 40,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2256_retiariu.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/retiarius.webp",
     "points": 90
   },
@@ -619,7 +619,7 @@
     "name": "Ninjas of the Northern Wind",
     "general": "Einar",
     "points_order": 49,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2064_ninja.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ninjas-du-vent-nordique.webp",
     "points": 110
   },
@@ -667,7 +667,7 @@
     "name": "Tagawa Samurai",
     "general": "Einar",
     "points_order": 56,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2575_tagawa.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/samourais-tagawa.webp",
     "points": 120
   },
@@ -675,7 +675,7 @@
     "name": "Tandros Kreel",
     "general": "Einar",
     "points_order": 58,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2593_tandros_787617_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/tandros-kreel.webp",
     "points": 120
   },
@@ -699,7 +699,7 @@
     "name": "Einar Imperium",
     "general": "Einar",
     "points_order": 61,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2623_imperium.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/imperium-deinar.webp",
     "points": 140
   },
@@ -739,7 +739,7 @@
     "name": "Spartacus",
     "general": "Einar",
     "points_order": 69,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2485_spartacu.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/spartacus.webp",
     "points": 200
   },
@@ -763,7 +763,7 @@
     "name": "White Wyrmling",
     "general": "Jandar",
     "points_order": 3,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2786_white_wyrmling_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/wyrmling-blanc.webp",
     "points": 30
   },
@@ -779,7 +779,7 @@
     "name": "Omnicron Repulsors",
     "general": "Jandar",
     "points_order": 7,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2118_omnicron_repulsors_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/repulseurs-omnicrons.webp",
     "points": 40
   },
@@ -803,7 +803,7 @@
     "name": "Tarn Viking Warriors",
     "general": "Jandar",
     "points_order": 11,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2605_tarn.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/guerriers-vikings-de-tarn.webp",
     "points": 50
   },
@@ -827,7 +827,7 @@
     "name": "Samuel Brown",
     "general": "Jandar",
     "points_order": 14,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2323_SamuelBrown_MasterSide.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/samuel-brown.webp",
     "points": 60
   },
@@ -835,7 +835,7 @@
     "name": "Zetacron",
     "general": "Jandar",
     "points_order": 15,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2840_Zetacron_Remastered_MasterSide.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/zetacron.webp",
     "points": 60
   },
@@ -939,7 +939,7 @@
     "name": "Raelin the Kyrie Warrior V1",
     "general": "Jandar",
     "points_order": 30,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2220_raelin.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/raelin-la-guerriere-kyrie-rotv.webp",
     "points": 80
   },
@@ -947,7 +947,7 @@
     "name": "Thorgrim the Viking Champion",
     "general": "Jandar",
     "points_order": 31,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2653_thorgrim.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/thorgrim-le-champion-viking.webp",
     "points": 80
   },
@@ -979,7 +979,7 @@
     "name": "Sir Denrick",
     "general": "Jandar",
     "points_order": 38,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2431_denrick.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sir-denrick.webp",
     "points": 100
   },
@@ -995,7 +995,7 @@
     "name": "Sir Gilbert",
     "general": "Jandar",
     "points_order": 41,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2443_SirGilbert_Remastered_MasterSide.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sir-gilbert.webp",
     "points": 105
   },
@@ -1019,7 +1019,7 @@
     "name": "Sentinels of Jandar",
     "general": "Jandar",
     "points_order": 46,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2359_sentinls.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sentinelles-de-jandar.webp",
     "points": 110
   },
@@ -1027,7 +1027,7 @@
     "name": "Sergent Drake Alexander V1",
     "general": "Jandar",
     "points_order": 47,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2377_sgtdrake.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sgt-drake-alexander-rotv.webp",
     "points": 110
   },
@@ -1067,7 +1067,7 @@
     "name": "Raelin the Kyrie Warrior V2",
     "general": "Jandar",
     "points_order": 53,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2226_raelinsotm.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/raelin-la-guerriere-kyrie-sotm.webp",
     "points": 120
   },
@@ -1099,7 +1099,7 @@
     "name": "Sergent Drake Alexander V2",
     "general": "Jandar",
     "points_order": 60,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2383_drakesotm.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sgt-drake-alexander-sotm.webp",
     "points": 170
   },
@@ -1179,7 +1179,7 @@
     "name": "Venoc Vipers",
     "general": "Ullar",
     "points_order": 7,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2725_venoc.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/viperes-venoc.webp",
     "points": 40
   },
@@ -1211,7 +1211,7 @@
     "name": "Warriors of Ashra",
     "general": "Ullar",
     "points_order": 12,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2768_ashra.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/guerrieres-dashra.webp",
     "points": 50
   },
@@ -1275,7 +1275,7 @@
     "name": "Saylind the Kyrie Warrior",
     "general": "Ullar",
     "points_order": 22,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2329_saylind.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/saylind-la-guerriere-kyrie.webp",
     "points": 80
   },
@@ -1283,7 +1283,7 @@
     "name": "Shaolin Monks",
     "general": "Ullar",
     "points_order": 23,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2395_shaolin.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/moines-shaolin.webp",
     "points": 80
   },
@@ -1371,7 +1371,7 @@
     "name": "Moriko",
     "general": "Ullar",
     "points_order": 41,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1992_sew8_moriko.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/moriko.webp",
     "points": 110
   },
@@ -1379,7 +1379,7 @@
     "name": "Protectors of Ullar",
     "general": "Ullar",
     "points_order": 42,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2184_protectors_of_ullar_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/protecteurs-dullar.webp",
     "points": 110
   },
@@ -1387,7 +1387,7 @@
     "name": "Sharwin Wildborn",
     "general": "Ullar",
     "points_order": 43,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2401_sharwin_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sharwin-wildborn.webp",
     "points": 110
   },
@@ -1395,7 +1395,7 @@
     "name": "Venoc Warlord",
     "general": "Ullar",
     "points_order": 46,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2731_venocwld.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/seigneur-de-guerre-venoc.webp",
     "points": 120
   },
@@ -1443,7 +1443,7 @@
     "name": "Sonlen",
     "general": "Ullar",
     "points_order": 53,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2473_sonlen.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sonlen.webp",
     "points": 160
   },
@@ -1515,7 +1515,7 @@
     "name": "Swog Rider",
     "general": "Utgar",
     "points_order": 7,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2539_swog.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/chevaucheur-de-swog.webp",
     "points": 25
   },
@@ -1659,7 +1659,7 @@
     "name": "Nerak the Glacian Swog Rider",
     "general": "Utgar",
     "points_order": 26,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2052_nerak_advanced_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/nerak-le-chevaucheur-de-swog-polaire.webp",
     "points": 50
   },
@@ -1723,7 +1723,7 @@
     "name": "Zombies of Morindan",
     "general": "Utgar",
     "points_order": 35,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2852_zombies.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/zombies-de-morindan.webp",
     "points": 60
   },
@@ -3307,7 +3307,7 @@
     "name": "Sonlen (2.0)",
     "general": "Ullar",
     "points": 170,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2473_sonlen.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sonlen-aoa.webp",
     "points_order": 54
   },
