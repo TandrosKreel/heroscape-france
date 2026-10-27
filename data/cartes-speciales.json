@@ -1,0 +1,33 @@
+{
+  "glyphes": [
+    {
+      "name": "A.I.L.E.S.",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/a-i-l-e-s.webp",
+      "type": "Glyphe"
+    },
+    {
+      "name": "G.R.I.F.F.E.S.",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/g-r-i-f-f-e-s.webp",
+      "type": "Glyphe / équipement à confirmer"
+    },
+    {
+      "name": "Lame maudite",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/lame-maudite.webp",
+      "type": "Glyphe / équipement à confirmer"
+    },
+    {
+      "name": "S.O.U.F.F.L.E.",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/s-o-u-f-f-l-e.webp",
+      "type": "Glyphe / équipement à confirmer"
+    }
+  ],
+  "sans_general": [
+    {
+      "name": "Porte de la forteresse",
+      "general": "Sans Général",
+      "points": null,
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/porte-de-la-forteresse.webp",
+      "type": "Objet de terrain"
+    }
+  ]
+}
