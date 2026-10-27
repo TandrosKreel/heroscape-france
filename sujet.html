@@ -18,6 +18,8 @@
 .forum-author-profile{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--gold2);text-decoration:none;max-width:100%}
 .forum-author-profile:hover{text-decoration:underline}
 @media(max-width:600px){.forum-author-profile{flex-direction:row;gap:10px}}
+.post-author .forum-mp-action{display:inline-flex;align-items:center;justify-content:center;align-self:center;width:auto;min-width:0;min-height:0;padding:2px 9px;font-size:11px;line-height:1.4;font-weight:600;border-radius:6px;margin-top:5px}
+@media(max-width:600px){.post-author .forum-mp-action{font-size:11px;padding:2px 8px}}
 </style>
 </head>
 
@@ -686,6 +688,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
       <div class="post-author">
         ${post.user_id ? `<a class="forum-author-profile" href="membre.html?id=${encodeURIComponent(post.user_id)}" title="Voir le profil de ${esc(post.author || "ce membre")}">${avatar}<strong>${esc(post.author || "Membre")}</strong></a>` : `${avatar}<strong>${esc(post.author || "Membre")}</strong>`}
         <span class="post-message-count">${messageCount} message${messageCount > 1 ? "s" : ""}</span>
+        ${viewerId && post.user_id && viewerId !== post.user_id ? `<a class="btn forum-mp-action" href="messages.html?to=${encodeURIComponent(post.user_id)}" aria-label="Envoyer un message privé à ${esc(post.author || "ce membre")}">MP</a>` : ""}
       </div>
 
       <div class="post-content">
@@ -701,7 +704,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
           Par <strong>${esc(post.author || "Membre")}</strong>
           ${post.created_at ? " — " + esc(formatDate(post.created_at)) : ""}
         </div>
-        <div class="forum-post-head-actions">${viewerId && post.user_id && viewerId !== post.user_id ? `<a class="btn forum-mp-action" href="messages.html?to=${encodeURIComponent(post.user_id)}" aria-label="Envoyer un message privé à ${esc(post.author || "ce membre")}">MP</a>` : ""}<button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button></div>
+        <div class="forum-post-head-actions"><button class="btn forum-quote-action" type="button" data-quote-post="${post.id}">Citer</button></div>
       </div>
 
       <div class="forum-message-body">${renderForumMessage(post.body)}</div>\n      ${post.updated_at && new Date(post.updated_at).getTime() > new Date(post.created_at).getTime() + 2000 ? `<div class="forum-edited-date">Modifié le ${esc(formatDate(post.updated_at))}</div>` : ""}\n      ${viewerId && viewerId === post.user_id ? `<div class="forum-edit-actions"><button type="button" class="forum-edit-post" data-edit-post="${post.id}">Éditer</button></div>` : ""}
