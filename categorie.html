@@ -369,11 +369,9 @@ async function render() {
   const arr = q ? allMatching.slice((selectedPage - 1) * pageSize, selectedPage * pageSize) : result.topics;
   const pagination = totalCategoryPages > 1
     ? '<nav class="pagination" aria-label="Pages de la catégorie">' +
-      Array.from({ length: totalCategoryPages }, (_, i) => i + 1).map(n =>
-        '<a class="' + (n === selectedPage ? 'active' : '') +
-        '" href="categorie.html?cat=' + encodeURIComponent(cat) + '&page=' + n +
-        '" data-category-page="' + n + '">' + n + '</a>'
-      ).join("") + '</nav>'
+      window.heroscapePagination.links(totalCategoryPages, selectedPage,
+        n => 'categorie.html?cat=' + encodeURIComponent(cat) + '&page=' + n) +
+      '</nav>'
     : "";
 
 
@@ -411,15 +409,9 @@ async function render() {
     const totalPages = Math.max(1, Math.ceil((postCounts[topicId] || 1) / 25));
     if (totalPages <= 1) return "";
 
-    const pages = totalPages <= 5
-      ? Array.from({ length: totalPages }, (_, i) => i + 1)
-      : [1, 2, 3, totalPages - 1, totalPages];
-
     return '<span class="topic-page-links" aria-label="Pages du sujet"><span class="topic-pages-label">Pages</span>' +
-      pages.map(pageNumber =>
-        '<a href="sujet.html?id=' + encodeURIComponent(topicId) + '&page=' + pageNumber +
-        '" title="Aller à la page ' + pageNumber + '">' + pageNumber + '</a>'
-      ).join("") +
+      window.heroscapePagination.links(totalPages, 0,
+        n => 'sujet.html?id=' + encodeURIComponent(topicId) + '&page=' + n) +
       '</span>';
   }
 
@@ -616,5 +608,6 @@ renderMember();
 
 </script>
 
-<script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
+<script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script><script src="js/forum-pagination.js?v=20261027-pagination1"></script>
+</body>
 </html>
