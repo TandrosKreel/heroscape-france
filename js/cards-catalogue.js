@@ -82,11 +82,11 @@ function updateRestore(){
  const hidden=edits.filter(e=>e.is_hidden);
  const tools=$('cards-restore-tools');
  $('cards-hidden-open').textContent='Cartes masquées et suppression définitive ('+hidden.length+')';
- if(!hidden.length){tools.hidden=true;$('cards-hidden-open').setAttribute('aria-expanded','false');}
+ if(!hidden.length){$('cards-hidden-open').setAttribute('aria-expanded',String(!tools.hidden));}
  updateManageList();
- $('cards-restore-list').innerHTML=hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join('');
+ $('cards-restore-list').innerHTML=hidden.length?hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join(''):'<option value="">Aucune carte masquée</option>';
  $('cards-restore-empty').hidden=hidden.length>0;
- $('cards-restore-list').hidden=hidden.length===0;
+ $('cards-restore-list').disabled=hidden.length===0;
  $('cards-restore').disabled=hidden.length===0;
  $('cards-permanent-delete').disabled=hidden.length===0||!hidden.some(e=>!e.source_name);
 }
