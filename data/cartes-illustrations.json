@@ -1,0 +1,36 @@
+{
+  "Skull Demon (C3V)": [
+    {
+      "label": "Illustration 1",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/demon-crane-1.webp",
+      "miniature": "https://tandroskreel.github.io/heroscape-france/assets/cartes/miniatures/demon-crane-1.webp"
+    },
+    {
+      "label": "Illustration 2",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/demon-crane-2.webp",
+      "miniature": "https://tandroskreel.github.io/heroscape-france/assets/cartes/miniatures/demon-crane-2.webp"
+    },
+    {
+      "label": "Illustration 3",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/demon-crane-3.webp",
+      "miniature": "https://tandroskreel.github.io/heroscape-france/assets/cartes/miniatures/demon-crane-3.webp"
+    },
+    {
+      "label": "Illustration 4",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/demon-crane-4.webp",
+      "miniature": "https://tandroskreel.github.io/heroscape-france/assets/cartes/miniatures/demon-crane-4.webp"
+    }
+  ],
+  "Nhah Scirh Cultists (C3V)": [
+    {
+      "label": "Illustration 1",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/cultistes-nhah-scirh.webp",
+      "miniature": "https://tandroskreel.github.io/heroscape-france/assets/cartes/miniatures/cultistes-nhah-scirh.webp"
+    },
+    {
+      "label": "Illustration 2",
+      "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/cultistes-nhah-scirh-2.webp",
+      "miniature": "https://tandroskreel.github.io/heroscape-france/assets/cartes/miniatures/cultistes-nhah-scirh-2.webp"
+    }
+  ]
+}
