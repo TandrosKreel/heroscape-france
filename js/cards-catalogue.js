@@ -99,7 +99,7 @@ function openForm(card=null){
  $('cards-points').value=card?.points??'';
  $('cards-fr').value=card?.fr||'';
  $('cards-en').value=card?.en||'';
- $('cards-fr-url-row').hidden=true;
+ $('cards-fr-url-row').hidden=false;
  $('cards-en-url-row').hidden=false;
  $('cards-fr-remove-row').hidden=!card;
  $('cards-en-remove-row').hidden=!card;
@@ -185,9 +185,11 @@ async function saveEdit(e){
   if($('cards-fr-file').files[0])row.fr=await uploadCardFile($('cards-fr-file').files[0]);
   if($('cards-en-file').files[0])row.en=await uploadCardFile($('cards-en-file').files[0]);
   const query=editing?db.from('army_card_edits')[editing._editId?'update':'insert'](row):db.from('army_card_edits').insert(row);
-  const res=editing&&editing._editId?await query.eq('id',editing._editId):await query;
+  const res=editing&&editing._editId?await query.eq('id',editing._editId).select('id,fr,en'):await query.select('id,fr,en');
   if(res.error)throw res.error;
-  await loadEdits();merge();render();closeForm();notifyCatalogueChange();
+  if(!res.data?.length)throw Error('Aucune modification enregistrée dans Supabase. Vérifie les autorisations du compte.');
+  await loadEdits();merge();render();updateRestore();closeForm();notifyCatalogueChange();
+  status.textContent+=' Modification enregistrée : '+name+'.';
  }catch(err){inform('Impossible d’enregistrer : '+(err.message||'erreur'),true)}
  finally{$('cards-save').disabled=false}
 }
