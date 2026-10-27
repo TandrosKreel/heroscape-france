@@ -11,7 +11,7 @@
     "name": "Kira Jax (C3V)",
     "general": "Aquilla",
     "points_order": 2,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_065_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/kira-jax.webp",
     "points": 30
   },
@@ -59,7 +59,7 @@
     "name": "Amberhive Protectors (C3V)",
     "general": "Aquilla",
     "points_order": 10,
-    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_007_2.webp",
+    "en": null,
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/protecteurs-de-la-ruche-d-ambre.webp",
     "points": 50
   },
@@ -107,7 +107,7 @@
     "name": "M-43 Resistance Fighters (C3V)",
     "general": "Aquilla",
     "points_order": 17,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_073_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/combattants-de-la-resistance-m-43.webp",
     "points": 65
   },
@@ -139,7 +139,7 @@
     "name": "Red Mantis Blade Dancers (C3V)",
     "general": "Aquilla",
     "points_order": 22,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_103_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/lames-dansantes-de-la-mante-rouge.webp",
     "points": 80
   },
@@ -147,7 +147,7 @@
     "name": "Shieldsmiths of Granite Keep (C3V)",
     "general": "Aquilla",
     "points_order": 23,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_107_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/shieldsmiths-du-donjon-de-granite.webp",
     "points": 80
   },
@@ -179,7 +179,7 @@
     "name": "Myrddin (C3V)",
     "general": "Aquilla",
     "points_order": 29,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_089_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/myrddin.webp",
     "points": 90
   },
@@ -227,7 +227,7 @@
     "name": "Varkaanan Quickblades (C3V)",
     "general": "Aquilla",
     "points_order": 37,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_131_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/varkaanan-quickblades.webp",
     "points": 100
   },
@@ -243,7 +243,7 @@
     "name": "Van Nessing (C3V)",
     "general": "Aquilla",
     "points_order": 39,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_127_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/van-nessing.webp",
     "points": 105
   },
@@ -251,7 +251,7 @@
     "name": "B-11 Resistance Corps (C3V)",
     "general": "Aquilla",
     "points_order": 40,
-    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_017_2.webp",
+    "en": null,
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/corps-de-la-resistance-b-11.webp",
     "points": 110
   },
@@ -259,7 +259,7 @@
     "name": "Manauvi (C3V)",
     "general": "Aquilla",
     "points_order": 41,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_077_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/manauvi.webp",
     "points": 110
   },
@@ -307,7 +307,7 @@
     "name": "Varkaanan Darkclaws (C3V)",
     "general": "Aquilla",
     "points_order": 48,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_129_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/varkaanan-darkclaws.webp",
     "points": 120
   },
@@ -347,7 +347,7 @@
     "name": "Mok (C3V)",
     "general": "Aquilla",
     "points_order": 55,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_085_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/mok.webp",
     "points": 220
   },
@@ -411,7 +411,7 @@
     "name": "Patrick Ferguson (C3V)",
     "general": "Einar",
     "points_order": 11,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_095_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/patrick-ferguson.webp",
     "points": 40
   },
@@ -483,7 +483,7 @@
     "name": "Honor Guard of the Blasted Lands (C3V)",
     "general": "Einar",
     "points_order": 25,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_061_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gardes-d-honneur-des-terres-devastees.webp",
     "points": 65
   },
@@ -515,7 +515,7 @@
     "name": "Martial la Hire (C3V)",
     "general": "Einar",
     "points_order": 30,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_079_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/martial-la-hire.webp",
     "points": 70
   },
@@ -523,7 +523,7 @@
     "name": "Cathar Spearmen (C3V)",
     "general": "Einar",
     "points_order": 33,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_033_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/lanciers-cathares.webp",
     "points": 75
   },
@@ -627,7 +627,7 @@
     "name": "Quorik Warwitch (C3V)",
     "general": "Einar",
     "points_order": 50,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_099_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sorciere-de-guerre-quorik.webp",
     "points": 110
   },
@@ -635,7 +635,7 @@
     "name": "Tomoe Gozen (C3V)",
     "general": "Einar",
     "points_order": 52,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_125_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/tomoe-gozen.webp",
     "points": 110
   },
@@ -715,7 +715,7 @@
     "name": "Ranjit Singh (C3V)",
     "general": "Einar",
     "points_order": 63,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_101_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ranjit-singh.webp",
     "points": 140
   },
@@ -771,7 +771,7 @@
     "name": "8th Infantry Pathfinder (C3V)",
     "general": "Jandar",
     "points_order": 4,
-    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_003_2.webp",
+    "en": null,
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/8-division-dinfanterie-pathfinder.webp",
     "points": 35
   },
@@ -787,7 +787,7 @@
     "name": "Clawfoot Interceptor (C3V)",
     "general": "Jandar",
     "points_order": 9,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_035_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/clawfoot-interceptor-vf.webp",
     "points": 50
   },
@@ -795,7 +795,7 @@
     "name": "Sir Orrick (C3V)",
     "general": "Jandar",
     "points_order": 10,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_109_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sir-orrick.webp",
     "points": 50
   },
@@ -811,7 +811,7 @@
     "name": "20th Maine Volunteers (C3V)",
     "general": "Jandar",
     "points_order": 12,
-    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_001_2.webp",
+    "en": null,
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/20-regiment-des-volontaires-du-maine.webp",
     "points": 60
   },
@@ -971,7 +971,7 @@
     "name": "Deltacron",
     "general": "Jandar",
     "points_order": 34,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_043_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/deltacron.webp",
     "points": 90
   },
@@ -1115,7 +1115,7 @@
     "name": "Omegacron (C3V)",
     "general": "Jandar",
     "points_order": 62,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_093_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/omegacron.webp",
     "points": 180
   },
@@ -1131,7 +1131,7 @@
     "name": "Heracles (C3V)",
     "general": "Jandar",
     "points_order": 64,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_059_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/heracles.webp",
     "points": 200
   },
@@ -1155,7 +1155,7 @@
     "name": "Eilan Sidhe (C3V)",
     "general": "Ullar",
     "points_order": 4,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_047_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/eilan-sidhe.webp",
     "points": 40
   },
@@ -1315,7 +1315,7 @@
     "name": "Haduc (C3V)",
     "general": "Ullar",
     "points_order": 30,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_057_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/haduc.webp",
     "points": 100
   },
@@ -1347,7 +1347,7 @@
     "name": "Wildwood Sentinel (C3V)",
     "general": "Ullar",
     "points_order": 36,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_137_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/wildwood-sentinel.webp",
     "points": 100
   },
@@ -1411,7 +1411,7 @@
     "name": "Locksley (C3V)",
     "general": "Ullar",
     "points_order": 48,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_071_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/locksley.webp",
     "points": 130
   },
@@ -1419,7 +1419,7 @@
     "name": "Master Lao Xin (C3V)",
     "general": "Ullar",
     "points_order": 49,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_081_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/maitre-lao-xin.webp",
     "points": 130
   },
@@ -1427,7 +1427,7 @@
     "name": "Wildwood Monarch (C3V)",
     "general": "Ullar",
     "points_order": 50,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_135_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/wildwood-monarque.webp",
     "points": 140
   },
@@ -1435,7 +1435,7 @@
     "name": "Azurite Warlord (C3V)",
     "general": "Ullar",
     "points_order": 51,
-    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_013_1.webp",
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_017_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/seigneur-de-guerre-azurite.webp",
     "points": 145
   },
@@ -1563,7 +1563,7 @@
     "name": "Koggo (C3V)",
     "general": "Utgar",
     "points_order": 13,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_067_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/koggo.webp",
     "points": 45
   },
@@ -1587,7 +1587,7 @@
     "name": "Beorn Boltcutter (C3V)",
     "general": "Utgar",
     "points_order": 17,
-    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_021_2.webp",
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_021_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/beorn-boltcutter.webp",
     "points": 50
   },
@@ -1683,7 +1683,7 @@
     "name": "Goblin Slashers (C3V)",
     "general": "Utgar",
     "points_order": 29,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_053_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gobelins-trancheurs.webp",
     "points": 55
   },
@@ -1731,7 +1731,7 @@
     "name": "Brute Gruts (C3V)",
     "general": "Utgar",
     "points_order": 36,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_027_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/brutes-grut.webp",
     "points": 65
   },
@@ -1755,7 +1755,7 @@
     "name": "Garrett Burns (C3V)",
     "general": "Utgar",
     "points_order": 40,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_051_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/garrett-burns.webp",
     "points": 70
   },
@@ -1979,7 +1979,7 @@
     "name": "Talingul (C3V)",
     "general": "Utgar",
     "points_order": 78,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_119_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/talingul.webp",
     "points": 100
   },
@@ -2003,7 +2003,7 @@
     "name": "Akumaken (C3V)",
     "general": "Utgar",
     "points_order": 81,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_007_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/akumaken.webp",
     "points": 110
   },
@@ -2099,7 +2099,7 @@
     "name": "Deathcommander Mark 3 (C3V)",
     "general": "Utgar",
     "points_order": 97,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_041_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/deathcommander-mark-3.webp",
     "points": 130
   },
@@ -2331,7 +2331,7 @@
     "name": "Preyblood Thrall (C3V)",
     "general": "Valkrill",
     "points_order": 4,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_097_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/thrall-preyblood.webp",
     "points": 30
   },
@@ -2363,7 +2363,7 @@
     "name": "Tomb Skeletons (C3V)",
     "general": "Valkrill",
     "points_order": 8,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_123_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/squelettes-des-tombes.webp",
     "points": 40
   },
@@ -2403,7 +2403,7 @@
     "name": "Bugbear Basher (C3V)",
     "general": "Valkrill",
     "points_order": 13,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_029_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gobelours-fonceur.webp",
     "points": 65
   },
@@ -2411,7 +2411,7 @@
     "name": "Durgeth Ravagers (C3V)",
     "general": "Valkrill",
     "points_order": 14,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_045_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ravageurs-durgeths.webp",
     "points": 65
   },
@@ -2427,7 +2427,7 @@
     "name": "Skull Demon (C3V)",
     "general": "Valkrill",
     "points_order": 16,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_111_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/demon-crane-1.webp",
     "points": 65
   },
@@ -2483,7 +2483,7 @@
     "name": "Emperor Andask (C3V)",
     "general": "Valkrill",
     "points_order": 24,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_049_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/empereur-andask.webp",
     "points": 130
   },
@@ -2491,7 +2491,7 @@
     "name": "Gothlok (C3V)",
     "general": "Valkrill",
     "points_order": 25,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_055_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gothlok.webp",
     "points": 130
   },
@@ -2515,7 +2515,7 @@
     "name": "Morgoloth (C3V)",
     "general": "Valkrill",
     "points_order": 28,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_087_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/morgoloth.webp",
     "points": 140
   },
@@ -2523,7 +2523,7 @@
     "name": "Nicholas Esenwein (C3V)",
     "general": "Valkrill",
     "points_order": 29,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_091_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/nicholas-esenwein.webp",
     "points": 140
   },
@@ -2547,7 +2547,7 @@
     "name": "Corvor the Tainted One (C3V)",
     "general": "Valkrill",
     "points_order": 33,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_037_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/corvor-vf.webp",
     "points": 175
   },
@@ -2555,7 +2555,7 @@
     "name": "Vulcanmech Incendiborgs (C3V)",
     "general": "Valkrill",
     "points_order": 34,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_133_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/vulcanmech-incendiborgs.webp",
     "points": 180
   },
@@ -2619,7 +2619,7 @@
     "name": "Seleena (C3V)",
     "general": "Vydar",
     "points_order": 8,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_105_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/seleena.webp",
     "points": 35
   },
@@ -2643,7 +2643,7 @@
     "name": "53rd North Carolina Sharpshooters (C3V)",
     "general": "Vydar",
     "points_order": 11,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_003_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/53-des-snipers-de-caroline-du-nord.webp",
     "points": 55
   },
@@ -2651,7 +2651,7 @@
     "name": "Kursus (C3V)",
     "general": "Vydar",
     "points_order": 12,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_069_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/kursus.webp",
     "points": 55
   },
@@ -2659,7 +2659,7 @@
     "name": "12th Caucasus Rifles (C3V)",
     "general": "Vydar",
     "points_order": 13,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_001_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/12-fusilliers-du-caucase.webp",
     "points": 60
   },
@@ -2683,7 +2683,7 @@
     "name": "Crypt Guardian (C3V)",
     "general": "Vydar",
     "points_order": 16,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_039_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gardien-des-cryptes.webp",
     "points": 60
   },
@@ -2699,7 +2699,7 @@
     "name": "Yi Feng (C3V)",
     "general": "Vydar",
     "points_order": 18,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_139_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/yi-feng.webp",
     "points": 60
   },
@@ -2715,7 +2715,7 @@
     "name": "Josie Whistlestop (C3V)",
     "general": "Vydar",
     "points_order": 21,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_063_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/josie-whistlestop.webp",
     "points": 70
   },
@@ -2747,7 +2747,7 @@
     "name": "Microcorp Troopers (C3V)",
     "general": "Vydar",
     "points_order": 26,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_083_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/microcorps-troopers.webp",
     "points": 80
   },
@@ -2787,7 +2787,7 @@
     "name": "Major J15 (C3V)",
     "general": "Vydar",
     "points_order": 31,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_075_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/major-j15.webp",
     "points": 95
   },
@@ -2883,7 +2883,7 @@
     "name": "Calibrax the Kyrie Warrior (C3V)",
     "general": "Vydar",
     "points_order": 49,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_031_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/calibrax-le-guerrier-kyrie.webp",
     "points": 130
   },
@@ -2907,7 +2907,7 @@
     "name": "Breach (C3V)",
     "general": "Vydar",
     "points_order": 52,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_025_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/breach.webp",
     "points": 145
   },
@@ -2923,7 +2923,7 @@
     "name": "Augamo (C3V)",
     "general": "Vydar",
     "points_order": 55,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_013_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/augamo.webp",
     "points": 155
   },
@@ -2931,7 +2931,7 @@
     "name": "The Varja (C3V)",
     "general": "Vydar",
     "points_order": 57,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_121_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/le-varja.webp",
     "points": 160
   },
