@@ -97,17 +97,12 @@ function openForm(card=null){
  $('cards-name').value=card?.name||'';
  $('cards-general').value=card?.general||'Aquilla';
  $('cards-points').value=card?.points??'';
- $('cards-fr').value=card?.fr||'';
- $('cards-en').value=card?.en||'';
- $('cards-fr-url-row').hidden=true;
- $('cards-en-url-row').hidden=true;
  $('cards-fr-remove-row').hidden=!card;
  $('cards-en-remove-row').hidden=!card;
  $('cards-remove-fr').checked=false;
  $('cards-remove-en').checked=false;
  $('cards-remove-fr').disabled=!card;
  $('cards-remove-en').disabled=!card;
- $('cards-fr').disabled=false;$('cards-en').disabled=false;
  $('cards-fr-file').disabled=false;$('cards-en-file').disabled=false;
  $('cards-place-after').hidden=!!card;
  $('cards-place-label').hidden=!!card;
@@ -154,9 +149,8 @@ async function showCardHistory(card){
 async function saveEdit(e){
  e.preventDefault();
  if(!admin||!db)return;
- const name=valid($('cards-name').value),general=valid($('cards-general').value),points=Number($('cards-points').value),fr=valid($('cards-fr').value)||null,en=valid($('cards-en').value)||null;
+ const name=valid($('cards-name').value),general=valid($('cards-general').value),points=Number($('cards-points').value),fr=editing?.fr||null,en=editing?.en||null;
  if(!name||!general||!Number.isInteger(points)||points<0||points>2000){inform('Renseigne un nom, un général et un coût valide.',true);return}
- if((fr&&!safeUrl(fr))||(en&&!safeUrl(en))){inform('Les liens historiques VF et VO doivent être valides.',true);return}
  if(!editing&&!$('cards-fr-file').files[0]){inform('Sélectionne une image VF à importer pour créer la carte.',true);return}
  if(all.some(x=>x.name.toLocaleLowerCase('fr')===name.toLocaleLowerCase('fr')&&(!editing||x.catalog_id!==editing.catalog_id))){inform('Une carte porte déjà ce nom.',true);return}
  let points_order=editing?Number(editing.points_order):9999;
@@ -370,8 +364,8 @@ $('cards-hidden-open').addEventListener('click',()=>{
  $('cards-hidden-open').setAttribute('aria-expanded',String(show));
  if(show)tools.scrollIntoView({behavior:'smooth',block:'nearest'});
 });
-for(const [checkbox,urlId,fileId] of [['cards-remove-fr','cards-fr','cards-fr-file'],['cards-remove-en','cards-en','cards-en-file']]){
- $(checkbox).addEventListener('change',()=>{if($(checkbox).checked){$(urlId).value='';$(fileId).value='';}$(urlId).disabled=$(checkbox).checked;$(fileId).disabled=$(checkbox).checked;});
+for(const [checkbox,fileId] of [['cards-remove-fr','cards-fr-file'],['cards-remove-en','cards-en-file']]){
+ $(checkbox).addEventListener('change',()=>{if($(checkbox).checked)$(fileId).value='';$(fileId).disabled=$(checkbox).checked;});
 }
 $('cards-cancel').addEventListener('click',closeForm);
 form.addEventListener('submit',saveEdit);
