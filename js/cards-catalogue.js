@@ -189,7 +189,9 @@ async function saveEdit(e){
   if(res.error)throw res.error;
   if(!res.data?.length)throw Error('Aucune modification enregistrée dans Supabase. Vérifie les autorisations du compte.');
   await loadEdits();merge();render();updateRestore();closeForm();notifyCatalogueChange();
-  status.textContent+=' Modification enregistrée : '+name+'.';
+  const savedCard=[...box.querySelectorAll('.army-card')].find(el=>el.querySelector('h3')?.textContent===name);
+  if(savedCard){savedCard.scrollIntoView({behavior:'smooth',block:'center'});savedCard.style.outline='2px solid #d6ac4f';setTimeout(()=>{savedCard.style.outline=''},3500)}
+  status.textContent+=' Modification enregistrée pour '+name+' — liens actualisés.';
  }catch(err){inform('Impossible d’enregistrer : '+(err.message||'erreur'),true)}
  finally{$('cards-save').disabled=false}
 }
