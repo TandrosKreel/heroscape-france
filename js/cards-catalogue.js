@@ -184,7 +184,7 @@ async function deleteEdit(){
 }
 async function refreshAdmin(){
  const check=++adminCheckSerial;
- let allowed=false;
+ let allowed=false,profileRoleIsCreator=false;
  if(db){
   try{
    // Lire la session locale sans bloquer l'interface ni le chargement des cartes.
@@ -195,11 +195,14 @@ async function refreshAdmin(){
     const {data:profile,error:profileError}=await db.from('profiles').select('role,can_manage_cards').eq('id',uid).maybeSingle();
     if(profileError)throw profileError;
     allowed=profile?.role==='admin'||profile?.role==='cards_admin'||profile?.can_manage_cards===true;
+    profileRoleIsCreator=profile?.role==='creator'||(profile?.role==='admin'&&sessionData?.session?.user?.user_metadata?.username==='Tandros Kreel');
    }
   }catch(err){console.warn('Droits de gestion des cartes non vérifiés :',err)}
  }
  if(check!==adminCheckSerial)return;
  admin=allowed;
+ vfMigrationCreator=allowed&&profileRoleIsCreator;
+ $('cards-vf-migration').hidden=!vfMigrationCreator;
  $('cards-admin-open').hidden=!admin;
  if(!admin&&editing)closeForm();
  if(all.length)render();
@@ -231,6 +234,63 @@ if(db){
  // Si la session arrive après le catalogue, réévaluer les droits sans recharger la page.
  db.auth.onAuthStateChange(()=>{setTimeout(()=>{void refreshAdmin()},0)});
 }
+
+
+let vfMigrationCreator=false,vfMigrationBusy=false;
+const vfMigrationLog=[];
+const vfMigrationPrefix='https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/';
+function vfMigrationCandidates(){
+ const byName=new Map(edits.filter(x=>x.source_name).map(x=>[x.source_name,x]));
+ return base.filter(x=>{
+  const e=byName.get(x.name),url=e?e.fr:x.fr;
+  return !!url&&!url.startsWith(vfMigrationPrefix);
+ });
+}
+function vfMigrationStatus(message){
+ const el=$('cards-vf-migration-status');
+ if(el)el.textContent=message;
+}
+async function vfMigrationBatch(){
+ if(!vfMigrationCreator||vfMigrationBusy||!db)return;
+ vfMigrationBusy=true;const button=$('cards-vf-migration-run');button.disabled=true;
+ let completed=0,failed=0;
+ try{
+  const candidates=vfMigrationCandidates().slice(0,10);
+  if(!candidates.length){vfMigrationStatus('Toutes les images VF référencées sont migrées ou déjà hébergées dans Supabase. Les références sans VF restent à traiter séparément.');return}
+  for(const card of candidates){
+   const previous=edits.find(e=>e.source_name===card.name);
+   const source=previous?previous.fr:card.fr;
+   vfMigrationStatus('Migration '+(completed+failed+1)+'/'+candidates.length+' : '+card.name);
+   try{
+    const response=await fetch(source,{mode:'cors',cache:'no-store'});
+    if(!response.ok)throw Error('Téléchargement HTTP '+response.status);
+    const blob=await response.blob();
+    if(blob.size>15*1024*1024)throw Error('Image de plus de 15 Mo');
+    const type=blob.type.split(';')[0];
+    if(!['image/webp','image/png','image/jpeg'].includes(type))throw Error('Format non reconnu : '+type);
+    const file=new File([blob],card.name+'.'+(type==='image/png'?'png':type==='image/jpeg'?'jpg':'webp'),{type});
+    const newUrl=await uploadCardFile(file);
+    const check=await fetch(newUrl,{cache:'no-store'});
+    if(!check.ok||!(check.headers.get('content-type')||'').startsWith('image/'))throw Error('Vérification de la copie impossible');
+    const row=previous?{fr:newUrl}:{source_name:card.name,name:card.name,general:card.general,points:card.points,points_order:card.points_order,fr:newUrl,en:card.en||null,is_hidden:false};
+    const result=previous?await db.from('army_card_edits').update(row).eq('id',previous.id):await db.from('army_card_edits').insert(row);
+    if(result.error)throw result.error;
+    vfMigrationLog.push({name:card.name,status:'migré',previous:source,current:newUrl});
+    completed++;
+    await loadEdits();merge();
+   }catch(err){
+    failed++;vfMigrationLog.push({name:card.name,status:'échec',previous:source,error:String(err.message||err)});
+   }
+  }
+  render();notifyCatalogueChange();
+  vfMigrationStatus('Lot terminé : '+completed+' migrées, '+failed+' échecs. '+vfMigrationCandidates().length+' VF restantes. Exporter le rapport pour les erreurs. Aucun original supprimé.');
+ }finally{vfMigrationBusy=false;button.disabled=false}
+}
+$('cards-vf-migration-run').addEventListener('click',()=>{void vfMigrationBatch().catch(err=>vfMigrationStatus('Migration interrompue : '+err.message))});
+$('cards-vf-migration-report').addEventListener('click',()=>{
+ const blob=new Blob([JSON.stringify(vfMigrationLog,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='rapport-migration-vf.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
 
 q.addEventListener('input',render);g.addEventListener('change',render);band.addEventListener('change',render);
 $('cards-tab-armies').addEventListener('click',()=>switchView(false));
