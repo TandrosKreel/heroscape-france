@@ -73,6 +73,7 @@ function updateRestore(){
  const hidden=edits.filter(e=>e.is_hidden);
  const tools=$('cards-restore-tools');tools.hidden=!hidden.length;
  $('cards-restore-list').innerHTML=hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join('');
+ $('cards-permanent-delete').disabled=!hidden.some(e=>!e.source_name);
 }
 function openForm(card=null){
  editing=card;
@@ -245,6 +246,34 @@ $('cards-restore').addEventListener('click',async()=>{
  const {error}=await db.from('army_card_edits').update({is_hidden:false}).eq('id',id);
  if(error){inform('Restauration impossible : '+error.message,true);return}
  await loadEdits();merge();render();updateRestore();inform('Carte restaurée.');notifyCatalogueChange();
+});
+$('cards-permanent-delete').addEventListener('click',async()=>{
+ if(!admin||!db)return;
+ const id=$('cards-restore-list').value,card=edits.find(e=>e.id===id);
+ if(!card||card.source_name){inform('Seules les cartes ajoutées sur le site peuvent être supprimées définitivement.',true);return}
+ if(!confirm('Supprimer définitivement « '+card.name+' » ? Cette action est irréversible. Les cartes utilisées dans Pari Heroscape sont protégées.'))return;
+ const confirmation=prompt('Pour confirmer, écris SUPPRIMER en majuscules :');
+ if(confirmation!=='SUPPRIMER')return;
+ const button=$('cards-permanent-delete');button.disabled=true;inform('Vérification des parties et suppression…');
+ try{
+  const {data,error}=await db.rpc('permanently_delete_custom_army_card',{p_card_id:id});
+  if(error)throw error;
+  const urls=(data||[]).flatMap(x=>[x.fr_url,x.en_url]).filter(Boolean);
+  const prefix=db.storage.from('army-cards').getPublicUrl('PLACEHOLDER').data.publicUrl.split('PLACEHOLDER')[0];
+  const paths=[...new Set(urls.filter(url=>url.startsWith(prefix)).map(url=>decodeURIComponent(url.slice(prefix.length).split('?')[0])))];
+  let warning='';
+  if(paths.length){
+   const {data:otherCards,error:checkError}=await db.from('army_card_edits').select('fr,en');
+   if(checkError)warning=' Vérifie les images dans Supabase : nettoyage non confirmé.';
+   else{
+    const referenced=new Set((otherCards||[]).flatMap(x=>[x.fr,x.en]));
+    const unused=paths.filter(path=>!referenced.has(prefix+path));
+    if(unused.length){const {error:storageError}=await db.storage.from('army-cards').remove(unused);if(storageError)warning=' La fiche est supprimée, mais certaines images n’ont pas pu être effacées.'}
+   }
+  }
+  await loadEdits();merge();render();updateRestore();inform('Carte supprimée définitivement. Son historique reste conservé.'+warning,!!warning);notifyCatalogueChange();
+ }catch(err){inform('Suppression impossible : '+(err.message||'erreur'),true)}
+ finally{button.disabled=false}
 });
 box.addEventListener('click',e=>{
  const option=e.target.closest('[data-variant-name]');
