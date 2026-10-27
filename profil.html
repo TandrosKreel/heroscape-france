@@ -6,6 +6,22 @@
   <title>Mon profil — Heroscape France</title>
   <link rel="stylesheet" href="css/style.css?v=20261020-chatmobile2">
   <link rel="stylesheet" href="css/forum-background.css?v=20261016-mobilelogo1">
+<style>
+/* Correction limitée à la page Profil sur écrans étroits. */
+@media (max-width: 700px) {
+  main.container { width:100%; max-width:100%; min-width:0; padding-left:13px; padding-right:13px; }
+  main .hero, #profile-card, #profile-editor, .avatar-settings, .avatar-controls { min-width:0; max-width:100%; }
+  #profile-card { width:100%; padding:16px; overflow-wrap:anywhere; }
+  .avatar-settings { flex-direction:column; gap:14px; }
+  .avatar-controls { width:100%; min-width:0; }
+  .avatar-controls input:not([type="radio"]):not([type="checkbox"]), .avatar-controls textarea, .avatar-controls select { width:100%; min-width:0; max-width:100%; box-sizing:border-box; }
+  .avatar-controls input[type="file"] { font-size:14px; }
+  .avatar-controls fieldset { min-width:0; width:100%; max-width:100%; margin-left:0; margin-right:0; }
+  .avatar-controls label { max-width:100%; overflow-wrap:anywhere; }
+  .avatar-controls input[type="radio"], .avatar-controls input[type="checkbox"] { min-width:0; width:auto; flex:0 0 auto; }
+  #profile-card .btn { max-width:100%; white-space:normal; }
+}
+</style>
 </head>
 <body>
 <header><div class="container">
