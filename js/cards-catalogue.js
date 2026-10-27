@@ -83,6 +83,8 @@ function openForm(card=null){
  $('cards-points').value=card?.points??'';
  $('cards-fr').value=card?.fr||'';
  $('cards-en').value=card?.en||'';
+ $('cards-fr-url-row').hidden=!card;
+ $('cards-en-url-row').hidden=!card;
  $('cards-place-after').hidden=!!card;
  $('cards-place-label').hidden=!!card;
  $('cards-delete').hidden=!card;
@@ -130,7 +132,8 @@ async function saveEdit(e){
  if(!admin||!db)return;
  const name=valid($('cards-name').value),general=valid($('cards-general').value),points=Number($('cards-points').value),fr=valid($('cards-fr').value)||null,en=valid($('cards-en').value)||null;
  if(!name||!general||!Number.isInteger(points)||points<0||points>2000){inform('Renseigne un nom, un général et un coût valide.',true);return}
- if((fr&&!safeUrl(fr))||(en&&!safeUrl(en))){inform('Les liens VF et VO doivent commencer par https:// ou http://.',true);return}
+ if((fr&&!safeUrl(fr))||(en&&!safeUrl(en))){inform('Les liens historiques VF et VO doivent être valides.',true);return}
+ if(!editing&&!$('cards-fr-file').files[0]){inform('Sélectionne une image VF à importer pour créer la carte.',true);return}
  if(all.some(x=>x.name.toLocaleLowerCase('fr')===name.toLocaleLowerCase('fr')&&(!editing||x.catalog_id!==editing.catalog_id))){inform('Une carte porte déjà ce nom.',true);return}
  let points_order=editing?Number(editing.points_order):9999;
  if(!editing){
