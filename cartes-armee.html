@@ -42,12 +42,6 @@
     .cards-admin-grid input,.cards-admin-grid select{width:100%;min-width:0;box-sizing:border-box;padding:10px;border:1px solid #667688;border-radius:7px;background:#0d1721;color:#f5f6f7}
     .cards-admin-wide{grid-column:1/-1}
     /* Afficher les contrôles d'édition même si un ancien script a conservé l'attribut hidden. */
-    #cards-admin-panel:not([hidden]) #cards-fr-url-row,
-    #cards-admin-panel:not([hidden]) #cards-en-url-row,
-    #cards-admin-panel:not([hidden]) #cards-fr-remove-row,
-    #cards-admin-panel:not([hidden]) #cards-en-remove-row{display:flex!important;visibility:visible!important}
-    #cards-admin-panel:not([hidden]) #cards-fr-url-row,
-    #cards-admin-panel:not([hidden]) #cards-en-url-row{flex-direction:column}
 
     .cards-admin-grid label.cards-remove-link{display:flex;flex-direction:row;align-items:center;gap:12px;padding:12px 14px;border:1px solid #bd9853;border-radius:8px;background:#223448;color:#f5d58c;font-size:15px;font-weight:700;cursor:pointer}
     .cards-admin-grid label.cards-remove-link input[type=checkbox]{appearance:auto;width:20px;height:20px;min-width:20px;margin:0;accent-color:#d6ac4f;cursor:pointer}
@@ -103,8 +97,8 @@
         <label>Général<input id="cards-general" maxlength="80" list="cards-generals" required placeholder="Aquilla"><datalist id="cards-generals"><option value="Aquilla"><option value="Einar"><option value="Jandar"><option value="Ullar"><option value="Utgar"><option value="Vydar"><option value="Valkrill"><option value="Revna"><option value="Volarak"><option value="Marvel"><option value="Sans Général"></datalist></label>
         <label>Coût en points<input id="cards-points" type="number" min="0" max="2000" step="1" required></label>
         <label id="cards-place-label">Position souhaitée<select id="cards-place-after"><option value="">Classement automatique par points</option></select></label>
-        <label class="cards-admin-wide">Importer une image VF (WebP, PNG ou JPG)<input id="cards-fr-file" type="file" accept="image/webp,image/png,image/jpeg"></label><label class="cards-admin-wide">Importer une image VO (WebP, PNG ou JPG)<input id="cards-en-file" type="file" accept="image/webp,image/png,image/jpeg"></label><label class="cards-admin-wide" id="cards-fr-url-row">Lien historique de la carte française (VF)<input id="cards-fr" type="url" maxlength="2048" placeholder="https://…"></label>
-        <label class="cards-admin-wide" id="cards-en-url-row">Lien historique de la carte anglaise (VO)<input id="cards-en" type="url" maxlength="2048" placeholder="https://…"></label>
+        <label class="cards-admin-wide">Importer une image VF (WebP, PNG ou JPG)<input id="cards-fr-file" type="file" accept="image/webp,image/png,image/jpeg"></label><label class="cards-admin-wide">Importer une image VO (WebP, PNG ou JPG)<input id="cards-en-file" type="file" accept="image/webp,image/png,image/jpeg"></label><label class="cards-admin-wide" id="cards-fr-url-row" hidden>Lien historique de la carte française (VF)<input id="cards-fr" type="url" maxlength="2048" placeholder="https://…"></label>
+        <label class="cards-admin-wide" id="cards-en-url-row" hidden>Lien historique de la carte anglaise (VO)<input id="cards-en" type="url" maxlength="2048" placeholder="https://…"></label>
         <label class="cards-admin-wide cards-remove-link" id="cards-fr-remove-row"><input id="cards-remove-fr" type="checkbox"> Retirer le lien VF de cette carte (sans masquer ni supprimer la carte)</label>
         <label class="cards-admin-wide cards-remove-link" id="cards-en-remove-row"><input id="cards-remove-en" type="checkbox"> Retirer le lien VO de cette carte (sans masquer ni supprimer la carte)</label>
       </div>
@@ -127,6 +121,6 @@
   </section>
 </main>
 <footer><div class="container">Heroscape France — cartes armées françaises et anglaises.</div></footer>
-<script src="js/army-cards-data.js?v=20261020-sync1" defer></script><script src="js/cards-catalogue.js?v=20261027-visible-controls-6" defer></script>
+<script src="js/army-cards-data.js?v=20261020-sync1" defer></script><script src="js/cards-catalogue.js?v=20261027-hide-urls-7" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
 </html>
