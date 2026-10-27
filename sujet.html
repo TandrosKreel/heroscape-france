@@ -15,6 +15,9 @@
 .forum-mp-action{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;white-space:nowrap}
 .forum-mp-action:hover{text-decoration:none}
 @media(max-width:600px){.forum-post-head-actions{gap:6px}.forum-mp-action{min-width:0}}
+.forum-author-profile{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--gold2);text-decoration:none;max-width:100%}
+.forum-author-profile:hover{text-decoration:underline}
+@media(max-width:600px){.forum-author-profile{flex-direction:row;gap:10px}}
 </style>
 </head>
 
@@ -681,8 +684,7 @@ function messageHtml(post, isFirstMessage = false, title = "", messageCount = 0,
     <article class="forum-post" id="post-${post.id}">
 
       <div class="post-author">
-        ${avatar}
-        <strong>${esc(post.author || "Membre")}</strong>
+        ${post.user_id ? `<a class="forum-author-profile" href="membre.html?id=${encodeURIComponent(post.user_id)}" title="Voir le profil de ${esc(post.author || "ce membre")}">${avatar}<strong>${esc(post.author || "Membre")}</strong></a>` : `${avatar}<strong>${esc(post.author || "Membre")}</strong>`}
         <span class="post-message-count">${messageCount} message${messageCount > 1 ? "s" : ""}</span>
       </div>
 
@@ -784,6 +786,7 @@ async function renderSubject() {
   const totalPages = Math.max(1, Math.ceil(pageResult.count / POSTS_PER_PAGE));
   const currentPage = pageResult.page;
   const pagePosts = posts;
+  const targetPostId = new URLSearchParams(location.search).get("post");
 
   let firstPostHtml = "";
   let repliesHtml = "";
