@@ -71,7 +71,9 @@ function fillPlacement(){
 }
 function updateRestore(){
  const hidden=edits.filter(e=>e.is_hidden);
- const tools=$('cards-restore-tools');tools.hidden=!hidden.length;
+ const tools=$('cards-restore-tools');
+ $('cards-hidden-open').textContent='Cartes masquées et suppression définitive ('+hidden.length+')';
+ if(!hidden.length){tools.hidden=true;$('cards-hidden-open').setAttribute('aria-expanded','false');}
  $('cards-restore-list').innerHTML=hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join('');
  $('cards-permanent-delete').disabled=!hidden.some(e=>!e.source_name);
 }
@@ -204,6 +206,8 @@ async function refreshAdmin(){
  vfMigrationCreator=allowed&&profileRoleIsCreator;
  $('cards-vf-migration').hidden=!vfMigrationCreator;
  $('cards-admin-open').hidden=!admin;
+ $('cards-hidden-open').hidden=!admin;
+ if(!admin){$('cards-restore-tools').hidden=true;$('cards-hidden-open').setAttribute('aria-expanded','false');}
  if(!admin&&editing)closeForm();
  if(all.length)render();
 }
@@ -308,6 +312,13 @@ q.addEventListener('input',render);g.addEventListener('change',render);band.addE
 $('cards-tab-armies').addEventListener('click',()=>switchView(false));
 $('cards-tab-glyphes').addEventListener('click',()=>switchView(true));
 $('cards-admin-open').addEventListener('click',()=>openForm());
+$('cards-hidden-open').addEventListener('click',()=>{
+ if(!admin)return;
+ const tools=$('cards-restore-tools'),show=tools.hidden;
+ tools.hidden=!show;
+ $('cards-hidden-open').setAttribute('aria-expanded',String(show));
+ if(show)tools.scrollIntoView({behavior:'smooth',block:'nearest'});
+});
 $('cards-cancel').addEventListener('click',closeForm);
 form.addEventListener('submit',saveEdit);
 $('cards-delete').addEventListener('click',deleteEdit);
