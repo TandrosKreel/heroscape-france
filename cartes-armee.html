@@ -18,6 +18,14 @@
     .army-actions a,.army-actions span{display:inline-block;padding:8px 11px;border-radius:6px;text-decoration:none}
     .army-actions span{opacity:.5}
     .section-count{font-weight:normal;font-size:.8em;opacity:.7}
+    .vf-variants{margin-top:12px}
+    .vf-variants-title{margin:0 0 8px;font-size:13px;font-weight:600}
+    .vf-variants-list{display:flex;flex-wrap:wrap;gap:8px}
+    .vf-variant-option{flex:0 0 78px;min-width:0;box-sizing:border-box;padding:5px;border:2px solid #667688;border-radius:8px;background:#182431;color:#edf2f6;cursor:pointer}
+    .vf-variant-option img{display:block;width:100%;height:72px;object-fit:contain}
+    .vf-variant-option span{display:block;font-size:11px;line-height:1.3;margin-top:4px}
+    .vf-variant-option.is-selected{border-color:#d6ac4f;box-shadow:0 0 0 1px #d6ac4f}
+    .vf-variant-option:focus-visible{outline:2px solid #f5d58c;outline-offset:3px}
     #cards-status{margin:12px 0}
     .cards-view-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
     .cards-view-tabs button{padding:10px 16px;border:1px solid #bd9853;border-radius:8px;background:#26384a;color:#f5d58c;font-weight:700;cursor:pointer}
@@ -103,6 +111,6 @@
   </section>
 </main>
 <footer><div class="container">Heroscape France — cartes armées françaises et anglaises.</div></footer>
-<script src="js/army-cards-data.js?v=20261020-sync1" defer></script><script src="js/cards-catalogue.js?v=20261027-glyphes1" defer></script>
+<script src="js/army-cards-data.js?v=20261020-sync1" defer></script><script src="js/cards-catalogue.js?v=20261027-vfvariants1" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
 </html>

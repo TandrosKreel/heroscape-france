@@ -6,6 +6,7 @@ const safeUrl=s=>{try{const u=new URL(String(s||''));return /^https?:$/.test(u.p
 const db=window.supabaseClient;
 let base=[],edits=[],all=[],admin=false,editing=null;
 let specials={glyphes:[],sans_general:[]};
+let illustrations={};
 let adminCheckSerial=0;
 const q=$('q'),g=$('g'),band=$('band'),box=$('cards'),status=$('cards-status'),panel=$('cards-admin-panel'),form=$('cards-admin-form'),notice=$('cards-admin-notice');
 const sortCards=(a,b)=>a.general.localeCompare(b.general,'fr')||a.points-b.points||Number(a.points_order||0)-Number(b.points_order||0)||a.name.localeCompare(b.name,'fr');
@@ -13,6 +14,15 @@ const valid=s=>String(s??'').trim();
 const inform=(message,error=false)=>{notice.textContent=message;notice.style.color=error?'#ffaaaa':'#b7e5c7'};
 function merge(){all=window.HeroscapeCards.merge(base,edits).active;}
 const notifyCatalogueChange=()=>{try{localStorage.setItem('heroscape-cards-updated',String(Date.now()))}catch{}};
+const variantKey=name=>'heroscape-vf-illustration:'+name;
+const variantsFor=card=>{
+ const variants=illustrations[card.name];
+ // Une modification administrative du lien VF doit toujours primer sur les illustrations du catalogue.
+ return Array.isArray(variants)&&variants.length>1&&variants[0].fr===card.fr?variants:[];
+};
+const selectedVariant=(name,variants)=>{
+ try{const index=Number(localStorage.getItem(variantKey(name)));return Number.isInteger(index)&&index>=0&&index<variants.length?index:0}catch{return 0}
+};
 
 function render(){
  const generals=[...new Set([...all.map(x=>x.general),...specials.sans_general.map(x=>x.general)])].sort((a,b)=>a.localeCompare(b,'fr'));
@@ -27,13 +37,17 @@ function render(){
  const specialFiltered=specials.sans_general.filter(x=>!band.value&&(!term||x.name.toLocaleLowerCase('fr').includes(term))&&(!g.value||x.general===g.value));
  const total=filtered.length+specialFiltered.length;
  status.textContent=total+' carte'+(total>1?'s':'')+' affichée'+(total>1?'s':'')+'.';
- const link=(url,label)=>safeUrl(url)?'<a class="btn" href="'+esc(safeUrl(url))+'" target="_blank" rel="noopener noreferrer">'+label+'</a>':'<span>'+label+' indisponible</span>';
+ const link=(url,label,variantLink=false)=>safeUrl(url)?'<a class="btn"'+(variantLink?' data-vf-variant-link':'')+' href="'+esc(safeUrl(url))+'" target="_blank" rel="noopener noreferrer">'+label+'</a>':'<span>'+label+' indisponible</span>';
  box.innerHTML=generals.map(general=>{
   const list=filtered.filter(x=>x.general===general);
   if(!list.length)return '';
   return '<section class="general-section"><h2>'+esc(general)+' <span class="section-count">('+list.length+')</span></h2><div class="army-grid">'+list.map(x=>{
    const key=x._source?'base:'+x._source:'custom:'+x.id;
-   return '<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.points)+' points</p><div class="army-actions">'+link(x.fr,'🇫🇷 VF')+link(x.en,'🇬🇧 English')+'</div>'+(admin?'<button class="cards-edit-btn" type="button" data-card-key="'+esc(key)+'">Modifier / supprimer</button>':'')+'</article>';
+   const variants=variantsFor(x);
+   const selected=variants.length?selectedVariant(x.name,variants):0;
+   const vf=variants.length?variants[selected].fr:x.fr;
+   const picker=variants.length?'<div class="vf-variants"><p class="vf-variants-title">Choisir une illustration VF</p><div class="vf-variants-list" role="group" aria-label="Illustrations VF de '+esc(x.name)+'">'+variants.map((v,i)=>'<button type="button" class="vf-variant-option'+(i===selected?' is-selected':'')+'" data-variant-name="'+esc(x.name)+'" data-variant-index="'+i+'" aria-pressed="'+(i===selected?'true':'false')+'" aria-label="'+esc(x.name+' — '+v.label)+'"><img src="'+esc(safeUrl(v.miniature))+'" alt="" loading="lazy" decoding="async"><span>'+esc(v.label)+'</span></button>').join('')+'</div></div>':'';
+   return '<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.points)+' points</p><div class="army-actions">'+link(vf,'🇫🇷 VF',!!variants.length)+link(x.en,'🇬🇧 English')+'</div>'+picker+(admin?'<button class="cards-edit-btn" type="button" data-card-key="'+esc(key)+'">Modifier / supprimer</button>':'')+'</article>';
   }).join('')+'</div></section>';
  }).join('')+(specialFiltered.length?'<section class="general-section"><h2>Sans Général <span class="section-count">('+specialFiltered.length+')</span></h2><div class="army-grid">'+specialFiltered.map(x=>'<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.type||'Objet de terrain')+'</p><div class="army-actions">'+link(x.fr,'🇫🇷 VF')+'</div></article>').join('')+'</div></section>':'');
 }
@@ -166,6 +180,13 @@ async function init(){
    const extraResponse=await fetch('data/cartes-speciales.json');
    if(extraResponse.ok){const data=await extraResponse.json();if(Array.isArray(data.glyphes)&&Array.isArray(data.sans_general))specials=data;}
   }catch(err){console.warn('Cartes spéciales indisponibles',err)}
+  try{
+   const variantsResponse=await fetch('data/cartes-illustrations.json');
+   if(variantsResponse.ok){
+    const data=await variantsResponse.json();
+    if(data&&typeof data==='object'&&!Array.isArray(data))illustrations=data;
+   }
+  }catch(err){console.warn('Illustrations VF alternatives indisponibles',err)}
   merge();render();renderGlyphes();
   // Les commandes administrateur ne doivent pas attendre la requête du catalogue Supabase.
   void refreshAdmin();
@@ -194,6 +215,27 @@ $('cards-restore').addEventListener('click',async()=>{
  if(error){inform('Restauration impossible : '+error.message,true);return}
  await loadEdits();merge();render();updateRestore();inform('Carte restaurée.');notifyCatalogueChange();
 });
-box.addEventListener('click',e=>{const b=e.target.closest('[data-card-key]');if(!b||!admin)return;const card=all.find(x=>(x._source?'base:'+x._source:'custom:'+x.id)===b.dataset.cardKey);if(card)openForm(card)});
+box.addEventListener('click',e=>{
+ const option=e.target.closest('[data-variant-name]');
+ if(option){
+  const name=option.dataset.variantName,index=Number(option.dataset.variantIndex);
+  const card=all.find(x=>x.name===name),variants=card?variantsFor(card):[];
+  if(!Number.isInteger(index)||index<0||index>=variants.length)return;
+  const chosenUrl=safeUrl(variants[index].fr);
+  if(!chosenUrl)return;
+  try{localStorage.setItem(variantKey(name),String(index))}catch{}
+  const article=option.closest('.army-card');
+  const vfLink=article?.querySelector('[data-vf-variant-link]');
+  if(vfLink)vfLink.href=chosenUrl;
+  article?.querySelectorAll('[data-variant-name]').forEach(button=>{
+   const selected=button===option;
+   button.classList.toggle('is-selected',selected);
+   button.setAttribute('aria-pressed',String(selected));
+  });
+  return;
+ }
+ const b=e.target.closest('[data-card-key]');if(!b||!admin)return;
+ const card=all.find(x=>(x._source?'base:'+x._source:'custom:'+x.id)===b.dataset.cardKey);if(card)openForm(card);
+});
 init();
 })();
