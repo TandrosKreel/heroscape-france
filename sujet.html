@@ -958,6 +958,14 @@ async function renderSubject() {
 
   `;
 
+  if (targetPostId && /^\\d+$/.test(targetPostId)) {
+    const target=document.getElementById('post-'+targetPostId);
+    if(target){
+      target.style.outline='2px solid var(--gold)';
+      target.style.outlineOffset='4px';
+      requestAnimationFrame(()=>target.scrollIntoView({block:'center',behavior:'instant'}));
+    }
+  }
 
   if (canModerate) {
     const pinButton = isAdmin ? document.getElementById("admin-toggle-pin") : null;
