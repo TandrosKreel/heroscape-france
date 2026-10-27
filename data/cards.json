@@ -59,7 +59,7 @@
     "name": "Amberhive Protectors (C3V)",
     "general": "Aquilla",
     "points_order": 10,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_007_2.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/protecteurs-de-la-ruche-d-ambre.webp",
     "points": 50
   },
@@ -251,7 +251,7 @@
     "name": "B-11 Resistance Corps (C3V)",
     "general": "Aquilla",
     "points_order": 40,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_017_2.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/corps-de-la-resistance-b-11.webp",
     "points": 110
   },
@@ -291,7 +291,7 @@
     "name": "Bahadur (C3V)",
     "general": "Aquilla",
     "points_order": 46,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_019_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/bahadur.webp",
     "points": 120
   },
@@ -395,7 +395,7 @@
     "name": "Achillean Gladiatrix (C3V)",
     "general": "Einar",
     "points_order": 9,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_005_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gladiatrice-achileenne.webp",
     "points": 40
   },
@@ -723,7 +723,7 @@
     "name": "Arashara Goshiri (C3V)",
     "general": "Einar",
     "points_order": 67,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_009_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/arashara-goshiri.webp",
     "points": 200
   },
@@ -771,7 +771,7 @@
     "name": "8th Infantry Pathfinder (C3V)",
     "general": "Jandar",
     "points_order": 4,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_003_2.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/8-division-dinfanterie-pathfinder.webp",
     "points": 35
   },
@@ -811,7 +811,7 @@
     "name": "20th Maine Volunteers (C3V)",
     "general": "Jandar",
     "points_order": 12,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_001_2.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/20-regiment-des-volontaires-du-maine.webp",
     "points": 60
   },
@@ -1043,7 +1043,7 @@
     "name": "Boreos (C3V)",
     "general": "Jandar",
     "points_order": 49,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_023_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/boreos.webp",
     "points": 115
   },
@@ -1107,7 +1107,7 @@
     "name": "Axentia (C3V)",
     "general": "Jandar",
     "points_order": 61,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_015_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/axentia-vf.webp",
     "points": 180
   },
@@ -1243,7 +1243,7 @@
     "name": "Arthur of Sherwood (C3V)",
     "general": "Ullar",
     "points_order": 16,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_011_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/arthur-de-sherwood.webp",
     "points": 70
   },
@@ -1435,7 +1435,7 @@
     "name": "Azurite Warlord (C3V)",
     "general": "Ullar",
     "points_order": 51,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_013_1.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/seigneur-de-guerre-azurite.webp",
     "points": 145
   },
@@ -1587,7 +1587,7 @@
     "name": "Beorn Boltcutter (C3V)",
     "general": "Utgar",
     "points_order": 17,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/C3V_021_2.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/beorn-boltcutter.webp",
     "points": 50
   },
