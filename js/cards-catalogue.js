@@ -69,11 +69,21 @@ function fillPlacement(){
  el.innerHTML='<option value="">Classement automatique par points</option>'+all.map(x=>'<option value="'+esc(x._source?'base:'+x._source:'custom:'+x.id)+'">Après '+esc(x.name)+' — '+esc(x.general)+' ('+esc(x.points)+' pts)</option>').join('');
  el.value=value;
 }
+function updateManageList(){
+ const search=$('cards-manage-search').value.trim().toLocaleLowerCase('fr');
+ const select=$('cards-manage-list'),previous=select.value;
+ const matches=all.filter(x=>x.name.toLocaleLowerCase('fr').includes(search));
+ select.innerHTML=matches.map(x=>'<option value="'+esc(x._source?'base:'+x._source:'custom:'+x.id)+'">'+esc(x.name)+' — '+esc(x.general)+' ('+esc(x.points)+' pts)</option>').join('');
+ if(matches.some(x=>(x._source?'base:'+x._source:'custom:'+x.id)===previous))select.value=previous;
+ $('cards-manage-hide').disabled=!matches.length;
+ $('cards-manage-status').textContent=matches.length?matches.length+' carte(s) disponibles.':'Aucune carte correspondante.';
+}
 function updateRestore(){
  const hidden=edits.filter(e=>e.is_hidden);
  const tools=$('cards-restore-tools');
  $('cards-hidden-open').textContent='Cartes masquées et suppression définitive ('+hidden.length+')';
  if(!hidden.length){tools.hidden=true;$('cards-hidden-open').setAttribute('aria-expanded','false');}
+ updateManageList();
  $('cards-restore-list').innerHTML=hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join('');
  $('cards-permanent-delete').disabled=!hidden.some(e=>!e.source_name);
 }
@@ -312,6 +322,28 @@ q.addEventListener('input',render);g.addEventListener('change',render);band.addE
 $('cards-tab-armies').addEventListener('click',()=>switchView(false));
 $('cards-tab-glyphes').addEventListener('click',()=>switchView(true));
 $('cards-admin-open').addEventListener('click',()=>openForm());
+$('cards-manage-search').addEventListener('input',updateManageList);
+$('cards-manage-hide').addEventListener('click',async()=>{
+ if(!admin||!db)return;
+ const key=$('cards-manage-list').value;
+ const card=all.find(x=>(x._source?'base:'+x._source:'custom:'+x.id)===key);
+ if(!card)return;
+ if(!confirm('Masquer « '+card.name+' » du catalogue visible ? La carte pourra être restaurée.'))return;
+ const button=$('cards-manage-hide');button.disabled=true;
+ try{
+  let res;
+  if(card._source){
+   const row={source_name:card._source,name:card.name,general:card.general,points:card.points,points_order:card.points_order,fr:card.fr||null,en:card.en||null,is_hidden:true};
+   res=card._editId?await db.from('army_card_edits').update({is_hidden:true}).eq('id',card._editId):await db.from('army_card_edits').insert(row);
+  }else{
+   if(!card._editId)throw Error('Identifiant de carte introuvable.');
+   res=await db.from('army_card_edits').update({is_hidden:true}).eq('id',card._editId);
+  }
+  if(res.error)throw res.error;
+  await loadEdits();merge();render();updateRestore();inform('Carte masquée. Elle reste restaurable.');notifyCatalogueChange();
+ }catch(err){inform('Impossible de masquer : '+(err.message||'erreur'),true);updateManageList()}
+ finally{button.disabled=!$('cards-manage-list').options.length}
+});
 $('cards-hidden-open').addEventListener('click',()=>{
  if(!admin)return;
  const tools=$('cards-restore-tools'),show=tools.hidden;
