@@ -1779,7 +1779,7 @@
     "name": "Phantom Knights",
     "general": "Utgar",
     "points_order": 43,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2178_phantom_knights_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/chevaliers-fantomes.webp",
     "points": 70
   },
@@ -1787,7 +1787,7 @@
     "name": "Zettian Guards",
     "general": "Utgar",
     "points_order": 44,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2846_zettian.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gardes-zettiens.webp",
     "points": 70
   },
@@ -1819,7 +1819,7 @@
     "name": "Khosumet the Darklord",
     "general": "Utgar",
     "points_order": 50,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1656_khosumet.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/khosumet-seigneur-des-tenebres.webp",
     "points": 75
   },
@@ -1827,7 +1827,7 @@
     "name": "Estivara",
     "general": "Utgar",
     "points_order": 54,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1254_estivara_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/estivara.webp",
     "points": 80
   },
@@ -1851,7 +1851,7 @@
     "name": "Ice Troll Berserker",
     "general": "Utgar",
     "points_order": 58,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1530_ice_troll_251533_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/troll-de-glace-berserk.webp",
     "points": 85
   },
@@ -1867,7 +1867,7 @@
     "name": "Feral Troll",
     "general": "Utgar",
     "points_order": 60,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1284_troll_602886_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/troll-sauvage.webp",
     "points": 90
   },
@@ -1875,7 +1875,7 @@
     "name": "Marrden Hounds",
     "general": "Utgar",
     "points_order": 63,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1842_marrhnds.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/chiens-de-meute-marrden.webp",
     "points": 90
   },
@@ -1891,7 +1891,7 @@
     "name": "Sir Hawthorne",
     "general": "Utgar",
     "points_order": 65,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2449_hawthorn.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sir-hawthorne.webp",
     "points": 90
   },
@@ -1931,7 +1931,7 @@
     "name": "Mind Flayer Mastermind",
     "general": "Utgar",
     "points_order": 71,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1944_mind_flayer_mastermind_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/maitre-ecorcheur-desprit.webp",
     "points": 100
   },
@@ -1947,7 +1947,7 @@
     "name": "Ogre Pulverizer",
     "general": "Utgar",
     "points_order": 73,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2106_ogre_pulverizer_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ogre-pulveriseur.webp",
     "points": 100
   },
@@ -1955,7 +1955,7 @@
     "name": "Ornak",
     "general": "Utgar",
     "points_order": 74,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2148_ornak_102932.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ornak.webp",
     "points": 100
   },
@@ -1963,7 +1963,7 @@
     "name": "Pelloth",
     "general": "Utgar",
     "points_order": 75,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2172_pelloth_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/pelloth.webp",
     "points": 100
   },
@@ -2019,7 +2019,7 @@
     "name": "Minions of Utgar",
     "general": "Utgar",
     "points_order": 83,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1950_minions.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/serviteurs-dutgar.webp",
     "points": 110
   },
@@ -2043,7 +2043,7 @@
     "name": "Fen Hydra",
     "general": "Utgar",
     "points_order": 87,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1278_hydra_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/hydre-des-marais.webp",
     "points": 120
   },
@@ -2075,7 +2075,7 @@
     "name": "Kurrok the Elementalist",
     "general": "Utgar",
     "points_order": 91,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1740_kurrok_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/kurrok-lelementaliste.webp",
     "points": 120
   },
@@ -2091,7 +2091,7 @@
     "name": "Torin",
     "general": "Utgar",
     "points_order": 94,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2677_torin_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/torin.webp",
     "points": 120
   },
@@ -2115,7 +2115,7 @@
     "name": "Grok Riders",
     "general": "Utgar",
     "points_order": 99,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1440_sew8_grok_riders.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/chevaucheurs-de-grok.webp",
     "points": 130
   },
@@ -2131,7 +2131,7 @@
     "name": "Tul-Bak-Ra",
     "general": "Utgar",
     "points_order": 101,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2695_tul_bak_ra_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/tul-bak-ra.webp",
     "points": 130
   },
@@ -2155,7 +2155,7 @@
     "name": "Wo-Sa-Ga",
     "general": "Utgar",
     "points_order": 104,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2804_lew3_wo_sa_ga.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/wo-sa-ga.webp",
     "points": 135
   },
@@ -2187,7 +2187,7 @@
     "name": "Othkurik the Black Dragon",
     "general": "Utgar",
     "points_order": 109,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2154_othkurik_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/othkurik-le-dragon-noir.webp",
     "points": 140
   },
@@ -2195,7 +2195,7 @@
     "name": "Werewolf Lord",
     "general": "Utgar",
     "points_order": 110,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2780_werewolf_lord_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/seigneur-loup-garou.webp",
     "points": 140
   },
@@ -2219,7 +2219,7 @@
     "name": "Ogre Warhulk",
     "general": "Utgar",
     "points_order": 114,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2112_ogre_warhulk_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ogre-warhulk.webp",
     "points": 150
   },
@@ -2243,7 +2243,7 @@
     "name": "Shurrak",
     "general": "Utgar",
     "points_order": 117,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2419_shurrak_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/shurrak.webp",
     "points": 160
   },
@@ -2267,7 +2267,7 @@
     "name": "Moltenclaw",
     "general": "Utgar",
     "points_order": 120,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1980_moltenclaw_17912_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/moltenclaw.webp",
     "points": 170
   },
@@ -2419,7 +2419,7 @@
     "name": "Mezzodemon Warmongers",
     "general": "Valkrill",
     "points_order": 15,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1908_mezzodemon_army_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/mezzodemons-de-la-discorde.webp",
     "points": 65
   },
@@ -2443,7 +2443,7 @@
     "name": "Horned Skull Brutes",
     "general": "Valkrill",
     "points_order": 18,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1524_horned_skull_brutes_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/brutes-a-cranes-cornus.webp",
     "points": 75
   },
@@ -2571,7 +2571,7 @@
     "name": "Otonashi",
     "general": "Vydar",
     "points_order": 1,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2160_sew8_ontonashi.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/otonashi.webp",
     "points": 10
   },
@@ -2731,7 +2731,7 @@
     "name": "James Murphy",
     "general": "Vydar",
     "points_order": 23,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1578_murphy.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/james-murphy.webp",
     "points": 75
   },
@@ -2739,7 +2739,7 @@
     "name": "Gladiatrons",
     "general": "Vydar",
     "points_order": 25,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1368_gtrons.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gladiatrons.webp",
     "points": 80
   },
@@ -2755,7 +2755,7 @@
     "name": "Warforged Soldiers",
     "general": "Vydar",
     "points_order": 27,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2762_warforged_soldiers_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/soldats-forgeliers.webp",
     "points": 80
   },
@@ -2763,7 +2763,7 @@
     "name": "Gorillinators",
     "general": "Vydar",
     "points_order": 28,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1392_gorill.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gorillinators.webp",
     "points": 90
   },
@@ -2771,7 +2771,7 @@
     "name": "Heirloom",
     "general": "Vydar",
     "points_order": 29,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1506_heirloom_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/heirloom.webp",
     "points": 90
   },
@@ -2795,7 +2795,7 @@
     "name": "Iron Golem",
     "general": "Vydar",
     "points_order": 33,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1542_golem_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/golem-de-fer.webp",
     "points": 100
   },
@@ -2803,7 +2803,7 @@
     "name": "Krav Maga Agents",
     "general": "Vydar",
     "points_order": 34,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1722_kravmaga.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/agents-de-krav-maga.webp",
     "points": 100
   },
@@ -2827,7 +2827,7 @@
     "name": "Evar Scarcarver",
     "general": "Vydar",
     "points_order": 39,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1260_evar_001_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/evar-scarcarver.webp",
     "points": 110
   },
@@ -2835,7 +2835,7 @@
     "name": "Laglor",
     "general": "Vydar",
     "points_order": 40,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1758_laglor_552421.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/laglor.webp",
     "points": 110
   },
@@ -2843,7 +2843,7 @@
     "name": "Mika Connour",
     "general": "Vydar",
     "points_order": 41,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1932_mika_card_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/mika-connour.webp",
     "points": 110
   },
@@ -2867,7 +2867,7 @@
     "name": "Nakita Agents",
     "general": "Vydar",
     "points_order": 46,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2010_nakita.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/agents-nakita.webp",
     "points": 120
   },
@@ -2875,7 +2875,7 @@
     "name": "Siege",
     "general": "Vydar",
     "points_order": 47,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2425_siege_card_001_original.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/siege.webp",
     "points": 120
   },
@@ -3364,7 +3364,7 @@
     "general": "Jandar",
     "points": 100,
     "points_order": 37,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2124_omnicron.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/snipers-omnicrons.webp"
   },
   {
@@ -3372,7 +3372,7 @@
     "general": "Einar",
     "points": 185,
     "points_order": 66,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2834_25eee826be5f4d84963dc7edf2d84e8b.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/zelrig.webp"
   },
   {
@@ -3380,7 +3380,7 @@
     "general": "Ullar",
     "points": 150,
     "points_order": 52,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2707_sew8_ulginesh.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ulginesh.webp"
   },
   {
@@ -3396,7 +3396,7 @@
     "general": "Jandar",
     "points": 150,
     "points_order": 59,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2437_sew8_sir_dupuis.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/sir-dupuis.webp"
   },
   {
@@ -3404,7 +3404,7 @@
     "general": "Vydar",
     "points": 100,
     "points_order": 36,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1914_microcrp.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/agents-microcorp.webp"
   },
   {
@@ -3420,7 +3420,7 @@
     "general": "Aquilla",
     "points": 100,
     "points_order": 32,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1398_hs_sew10_graniteguardians_2.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gardiens-de-granite.webp"
   },
   {
