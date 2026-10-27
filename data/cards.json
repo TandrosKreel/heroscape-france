@@ -4158,5 +4158,109 @@
     "points_order": 93,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Taelord%20the%20Kyrie%20Warrior%20(2.0)",
     "fr": null
+  },
+  {
+    "name": "Agrith-Naar",
+    "general": "Valkrill",
+    "points_order": 36,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/agrith-naar.webp",
+    "points": 125
+  },
+  {
+    "name": "Drow Assassin",
+    "general": "Utgar",
+    "points_order": 125,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/assassin-drow.webp",
+    "points": 25
+  },
+  {
+    "name": "Betacron",
+    "general": "Jandar",
+    "points_order": 65,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/betacron.webp",
+    "points": 45
+  },
+  {
+    "name": "The Alder Knights",
+    "general": "Jandar",
+    "points_order": 66,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/chevaliers-de-laulne.webp",
+    "points": 35
+  },
+  {
+    "name": "Jim Whitecloud",
+    "general": "Aquilla",
+    "points_order": 56,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/jim-whitecloud.webp",
+    "points": 70
+  },
+  {
+    "name": "Kolbjorn",
+    "general": "Ullar",
+    "points_order": 58,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/kolbjorn.webp",
+    "points": 80
+  },
+  {
+    "name": "Leslie \"Coyote\" Cane",
+    "general": "Vydar",
+    "points_order": 61,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/leslie-coyote-cane.webp",
+    "points": 40
+  },
+  {
+    "name": "Nordlung",
+    "general": "Jandar",
+    "points_order": 67,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/nordlung.webp",
+    "points": 160
+  },
+  {
+    "name": "Ogre Castle Crasher",
+    "general": "Utgar",
+    "points_order": 126,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ogre-brise-chateau.webp",
+    "points": 100
+  },
+  {
+    "name": "Roeden Saren",
+    "general": "Aquilla",
+    "points_order": 57,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/roaden-saren.webp",
+    "points": 85
+  },
+  {
+    "name": "Rujin",
+    "general": "Utgar",
+    "points_order": 127,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/rujin.webp",
+    "points": 115
+  },
+  {
+    "name": "Shadow Wraith",
+    "general": "Vydar",
+    "points_order": 62,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/shadow-wraith.webp",
+    "points": 25
+  },
+  {
+    "name": "Veterans of Orleans",
+    "general": "Jandar",
+    "points_order": 68,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/veterans-dorleans.webp",
+    "points": 55
   }
 ]
