@@ -237,13 +237,14 @@ if(db){
 
 
 let vfMigrationCreator=false,vfMigrationBusy=false;
+const vfMigrationFailed=new Set();
 const vfMigrationLog=[];
 const vfMigrationPrefix='https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/';
 function vfMigrationCandidates(){
  const byName=new Map(edits.filter(x=>x.source_name).map(x=>[x.source_name,x]));
  return base.filter(x=>{
   const e=byName.get(x.name),url=e?e.fr:x.fr;
-  return !!url&&!url.startsWith(vfMigrationPrefix);
+  return !!url&&!url.startsWith(vfMigrationPrefix)&&!vfMigrationFailed.has(x.name);
  });
 }
 function vfMigrationStatus(message){
@@ -279,7 +280,7 @@ async function vfMigrationBatch(){
     completed++;
     await loadEdits();merge();
    }catch(err){
-    failed++;vfMigrationLog.push({name:card.name,status:'échec',previous:source,error:String(err.message||err)});
+    failed++;vfMigrationFailed.add(card.name);vfMigrationLog.push({name:card.name,status:'échec',previous:source,error:String(err.message||err)});
    }
   }
   render();notifyCatalogueChange();
