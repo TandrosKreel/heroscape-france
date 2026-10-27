@@ -41,6 +41,9 @@
     .cards-admin-grid label{display:flex;flex-direction:column;gap:5px;font-weight:600;font-size:13px}
     .cards-admin-grid input,.cards-admin-grid select{width:100%;min-width:0;box-sizing:border-box;padding:10px;border:1px solid #667688;border-radius:7px;background:#0d1721;color:#f5f6f7}
     .cards-admin-wide{grid-column:1/-1}
+    .cards-admin-grid label.cards-remove-link{display:flex;flex-direction:row;align-items:center;gap:12px;padding:12px 14px;border:1px solid #bd9853;border-radius:8px;background:#223448;color:#f5d58c;font-size:15px;font-weight:700;cursor:pointer}
+    .cards-admin-grid label.cards-remove-link input[type=checkbox]{appearance:auto;width:20px;height:20px;min-width:20px;margin:0;accent-color:#d6ac4f;cursor:pointer}
+    .cards-admin-grid label.cards-remove-link:has(input:checked){border-color:#e8b45b;background:#423324}
     .cards-admin-buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
     .cards-admin-buttons button,.cards-edit-btn{padding:8px 12px;border:1px solid #bd9853;border-radius:7px;background:#26384a;color:#f5d58c;cursor:pointer}
     .cards-admin-buttons .cards-danger{border-color:#be6969;color:#ffcccc;background:#42272c}
@@ -94,8 +97,8 @@
         <label id="cards-place-label">Position souhaitée<select id="cards-place-after"><option value="">Classement automatique par points</option></select></label>
         <label class="cards-admin-wide">Importer une image VF (WebP, PNG ou JPG)<input id="cards-fr-file" type="file" accept="image/webp,image/png,image/jpeg"></label><label class="cards-admin-wide">Importer une image VO (WebP, PNG ou JPG)<input id="cards-en-file" type="file" accept="image/webp,image/png,image/jpeg"></label><label class="cards-admin-wide" id="cards-fr-url-row" hidden>Lien historique de la carte française (VF)<input id="cards-fr" type="url" maxlength="2048" placeholder="https://…"></label>
         <label class="cards-admin-wide" id="cards-en-url-row" hidden>Lien historique de la carte anglaise (VO)<input id="cards-en" type="url" maxlength="2048" placeholder="https://…"></label>
-        <label class="cards-admin-wide" id="cards-fr-remove-row" hidden><input id="cards-remove-fr" type="checkbox"> Retirer le lien VF de cette carte (sans masquer ni supprimer la carte)</label>
-        <label class="cards-admin-wide" id="cards-en-remove-row" hidden><input id="cards-remove-en" type="checkbox"> Retirer le lien VO de cette carte (sans masquer ni supprimer la carte)</label>
+        <label class="cards-admin-wide cards-remove-link" id="cards-fr-remove-row" hidden><input id="cards-remove-fr" type="checkbox"> Retirer le lien VF de cette carte (sans masquer ni supprimer la carte)</label>
+        <label class="cards-admin-wide cards-remove-link" id="cards-en-remove-row" hidden><input id="cards-remove-en" type="checkbox"> Retirer le lien VO de cette carte (sans masquer ni supprimer la carte)</label>
       </div>
       <div class="cards-admin-buttons">
         <button id="cards-save" type="submit">Enregistrer la carte</button>
