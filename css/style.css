@@ -2297,3 +2297,15 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
     box-sizing:border-box!important;
   }
 }
+
+/* Pagination compacte : champ de saut direct entre la page 3 et les dernières pages. */
+.pagination{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.pagination-jump{display:inline-flex;align-items:center;gap:3px;margin:0}
+.pagination-jump input{width:54px;max-width:54px;min-width:0;box-sizing:border-box;padding:7px 4px;text-align:center;border:1px solid #bd9853;border-radius:6px;background:#15222e;color:#f5d58c;font:inherit}
+.pagination-jump input::-webkit-inner-spin-button,.pagination-jump input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.pagination-jump input[type=number]{-moz-appearance:textfield;appearance:textfield}
+.pagination-jump button{border:1px solid #bd9853;border-radius:6px;padding:7px 8px;background:#26384a;color:#f5d58c;cursor:pointer}
+.pagination-jump input:focus-visible,.pagination-jump button:focus-visible{outline:2px solid #e5ba59;outline-offset:2px}
+.topic-page-links .pagination-jump{vertical-align:middle}
+.topic-page-links .pagination-jump input{width:42px;max-width:42px;padding:4px 2px;font-size:12px}
+.topic-page-links .pagination-jump button{padding:4px 5px;font-size:12px}
