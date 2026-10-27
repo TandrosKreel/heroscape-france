@@ -5,6 +5,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const safeUrl=s=>{try{const u=new URL(String(s||''));return /^https?:$/.test(u.protocol)?u.href:''}catch{return ''}};
 const db=window.supabaseClient;
 let base=[],edits=[],all=[],admin=false,editing=null;
+let specials={glyphes:[],sans_general:[]};
 let adminCheckSerial=0;
 const q=$('q'),g=$('g'),band=$('band'),box=$('cards'),status=$('cards-status'),panel=$('cards-admin-panel'),form=$('cards-admin-form'),notice=$('cards-admin-notice');
 const sortCards=(a,b)=>a.general.localeCompare(b.general,'fr')||a.points-b.points||Number(a.points_order||0)-Number(b.points_order||0)||a.name.localeCompare(b.name,'fr');
@@ -14,7 +15,7 @@ function merge(){all=window.HeroscapeCards.merge(base,edits).active;}
 const notifyCatalogueChange=()=>{try{localStorage.setItem('heroscape-cards-updated',String(Date.now()))}catch{}};
 
 function render(){
- const generals=[...new Set(all.map(x=>x.general))].sort((a,b)=>a.localeCompare(b,'fr'));
+ const generals=[...new Set([...all.map(x=>x.general),...specials.sans_general.map(x=>x.general)])].sort((a,b)=>a.localeCompare(b,'fr'));
  const selected=g.value;
  g.innerHTML='<option value="">Tous les généraux</option>'+generals.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('');
  g.value=selected;
@@ -23,7 +24,9 @@ function render(){
   const cost=!band.value||(band.value==='lt100'&&x.points<100)||(band.value==='100to149'&&x.points>=100&&x.points<150)||(band.value==='gte150'&&x.points>=150);
   return cost&&(!term||x.name.toLocaleLowerCase('fr').includes(term))&&(!g.value||x.general===g.value);
  });
- status.textContent=filtered.length+' carte'+(filtered.length>1?'s':'')+' affichée'+(filtered.length>1?'s':'')+'.';
+ const specialFiltered=specials.sans_general.filter(x=>!band.value&&(!term||x.name.toLocaleLowerCase('fr').includes(term))&&(!g.value||x.general===g.value));
+ const total=filtered.length+specialFiltered.length;
+ status.textContent=total+' carte'+(total>1?'s':'')+' affichée'+(total>1?'s':'')+'.';
  const link=(url,label)=>safeUrl(url)?'<a class="btn" href="'+esc(safeUrl(url))+'" target="_blank" rel="noopener noreferrer">'+label+'</a>':'<span>'+label+' indisponible</span>';
  box.innerHTML=generals.map(general=>{
   const list=filtered.filter(x=>x.general===general);
@@ -32,7 +35,20 @@ function render(){
    const key=x._source?'base:'+x._source:'custom:'+x.id;
    return '<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.points)+' points</p><div class="army-actions">'+link(x.fr,'🇫🇷 VF')+link(x.en,'🇬🇧 English')+'</div>'+(admin?'<button class="cards-edit-btn" type="button" data-card-key="'+esc(key)+'">Modifier / supprimer</button>':'')+'</article>';
   }).join('')+'</div></section>';
- }).join('');
+ }).join('')+(specialFiltered.length?'<section class="general-section"><h2>Sans Général <span class="section-count">('+specialFiltered.length+')</span></h2><div class="army-grid">'+specialFiltered.map(x=>'<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.type||'Objet de terrain')+'</p><div class="army-actions">'+link(x.fr,'🇫🇷 VF')+'</div></article>').join('')+'</div></section>':'');
+}
+function renderGlyphes(){
+ const target=$('cards-glyphes');if(!target)return;
+ const glyphes=specials.glyphes||[];
+ const link=url=>safeUrl(url)?'<a class="btn" href="'+esc(safeUrl(url))+'" target="_blank" rel="noopener noreferrer">🇫🇷 VF</a>':'<span>VF indisponible</span>';
+ target.innerHTML=glyphes.map(x=>'<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.type||'Glyphe')+'</p><div class="army-actions">'+link(x.fr)+'</div></article>').join('');
+ $('cards-glyphes-status').textContent=glyphes.length+' glyphe'+(glyphes.length>1?'s':'')+' ou équipement'+(glyphes.length>1?'s':'')+' dans la bibliothèque.';
+}
+function switchView(showGlyphes){
+ $('cards-armies-view').hidden=showGlyphes;
+ $('cards-glyphes-view').hidden=!showGlyphes;
+ $('cards-tab-armies').setAttribute('aria-selected',String(!showGlyphes));
+ $('cards-tab-glyphes').setAttribute('aria-selected',String(showGlyphes));
 }
 function fillPlacement(){
  const el=$('cards-place-after'),value=el.value;
@@ -146,7 +162,11 @@ async function init(){
  try{
   const response=await fetch('data/cards.json');if(!response.ok)throw Error('Catalogue introuvable');
   base=await response.json();
-  merge();render();
+  try{
+   const extraResponse=await fetch('data/cartes-speciales.json');
+   if(extraResponse.ok){const data=await extraResponse.json();if(Array.isArray(data.glyphes)&&Array.isArray(data.sans_general))specials=data;}
+  }catch(err){console.warn('Cartes spéciales indisponibles',err)}
+  merge();render();renderGlyphes();
   // Les commandes administrateur ne doivent pas attendre la requête du catalogue Supabase.
   void refreshAdmin();
   void loadEdits().then(()=>{merge();render()}).catch(err=>console.warn('Catalogue Supabase indisponible :',err));
@@ -160,6 +180,8 @@ if(db){
 }
 
 q.addEventListener('input',render);g.addEventListener('change',render);band.addEventListener('change',render);
+$('cards-tab-armies').addEventListener('click',()=>switchView(false));
+$('cards-tab-glyphes').addEventListener('click',()=>switchView(true));
 $('cards-admin-open').addEventListener('click',()=>openForm());
 $('cards-cancel').addEventListener('click',closeForm);
 form.addEventListener('submit',saveEdit);
