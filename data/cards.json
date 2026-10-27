@@ -3809,7 +3809,7 @@
   },
   {
     "name": "Dr. Torvik Morinstein",
-    "general": "Revna",
+    "general": "Vydar",
     "points": 40,
     "points_order": 6,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Dr.%20Torvik%20Morinstein",
@@ -3825,7 +3825,7 @@
   },
   {
     "name": "Durnipia",
-    "general": "Volarak",
+    "general": "Einar",
     "points": 75,
     "points_order": 8,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Durnipia",
@@ -3929,7 +3929,7 @@
   },
   {
     "name": "Morinstein's Masterpiece",
-    "general": "Revna",
+    "general": "Indépendant",
     "points": 20,
     "points_order": 1,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Morinstein's%20Masterpiece",
@@ -4040,8 +4040,8 @@
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/soldat-de-la-ruche-crachant.webp"
   },
   {
-    "name": "Storm Shadow",
-    "general": "G.I. JOE",
+    "name": "Storm Shadow V1",
+    "general": "COBRA",
     "points": 80,
     "points_order": 5,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Storm%20Shadow",
