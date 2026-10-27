@@ -3853,7 +3853,7 @@
     "points": 35,
     "points_order": 5,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Frizzt%20Galagan",
-    "fr": null
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/frizzt-galagan.webp"
   },
   {
     "name": "Gimbal",
@@ -4109,7 +4109,7 @@
     "points": 100,
     "points_order": 36,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Concan%20the%20Kyrie%20Warrior%20(2.0)",
-    "fr": null
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/concan-le-guerrier-kyrie-v2.webp"
   },
   {
     "name": "Guilty McCreech (2.0)",
@@ -4157,7 +4157,7 @@
     "points": 120,
     "points_order": 93,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Taelord%20the%20Kyrie%20Warrior%20(2.0)",
-    "fr": null
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/taelord-le-guerrier-kyrie-v2.webp"
   },
   {
     "name": "Agrith-Naar",
@@ -4262,5 +4262,93 @@
     "en": null,
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/veterans-dorleans.webp",
     "points": 55
+  },
+  {
+    "name": "Champion of Scaeda",
+    "general": "Jandar",
+    "points_order": 69,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/champion-de-scaeda.webp",
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/champion-de-scaeda.webp",
+    "points": 165
+  },
+  {
+    "name": "Knights of Scaeda",
+    "general": "Aquilla",
+    "points_order": 58,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/chevaliers-de-scaeda.webp",
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/chevaliers-de-scaeda.webp",
+    "points": 65
+  },
+  {
+    "name": "Defletacron",
+    "general": "Vydar",
+    "points_order": 63,
+    "en": null,
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/defletacron.webp",
+    "points": 25
+  },
+  {
+    "name": "Head Warden Lermek",
+    "general": "Vydar",
+    "points_order": 64,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/lermek-chef-de-la-garde.webp",
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/lermek-chef-de-la-garde.webp",
+    "points": 65
+  },
+  {
+    "name": "Mage of Scaeda",
+    "general": "Utgar",
+    "points_order": 128,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/mage-de-scaeda.webp",
+    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/mage-de-scaeda.webp",
+    "points": 95
+  },
+  {
+    "name": "Associates of Volarak",
+    "general": "Volarak",
+    "points_order": 15,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/associates-of-volarak.webp",
+    "fr": null,
+    "points": 85
+  },
+  {
+    "name": "Dr. Valentina Lockhart",
+    "general": "Vydar",
+    "points_order": 65,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/dr-valentina-lockhart.webp",
+    "fr": null,
+    "points": 85
+  },
+  {
+    "name": "Dr. Harlan Eisen",
+    "general": "Vydar",
+    "points_order": 66,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/dr-harlan-eisen.webp",
+    "fr": null,
+    "points": 70
+  },
+  {
+    "name": "Seelie Courtiers",
+    "general": "Ullar",
+    "points_order": 59,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/seelie-courtiers.webp",
+    "fr": null,
+    "points": 50
+  },
+  {
+    "name": "Taega the Kyrie Warrior",
+    "general": "Volarak",
+    "points_order": 16,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/taega-the-kyrie-warrior.webp",
+    "fr": null,
+    "points": 95
+  },
+  {
+    "name": "Oberon",
+    "general": "Ullar",
+    "points_order": 60,
+    "en": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vo/oberon.webp",
+    "fr": null,
+    "points": 100
   }
 ]
