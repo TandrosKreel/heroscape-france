@@ -1491,7 +1491,7 @@
     "name": "Drow Chainfighter",
     "general": "Utgar",
     "points_order": 4,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1152_Drowchainfightercard.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/combattant-a-chaine-drow.webp",
     "points": 25
   },
@@ -1971,7 +1971,7 @@
     "name": "Shades of Bleakewoode",
     "general": "Utgar",
     "points_order": 77,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2389_shades.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ombres-de-bleakwoode.webp",
     "points": 100
   },
@@ -2163,7 +2163,7 @@
     "name": "Cxurg'gyath (SoV)",
     "general": "Utgar",
     "points_order": 105,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/09_cxurgygyath.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/cxurggyath.webp",
     "points": 140
   },
@@ -3051,7 +3051,7 @@
     "name": "Dreadnoughts of Caraway Cavern",
     "general": "Utgar",
     "points": 80,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1140_EoW-11.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/cuirasses-de-la-grotte-de-carvi.webp",
     "points_order": 53
   },
@@ -3131,7 +3131,7 @@
     "name": "Dorim the Bulkhead Brawler",
     "general": "Aquilla",
     "points": 100,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1134_Dorim_Master.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/dorim-the-bulkhead-brawler.webp",
     "points_order": 31
   },
@@ -3428,7 +3428,7 @@
     "general": "Ullar",
     "points": 100,
     "points_order": 29,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1218_eov.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/viperes-delite-onyx.webp"
   },
   {
@@ -3732,7 +3732,7 @@
     "general": "Vydar",
     "points": 40,
     "points_order": 6,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1158_DrTorvikMorinstein_MasterSide.webp",
     "fr": null
   },
   {
@@ -3748,7 +3748,7 @@
     "general": "Einar",
     "points": 75,
     "points_order": 8,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1188_sotc-durnipia.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/durnipia.webp"
   },
   {
@@ -3756,7 +3756,7 @@
     "general": "Volarak",
     "points": 155,
     "points_order": 14,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1206_sotc-eel-and-ffuoh.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/eel-ffuoh.webp"
   },
   {
@@ -3964,7 +3964,7 @@
     "general": "COBRA",
     "points": 80,
     "points_order": 5,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_2497_67c470c5a1384be990ab6dbcc609f5c4.webp",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/storm-shadow.webp"
   },
   {
@@ -4235,7 +4235,7 @@
     "name": "Dr. Valentina Lockhart",
     "general": "Vydar",
     "points_order": 65,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1164_a881300dded44d949216c9e0373d4d45.webp",
     "fr": null,
     "points": 85
   },
@@ -4243,7 +4243,7 @@
     "name": "Dr. Harlan Eisen",
     "general": "Vydar",
     "points_order": 66,
-    "en": null,
+    "en": "https://yhpazuslssejitmneqgs.supabase.co/storage/v1/object/public/army-cards/Vo%20cards/imgi_1146_09906d99ff174d2bafaaf2f390b38a62.webp",
     "fr": null,
     "points": 70
   },
