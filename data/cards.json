@@ -456,7 +456,7 @@
     "points": 55
   },
   {
-    "name": "Izumi Samourai",
+    "name": "Izumi Samurai",
     "general": "Einar",
     "points_order": 21,
     "en": "https://lh3.googleusercontent.com/-OJ98wdZp-XA/VTZtvvCPWSI/AAAAAAAAPV0/nLYyxQ0XBc4/Samourai%2520Izumi.png",
@@ -488,7 +488,7 @@
     "points": 65
   },
   {
-    "name": "Tagawa Samourai Archers",
+    "name": "Tagawa Samurai Archers",
     "general": "Einar",
     "points_order": 26,
     "en": "https://lh4.googleusercontent.com/-TKILwSbNZnk/T-3JY-JrKsI/AAAAAAAACqU/B7GnP2sCkc4/Tagawa%2520Samurai%2520Archers.jpg",
@@ -576,7 +576,7 @@
     "points": 100
   },
   {
-    "name": "Kozuke Samourai",
+    "name": "Kozuke Samurai",
     "general": "Einar",
     "points_order": 43,
     "en": "https://lh3.googleusercontent.com/-wsIdjRwN68w/T-3KnIFdUYI/AAAAAAAAC6A/dQzTGmlNa6U/Kozuke%2520Samurai.jpg",
@@ -664,7 +664,7 @@
     "points": 120
   },
   {
-    "name": "Tagawa Samourai",
+    "name": "Tagawa Samurai",
     "general": "Einar",
     "points_order": 56,
     "en": "https://lh6.googleusercontent.com/-9JT47Pkr684/T-3JZVcPuYI/AAAAAAAACqY/FUsavigD9UQ/Tagawa%2520Samurai.jpg",
@@ -784,7 +784,7 @@
     "points": 40
   },
   {
-    "name": "Clayfoot Interceptor (C3V)",
+    "name": "Clawfoot Interceptor (C3V)",
     "general": "Jandar",
     "points_order": 9,
     "en": "https://www.heroscapers.com/community/gallery/files/1/c3v_clawfootinterceptor_master.jpg",
@@ -1264,7 +1264,7 @@
     "points": 75
   },
   {
-    "name": "Emiroon",
+    "name": "Emirroon",
     "general": "Ullar",
     "points_order": 20,
     "en": "https://lh6.googleusercontent.com/-0K8H58myw0c/T-3KJOiUQCI/AAAAAAAACzY/JVS7dkvIDs8/Emirroon.jpg",
@@ -1320,7 +1320,7 @@
     "points": 100
   },
   {
-    "name": "Johrdawn",
+    "name": "Jorhdawn",
     "general": "Ullar",
     "points_order": 31,
     "en": "https://lh3.googleusercontent.com/-f4d52e_NKkI/T-3Ke47uaLI/AAAAAAAAC4c/LTt_b4-9C28/Jorhdawn.jpg",
@@ -3432,14 +3432,6 @@
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/deathstalkers.webp"
   },
   {
-    "name": "Izumi Samurai",
-    "general": "Einar",
-    "points": 60,
-    "points_order": 22,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Izumi%20Samurai",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/samourais-izumi.webp"
-  },
-  {
     "name": "Major Q10",
     "general": "Vydar",
     "points": 150,
@@ -3470,38 +3462,6 @@
     "points_order": 52,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Ulginesh",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/ulginesh.webp"
-  },
-  {
-    "name": "The Einar Imperium",
-    "general": "Einar",
-    "points": 140,
-    "points_order": 64,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=The%20Einar%20Imperium",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/imperium-deinar.webp"
-  },
-  {
-    "name": "The Axegrinders of Burning Forge",
-    "general": "Aquilla",
-    "points": 70,
-    "points_order": 21,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=The%20Axegrinders%20of%20Burning%20Forge",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/axegrinders.webp"
-  },
-  {
-    "name": "Tagawa Samurai",
-    "general": "Einar",
-    "points": 120,
-    "points_order": 57,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Tagawa%20Samurai",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/samourais-tagawa.webp"
-  },
-  {
-    "name": "Tagawa Samurai Archers",
-    "general": "Einar",
-    "points": 65,
-    "points_order": 27,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Tagawa%20Samurai%20Archers",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/samourais-archers-tagawa.webp"
   },
   {
     "name": "M.A.R.S.",
@@ -3536,36 +3496,12 @@
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/major-x17.webp"
   },
   {
-    "name": "Kozuke Samurai",
-    "general": "Einar",
-    "points": 100,
-    "points_order": 44,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Kozuke%20Samurai",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/samourais-kozuke.webp"
-  },
-  {
-    "name": "Jorhdawn",
-    "general": "Ullar",
-    "points": 100,
-    "points_order": 32,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Jorhdawn",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/jorhdawn.webp"
-  },
-  {
     "name": "Granite Guardians",
     "general": "Aquilla",
     "points": 100,
     "points_order": 32,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Granite%20Guardians",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/gardiens-de-granite.webp"
-  },
-  {
-    "name": "Emirroon",
-    "general": "Ullar",
-    "points": 80,
-    "points_order": 21,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Emirroon",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/emirroon.webp"
   },
   {
     "name": "Elite Onyx Vipers",
@@ -3630,30 +3566,6 @@
     "points_order": 51,
     "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Brontos",
     "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/brontos.webp"
-  },
-  {
-    "name": "Capt. John Varan",
-    "general": "Jandar",
-    "points": 80,
-    "points_order": 20,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Capt.%20John%20Varan",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/capt-john-varan.webp"
-  },
-  {
-    "name": "Clawfoot Interceptor",
-    "general": "Jandar",
-    "points": 50,
-    "points_order": 8,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Clawfoot%20Interceptor",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/clawfoot-interceptor-vf.webp"
-  },
-  {
-    "name": "Gen. Simon Fraser",
-    "general": "Einar",
-    "points": 45,
-    "points_order": 13,
-    "en": "https://heroscape.org/builder/?pointSystem=Standard&search=Gen.%20Simon%20Fraser",
-    "fr": "https://tandroskreel.github.io/heroscape-france/assets/cartes/vf/general-simon-fraser.webp"
   },
   {
     "name": "Zhen Yuan",
