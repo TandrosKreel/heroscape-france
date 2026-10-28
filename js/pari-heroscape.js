@@ -36,11 +36,25 @@ async function refreshCards(){
  try{return await cardsRefreshing}finally{cardsRefreshing=null}
 }
 async function load(){
+ const notice=$('pari-access-notice'),privateContent=$('pari-private-content');
+ const {data:authData,error:authError}=await db.auth.getUser();
+ const currentUser=authData?.user;
+ if(authError||!currentUser){
+  notice.innerHTML='🔒 Le Pari Heroscape est réservé aux membres connectés du forum. <a href="index.html" style="color:#f5d58c;text-decoration:underline">Retour au forum pour se connecter</a>.';
+  return false;
+ }
+ const {data:memberProfile,error:profileError}=await db.from('profiles').select('id').eq('id',currentUser.id).maybeSingle();
+ if(profileError||!memberProfile){
+  notice.textContent='🔒 Accès réservé aux membres du forum. Votre profil de membre n’a pas pu être vérifié.';
+  return false;
+ }
+ privateContent.hidden=false;notice.hidden=true;
  const [u,c,m,ms,as,cs,vs]=await Promise.all([user?Promise.resolve({data:{user}}):db.auth.getUser(),window.HeroscapeCards.load(db),members.length?Promise.resolve({data:members}):db.from('profiles').select('id,username,role,can_moderate'),db.from('bet_matches').select('*').order('created_at',{ascending:false}),db.from('bet_armies').select('*'),db.from('bet_army_cards').select('*'),db.from('bet_votes').select('*')]);
  for(const x of [m,ms,as,cs,vs])if(x.error)throw x.error;
  user=u.data.user;members=m.data||[];admin=members.some(x=>x.id===user?.id&&(x.role==='admin'||x.role==='moderator'||x.can_moderate===true));
  setCatalogue(c);
  matches=ms.data||[];armies=as.data||[];items=cs.data||[];votes=vs.data||[];indexRows();render();
+ return true;
 }
 async function reloadVotes(){const {data,error}=await db.from('bet_votes').select('*');if(error)throw error;votes=data||[];indexRows();render()}
 
@@ -254,7 +268,8 @@ if(db){
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)void refreshCards().catch(e=>console.warn('Actualisation des cartes :',e))});
 window.addEventListener('focus',()=>{void refreshCards().catch(e=>console.warn('Actualisation des cartes :',e))});
 window.addEventListener('storage',e=>{if(e.key==='heroscape-cards-updated')void refreshCards().catch(err=>console.warn('Actualisation des cartes :',err))});
-load().then(()=>{
+load().then(allowed=>{
+ if(!allowed)return;
  const requested=Number(new URLSearchParams(location.search).get('match'));
  const found=requested?matches.find(m=>m.id===requested):null;
  let selected=['encours','terminees','participants','cartes'].includes(location.hash.slice(1))?location.hash.slice(1):'encours';
