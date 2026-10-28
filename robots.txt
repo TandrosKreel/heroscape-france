@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tandroskreel.github.io/heroscape-france/sitemap.xml
