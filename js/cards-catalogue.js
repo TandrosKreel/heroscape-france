@@ -58,11 +58,65 @@ function renderGlyphes(){
  target.innerHTML=glyphes.map(x=>'<article class="card army-card"><h3>'+esc(x.name)+'</h3><p class="army-meta">'+esc(x.type||'Glyphe')+'</p><div class="army-actions">'+link(x.fr)+'</div></article>').join('');
  $('cards-glyphes-status').textContent=glyphes.length+' glyphe'+(glyphes.length>1?'s':'')+' ou équipement'+(glyphes.length>1?'s':'')+' dans la bibliothèque.';
 }
-function switchView(showGlyphes){
- $('cards-armies-view').hidden=showGlyphes;
- $('cards-glyphes-view').hidden=!showGlyphes;
- $('cards-tab-armies').setAttribute('aria-selected',String(!showGlyphes));
- $('cards-tab-glyphes').setAttribute('aria-selected',String(showGlyphes));
+function switchView(view){
+ const selected=view===true?'glyphes':view===false?'armies':view;
+ if(selected==='history'&&!admin)return;
+ for(const name of ['armies','glyphes','history']){
+  $('cards-'+name+'-view').hidden=name!==selected;
+  $('cards-tab-'+name).setAttribute('aria-selected',String(name===selected));
+ }
+ if(selected==='history')void loadGlobalCardHistory(true);
+}
+let globalHistoryOffset=0,globalHistoryBusy=false;
+const HISTORY_BATCH=30;
+function describeCardHistoryChange(entry){
+ const old=entry.old_data||{},next=entry.new_data||{},labels={name:'Nom',general:'Général',points:'Coût',fr:'Image VF',en:'Image VO',is_hidden:'Visibilité'};
+ if(entry.action==='INSERT')return '<p>Nouvelle carte ajoutée au catalogue.</p>';
+ if(entry.action==='DELETE')return '<p>Carte supprimée du catalogue.</p>';
+ const changes=[];
+ for(const [key,label] of Object.entries(labels)){
+  if(old[key]===next[key])continue;
+  if(key==='fr'||key==='en'){
+   changes.push('<p>'+label+' : '+(next[key]?'ajoutée ou remplacée':'retirée')+'</p>');
+  }else if(key==='is_hidden'){
+   changes.push('<p>Visibilité : '+(next[key]?'carte masquée':'carte visible')+'</p>');
+  }else{
+   changes.push('<p>'+label+' : '+esc(String(old[key]??'—'))+' → '+esc(String(next[key]??'—'))+'</p>');
+  }
+ }
+ return changes.join('')||'<p>Enregistrement mis à jour, sans changement visible des principaux champs.</p>';
+}
+async function loadGlobalCardHistory(reset=false){
+ if(!admin||!db||globalHistoryBusy)return;
+ if(reset){globalHistoryOffset=0;$('cards-history-list').innerHTML='';}
+ globalHistoryBusy=true;
+ const status=$('cards-history-status'),more=$('cards-history-more');
+ more.hidden=true;status.textContent='Chargement de l’historique…';
+ try{
+  const {data,error}=await db.from('army_card_history')
+   .select('action,changed_at,actor_id,old_data,new_data,card_id')
+   .order('changed_at',{ascending:false})
+   .range(globalHistoryOffset,globalHistoryOffset+HISTORY_BATCH-1);
+  if(error)throw error;
+  const entries=data||[];
+  const ids=[...new Set(entries.map(x=>x.actor_id).filter(Boolean))];
+  let names={};
+  if(ids.length){
+   const res=await db.from('profiles').select('id,username').in('id',ids);
+   if(!res.error)names=Object.fromEntries((res.data||[]).map(x=>[x.id,x.username]));
+  }
+  const html=entries.map(x=>{
+   const name=x.new_data?.name||x.old_data?.name||'Carte inconnue';
+   const action=({INSERT:'Ajout',UPDATE:'Modification',DELETE:'Suppression'})[x.action]||x.action;
+   const date=new Date(x.changed_at).toLocaleString('fr-FR');
+   return '<details class="cards-history-entry"><summary>'+esc(date)+' — '+esc(name)+' — '+esc(action)+' — '+esc(names[x.actor_id]||'Compte inconnu')+'</summary><div class="cards-history-detail">'+describeCardHistoryChange(x)+'</div></details>';
+  }).join('');
+  $('cards-history-list').insertAdjacentHTML('beforeend',html);
+  globalHistoryOffset+=entries.length;
+  more.hidden=entries.length<HISTORY_BATCH;
+  status.textContent=globalHistoryOffset?globalHistoryOffset+' modification(s) affichée(s), des plus récentes aux plus anciennes.':'Aucune modification enregistrée.';
+ }catch(err){status.textContent='Historique indisponible : '+(err.message||'erreur de chargement');}
+ finally{globalHistoryBusy=false}
 }
 function fillPlacement(){
  const el=$('cards-place-after'),value=el.value;
@@ -230,6 +284,8 @@ async function refreshAdmin(){
  $('cards-vf-migration').hidden=!vfMigrationCreator;
  $('cards-admin-open').hidden=!admin;
  $('cards-hidden-open').hidden=!admin;
+ $('cards-tab-history').hidden=!admin;
+ if(!admin&&!$('cards-history-view').hidden)switchView('armies');
  if(!admin){$('cards-restore-tools').hidden=true;$('cards-hidden-open').setAttribute('aria-expanded','false');}
  if(!admin&&editing)closeForm();
  if(all.length)render();
@@ -334,6 +390,8 @@ $('cards-vf-migration-report').addEventListener('click',()=>{
 q.addEventListener('input',render);g.addEventListener('change',render);band.addEventListener('change',render);
 $('cards-tab-armies').addEventListener('click',()=>switchView(false));
 $('cards-tab-glyphes').addEventListener('click',()=>switchView(true));
+$('cards-tab-history').addEventListener('click',()=>switchView('history'));
+$('cards-history-more').addEventListener('click',()=>{void loadGlobalCardHistory(false)});
 $('cards-admin-open').addEventListener('click',()=>openForm());
 $('cards-manage-search').addEventListener('input',updateManageList);
 $('cards-manage-hide').addEventListener('click',async()=>{
