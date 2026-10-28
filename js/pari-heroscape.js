@@ -44,9 +44,14 @@ async function load(){
   notice.innerHTML='🔒 Le Pari Heroscape est réservé aux membres connectés du forum. <a href="index.html" style="color:#f5d58c;text-decoration:underline">Retour au forum pour se connecter</a>.';
   return false;
  }
- const {data:memberProfile,error:profileError}=await db.from('profiles').select('id').eq('id',currentUser.id).maybeSingle();
+ const {data:memberProfile,error:profileError}=await db.from('profiles').select('id,posting_blocked').eq('id',currentUser.id).maybeSingle();
  if(profileError||!memberProfile){
   notice.textContent='🔒 Accès réservé aux membres du forum. Votre profil de membre n’a pas pu être vérifié.';
+  return false;
+ }
+ if(memberProfile.posting_blocked){
+  privateContent.hidden=true;
+  notice.textContent='🔒 Votre accès au Pari Heroscape est bloqué. Contactez un administrateur du forum pour toute question.';
   return false;
  }
  privateContent.hidden=false;notice.hidden=true;
