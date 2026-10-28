@@ -205,7 +205,6 @@ async function saveEdit(e){
  if(!admin||!db)return;
  const name=valid($('cards-name').value),general=valid($('cards-general').value),points=Number($('cards-points').value),fr=editing?.fr||null,en=editing?.en||null;
  if(!name||!general||!Number.isInteger(points)||points<0||points>2000){inform('Renseigne un nom, un général et un coût valide.',true);return}
- if(!editing&&!$('cards-fr-file').files[0]){inform('Sélectionne une image VF à importer pour créer la carte.',true);return}
  if(all.some(x=>x.name.toLocaleLowerCase('fr')===name.toLocaleLowerCase('fr')&&(!editing||x.catalog_id!==editing.catalog_id))){inform('Une carte porte déjà ce nom.',true);return}
  let points_order=editing?Number(editing.points_order):9999;
  if(!editing){
