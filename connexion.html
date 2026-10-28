@@ -228,6 +228,24 @@
       });
     }
 
+    // Enregistre toute nouvelle session avant l'accès au forum.
+    async function registerActiveForumSession(session) {
+      if (!session?.access_token) throw new Error("Session de connexion introuvable.");
+      let sessionId;
+      try {
+        const payload = JSON.parse(atob(session.access_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+        sessionId = payload.session_id;
+      } catch (_) {
+        throw new Error("Impossible de vérifier la session.");
+      }
+      if (!sessionId) throw new Error("Identifiant de session manquant.");
+      const { error } = await window.supabaseClient.rpc("register_forum_session", {
+        p_session_id: sessionId
+      });
+      if (error) throw new Error("Enregistrement de la session impossible. Réessaie de te connecter.");
+      localStorage.setItem("heroscape_last_activity", String(Date.now()));
+    }
+
     async function handleEmailConfirmationReturn() {
       const params = new URLSearchParams(window.location.search);
       const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
@@ -244,9 +262,16 @@
 
       const code = params.get("code");
       if (code) {
-        const { error } = await window.supabaseClient.auth.exchangeCodeForSession(code);
+        const { data, error } = await window.supabaseClient.auth.exchangeCodeForSession(code);
         if (error) {
           showMessage(loginMessage, "Confirmation impossible : " + error.message);
+          return;
+        }
+        try {
+          await registerActiveForumSession(data.session);
+        } catch (sessionError) {
+          console.error("Sécurité session :", sessionError);
+          showMessage(loginMessage, sessionError.message);
           return;
         }
         window.history.replaceState({}, document.title, "connexion.html");
@@ -256,6 +281,13 @@
 
       const { data: { session } } = await window.supabaseClient.auth.getSession();
       if (session && (hash.get("access_token") || params.get("type") === "signup")) {
+        try {
+          await registerActiveForumSession(session);
+        } catch (sessionError) {
+          console.error("Sécurité session :", sessionError);
+          showMessage(loginMessage, sessionError.message);
+          return;
+        }
         window.history.replaceState({}, document.title, "connexion.html");
         window.location.replace("index.html");
       }
@@ -314,22 +346,12 @@
         return;
       }
 
-      // Enregistre cette connexion comme l'unique session active du compte.
       try {
-        const session = data.session;
-        if (session?.access_token) {
-          const payload = JSON.parse(atob(session.access_token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
-          const sessionId = payload.session_id;
-          if (sessionId) {
-            const { error: sessionError } = await window.supabaseClient.rpc("register_forum_session", {
-              p_session_id: sessionId
-            });
-            if (sessionError) console.error("Enregistrement session :", sessionError);
-          }
-          localStorage.setItem("heroscape_last_activity", String(Date.now()));
-        }
+        await registerActiveForumSession(data.session);
       } catch (sessionError) {
         console.error("Sécurité session :", sessionError);
+        showMessage(loginMessage, sessionError.message);
+        return;
       }
 
       showMessage(
