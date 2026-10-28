@@ -30,8 +30,14 @@
     .cards-view-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
     .cards-view-tabs button{padding:10px 16px;border:1px solid #bd9853;border-radius:8px;background:#26384a;color:#f5d58c;font-weight:700;cursor:pointer}
     .cards-view-tabs button[aria-selected="true"]{background:#d6ac4f;color:#17222d}
-    #cards-armies-view[hidden],#cards-glyphes-view[hidden]{display:none!important}
+    #cards-armies-view[hidden],#cards-glyphes-view[hidden],#cards-history-view[hidden],#cards-tab-history[hidden]{display:none!important}
     #cards-glyphes-status{margin:12px 0}
+    #cards-history-view{padding:16px 0}
+    .cards-history-entry{border:1px solid #526273;border-radius:9px;background:#192735;padding:13px 16px;margin:10px 0}
+    .cards-history-entry summary{cursor:pointer;color:#f5d58c;font-weight:650;line-height:1.6}
+    .cards-history-entry .cards-history-detail{padding:10px 0 0;line-height:1.7;overflow-wrap:anywhere}
+    .cards-history-entry .cards-history-detail p{margin:4px 0}
+    #cards-history-more{margin:12px 0 20px;padding:10px 16px;border:1px solid #bd9853;border-radius:8px;background:#26384a;color:#f5d58c;cursor:pointer}
     /* Gestion du catalogue, visible uniquement aux administrateurs. */
     .cards-admin-open{margin:0 0 12px;padding:10px 16px;border:1px solid #d6ac4f;border-radius:8px;background:#26384a;color:#f5d58c;font-weight:700;cursor:pointer}
     .cards-admin-panel{margin:16px 0 24px;padding:20px;border:1px solid #c59d49;border-radius:12px;background:#182431;color:#edf2f6}
@@ -72,7 +78,7 @@
     <h2>Cartes Armées</h2>
     <p>Bibliothèque des cartes classées par général et selon l'ordre de points de la collection source. Ouvre directement la carte française ou anglaise.</p>
   </section>
-  <div class="cards-view-tabs" role="tablist" aria-label="Bibliothèques de cartes"><button id="cards-tab-armies" type="button" role="tab" aria-controls="cards-armies-view" aria-selected="true">Cartes d’armée</button><button id="cards-tab-glyphes" type="button" role="tab" aria-controls="cards-glyphes-view" aria-selected="false">Glyphes</button></div>
+  <div class="cards-view-tabs" role="tablist" aria-label="Bibliothèques de cartes"><button id="cards-tab-armies" type="button" role="tab" aria-controls="cards-armies-view" aria-selected="true">Cartes d’armée</button><button id="cards-tab-glyphes" type="button" role="tab" aria-controls="cards-glyphes-view" aria-selected="false">Glyphes</button><button id="cards-tab-history" type="button" role="tab" aria-controls="cards-history-view" aria-selected="false" hidden>Historique des modifications</button></div>
   <div id="cards-armies-view" role="tabpanel" aria-labelledby="cards-tab-armies">
   <div class="cards-toolbar">
     <input id="q" type="search" placeholder="Rechercher une unité…">
@@ -118,8 +124,15 @@
     <div id="cards-glyphes-status">Chargement des glyphes…</div>
     <div id="cards-glyphes" class="army-grid"></div>
   </section>
+  <section id="cards-history-view" role="tabpanel" aria-labelledby="cards-tab-history" hidden>
+    <h3>Historique des modifications des cartes armées</h3>
+    <p>Journal des ajouts, modifications et suppressions enregistrés dans le catalogue.</p>
+    <p id="cards-history-status" role="status" aria-live="polite"></p>
+    <div id="cards-history-list"></div>
+    <button id="cards-history-more" type="button" hidden>Afficher les modifications précédentes</button>
+  </section>
 </main>
 <footer><div class="container">Heroscape France — cartes armées françaises et anglaises.</div></footer>
-<script src="js/army-cards-data.js?v=20261020-sync1" defer></script><script src="js/cards-catalogue.js?v=20261027-remove-historical-fields-8" defer></script>
+<script src="js/army-cards-data.js?v=20261020-sync1" defer></script><script src="js/cards-catalogue.js?v=20261028-history-tab1" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/supabase-config.js"></script><script src="js/forum-background.js?v=20261015-allpages"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script><script src="js/forum.js?v=20261020-notification1"></script><script src="js/forum-presence.js?v=20261020-2"></script><script src="js/forum-live-chat.js?v=20261020-chat-controls3"></script></body>
 </html>
