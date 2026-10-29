@@ -24,6 +24,8 @@ window.HeroscapePolls=(()=>{
   if(!polls?.length)return;
   const {data:votes,error:voteError}=await db.from('forum_poll_votes').select('poll_id,user_id,selections').in('poll_id',polls.map(p=>p.id));if(voteError){console.warn(voteError);return}
   const {data:auth}=await db.auth.getUser(),uid=auth?.user?.id;
+  const {data:postOwners}=await db.from('posts').select('id,user_id').in('id',ids);
+  const owners=new Map((postOwners||[]).map(p=>[p.id,p.user_id]));
   for(const poll of polls){
    const target=poll.post_id===firstPostId&&container.querySelector('[data-forum-topic-poll]')?container.querySelector('[data-forum-topic-poll]'):container.querySelector('#post-'+poll.post_id+' .forum-message-body');
    if(!target)continue;
@@ -34,7 +36,7 @@ window.HeroscapePolls=(()=>{
    const results=()=>opts.map((o,i)=>'<div class="forum-poll-result"><div class="forum-poll-result-line"><span>'+esc(o)+'</span><strong>'+counts[i]+' ('+(total?Math.round(counts[i]/total*100):0)+' %)</strong></div><div class="forum-poll-track"><div style="width:'+(total?counts[i]/total*100:0)+'%"></div></div></div>').join('');
    card.innerHTML='<div class="forum-poll-title">📊 Sondage</div><h3>'+esc(poll.question)+'</h3><p class="count">'+(poll.max_choices===1?'Une réponse autorisée':'Jusqu’à '+poll.max_choices+' réponses autorisées')+' · '+total+' participant'+(total>1?'s':'')+'</p>'+
     (mine?'<p class="forum-poll-locked">✓ Tu as voté. Ton vote est définitif.</p>'+results():'<form class="forum-poll-vote">'+opts.map((o,i)=>'<label class="forum-poll-choice"><input type="'+(poll.max_choices===1?'radio':'checkbox')+'" name="poll-'+poll.id+'" value="'+i+'"> <span>'+esc(o)+'</span></label>').join('')+'<button type="submit" class="btn">Voter</button><p class="count">Après validation, ton vote ne pourra plus être modifié.</p></form><details class="forum-poll-results"><summary>Voir les résultats</summary>'+results()+'</details>')+
-    (uid===container.dataset.pollViewer&&!locked?'<button type="button" class="btn" data-poll-edit>Modifier le sondage</button>':'');
+    (uid&&uid===owners.get(poll.post_id)&&!locked?'<button type="button" class="btn" data-poll-edit>Modifier le sondage</button>':'');
    target.prepend(card);
    const form=card.querySelector('form');
    if(form){
