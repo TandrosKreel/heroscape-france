@@ -1,0 +1,24 @@
+/* Sondages — s'adaptent au thème du forum et aux écrans étroits */
+.forum-poll-editor,.forum-poll-card{margin:14px 0;padding:16px;border:1px solid var(--gold,#b89b59);border-radius:12px;background:rgba(15,23,42,.28);color:inherit;max-width:100%;box-sizing:border-box}
+.forum-poll-editor [data-poll-fields]{padding-top:12px}
+.forum-poll-editor label{display:block;margin:10px 0;font-weight:600}
+.forum-poll-editor input,.forum-poll-editor select{display:block;width:100%;max-width:100%;box-sizing:border-box;margin:6px 0;padding:10px;border-radius:7px}
+.forum-poll-option-row{display:flex;gap:8px;align-items:center;margin:8px 0}
+.forum-poll-option-row input{min-width:0;flex:1}
+.forum-poll-option-row button{flex:0 0 auto}
+.forum-poll-card h3{margin:8px 0 12px;overflow-wrap:anywhere}
+.forum-poll-title{font-weight:700;color:var(--gold2,#eacb81)}
+.forum-poll-choice{display:flex;align-items:flex-start;gap:10px;padding:10px;margin:7px 0;border:1px solid rgba(170,170,170,.35);border-radius:8px;cursor:pointer;overflow-wrap:anywhere}
+.forum-poll-choice input{margin-top:4px;flex-shrink:0;accent-color:#c49b46}
+.forum-poll-choice span{min-width:0}
+.forum-poll-vote button{margin:10px 0}
+.forum-poll-result{margin:10px 0}
+.forum-poll-result-line{display:flex;justify-content:space-between;gap:12px;font-size:.94em;overflow-wrap:anywhere}
+.forum-poll-result-line span{min-width:0}
+.forum-poll-result-line strong{flex-shrink:0}
+.forum-poll-track{height:9px;border-radius:10px;background:rgba(130,130,130,.35);overflow:hidden;margin-top:5px}
+.forum-poll-track>div{height:100%;border-radius:10px;background:var(--gold,#c8a45b)}
+.forum-poll-locked{font-weight:600}
+.forum-poll-results{margin-top:12px}
+.forum-topic-poll{margin:16px 0}
+@media(max-width:600px){.forum-poll-editor,.forum-poll-card{padding:12px;margin:10px 0}.forum-poll-option-row{gap:5px}.forum-poll-option-row button{padding:7px 9px;min-width:0}.forum-poll-result-line{font-size:.86em}}
