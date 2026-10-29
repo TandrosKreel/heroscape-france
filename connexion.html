@@ -89,7 +89,7 @@
             type="text"
             id="signup-username"
             minlength="3"
-            maxlength="30"
+            maxlength="20"
             required
             autocomplete="username"
           >
@@ -390,6 +390,11 @@
           signupMessage,
           "Le pseudo doit contenir au moins 3 caractères."
         );
+        return;
+      }
+
+      if (username.length > 20) {
+        showMessage(signupMessage, "Le pseudo ne peut pas dépasser 20 caractères.");
         return;
       }
 
