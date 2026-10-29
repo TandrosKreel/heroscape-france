@@ -552,6 +552,7 @@ async function addTopic(category, title, author, body) {
 
   if (error || !data?.length) {
     console.error("Erreur création atomique du sujet :", error);
+    window.forumLastTopicError = error?.message || (!data?.length ? "Aucun sujet renvoyé par Supabase." : "Erreur inconnue");
     return null;
   }
 
