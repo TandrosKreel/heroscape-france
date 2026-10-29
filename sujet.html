@@ -22,6 +22,7 @@
 @media(max-width:600px){.post-author .forum-mp-action{font-size:11px;padding:2px 8px}}
 </style>
 <script src="js/forum-pagination.js?v=20261027-pagination1"></script>
+<link rel="stylesheet" href="css/forum-polls.css?v=20261029-1">
 </head>
 
 <body>
@@ -79,7 +80,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="js/supabase-config.js"></script>
+<script src="js/supabase-config.js"></script><script src="js/forum-polls.js?v=20261029-2"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script>
 
 <script src="js/forum.js?v=20261020-staff2"></script>
@@ -900,7 +901,7 @@ async function renderSubject() {
           data-placeholder="Écris ta réponse…"
         ></div>
 
-        <div class="smileys-toolbar">\n          <button class="btn" id="insert-quote" type="button">❝ Citation</button>
+        <div id="reply-poll-editor"></div>\n        <div class="smileys-toolbar">\n          <button class="btn" id="insert-quote" type="button">❝ Citation</button>
           <button class="btn" id="smileys-toggle" type="button" aria-expanded="false" aria-controls="smileys-picker">😊 Smileys</button>
           <div class="smileys-picker" id="smileys-picker" hidden>
             <div class="smileys-picker-head"><strong>Choisir un smiley</strong><button type="button" id="smileys-close" aria-label="Fermer les smileys">×</button></div>
@@ -954,6 +955,7 @@ async function renderSubject() {
     ${paginationHtml}
     ${canModerate ? '<div class="admin-thread-actions">' + (isAdmin ? '<button class="btn" id="admin-toggle-pin" type="button">' + (thread.is_pinned ? 'Désépingler ce sujet' : 'Épingler ce sujet') + '</button>' : '') + '<button class="btn" id="admin-delete-thread" type="button">Supprimer ce sujet</button></div>' : ""}
     ${firstPostHtml}
+    ${currentPage>1 ? '<div class="forum-topic-poll" data-forum-topic-poll></div>' : ""}
 
     <h3>Réponses</h3>
 
@@ -966,6 +968,10 @@ async function renderSubject() {
     ${recentMessagesHtml}
 
   `;
+
+  // Afficher les sondages de tous les messages de la page et celui du premier message sur chaque page.
+  const {data:firstPollPost}=await window.supabaseClient.from("posts").select("id").eq("thread_id",id).order("created_at",{ascending:true}).order("id",{ascending:true}).limit(1).maybeSingle();
+  await window.HeroscapePolls.show(subjectBox,posts.map(p=>p.id),currentPage>1?firstPollPost?.id:null);
 
   if (targetPostId && /^\\d+$/.test(targetPostId)) {
     const target=document.getElementById('post-'+targetPostId);
@@ -1116,6 +1122,7 @@ async function renderSubject() {
   if (user && !thread.is_locked) {
 
     setupSmileysPicker();
+    window.currentReplyPollEditor=window.HeroscapePolls.editor(document.getElementById("reply-poll-editor"));
     const editor = document.getElementById("reply-body");
     // Édition visuelle : les éléments affichés sont convertis en BBCode à la publication.
     let savedRange = null;
@@ -1629,6 +1636,9 @@ async function publishReply() {
   }
 
 
+  let pollDraft;
+  try{pollDraft=window.currentReplyPollEditor?.get()||null}catch(e){replyMessage.textContent=e.message;return}
+
   replyButton.disabled = true;
 
   replyMessage.textContent =
@@ -1653,6 +1663,11 @@ async function publishReply() {
     return;
   }
 
+
+  if(pollDraft){
+    try{await window.HeroscapePolls.save(result.id,pollDraft)}
+    catch(e){replyMessage.textContent="Message publié, mais sondage non enregistré : "+e.message;replyButton.disabled=false;return}
+  }
 
   const postsAfter = await getReplies(id);
   const lastPage = Math.max(1, Math.ceil(postsAfter.length / POSTS_PER_PAGE));
