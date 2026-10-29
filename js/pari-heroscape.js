@@ -142,7 +142,7 @@ const matchHTML=(m)=>{const aa=byMatch(m.id),vv=voteFor(m.id),mine=vv.find(v=>v.
  const armyHTML=aa.map((a,i)=>'<div class="bet-army"><h4>Armée '+a.position+'</h4>'+(a.army_name?'<p class="bet-army-custom-name">'+esc(a.army_name)+'</p>':'')+'<p class="bet-played-by"><span>Joué par</span> <strong>'+esc(a.player_name)+'</strong></p><ul>'+byArmy(a.id).map(c=>'<li>'+esc(c.card_name)+(c.quantity>1?' ×'+c.quantity:'')+(score?' — '+cardScore(c.card_name,m.scoring_format||'standard',c.catalog_id):'')+'</li>').join('')+'</ul>'+(m.scoring_format==='delta'?'':'<p>'+pointsOf(a)+' points</p>')+(score?'<p class="bet-result">'+(m.is_draw?'Égalité':a.is_winner?'Vainqueur':'Vaincu')+'</p>':'')+'</div>').join('<div class="bet-vs" aria-label="contre"><span>VS</span></div>');
  const counts=aa.map(a=>({army:a,count:vv.filter(v=>v.army_ids.includes(a.id)).length})),totalChoices=counts.reduce((n,x)=>n+x.count,0);
  const voteSummary='<section class="bet-voting'+(score?' bet-voting-finished':'')+'"><div class="bet-vote-heading"><div><h4>🗳️ Les paris</h4><span class="bet-vote-subtitle">'+(score?'Résultats des pronostics':'Choisissez votre pronostic')+'</span></div><div class="bet-vote-total"><strong>'+vv.length+'</strong><span>vote'+(vv.length>1?'s':'')+' au total</span></div></div>'+(score?'':'<div class="bet-vote-switch"><button type="button" class="bet-vote-tab active" data-vote-view="choose" data-vote-match="'+m.id+'">Voter</button><button type="button" class="bet-vote-tab" data-vote-view="results" data-vote-match="'+m.id+'">Voir les votes</button></div><div class="bet-vote-panel" data-vote-panel="choose" data-vote-match="'+m.id+'">')+''+(score?'':user&&!participant?'<p class="bet-vote-help">Sélectionnez jusqu’à '+maxVote+' armée'+(maxVote>1?'s':'')+'. Vous pouvez modifier ou retirer votre vote.</p><div class="bet-vote-choices">'+aa.map(a=>'<label class="bet-vote-tile"><input type="checkbox" data-vote="'+m.id+'" value="'+a.id+'" '+(mine?.army_ids.includes(a.id)?'checked':'')+'><span class="bet-vote-tile-text"><strong>Armée '+a.position+'</strong>'+(a.army_name?'<em class="bet-vote-army-name">'+esc(a.army_name)+'</em>':'')+'<small>'+esc(a.player_name)+'</small></span><span class="bet-vote-tick">✓</span></label>').join('')+'</div><div class="bet-vote-buttons"><button data-save-vote="'+m.id+'">Enregistrer mon vote</button><button data-clear-vote="'+m.id+'">Retirer mon vote</button></div>':'<p class="bet-vote-help">'+(participant?'Vous participez à cette partie : vous ne pouvez pas voter.':'Connectez-vous pour participer aux votes.')+'</p>')+(score?'':'</div>')+'<div class="bet-vote-panel" data-vote-panel="results" data-vote-match="'+m.id+'"'+(score?'':' hidden')+'><p class="bet-vote-help">Répartition des '+totalChoices+' choix exprimés par '+vv.length+' membre'+(vv.length>1?'s':'')+'.</p><div class="bet-vote-bars">'+counts.map(x=>'<div class="bet-vote-bar-row"><div class="bet-vote-bar-label"><strong>'+esc(armyVoteLabel(x.army))+'</strong><span>'+x.count+' vote'+(x.count>1?'s':'')+' · '+(totalChoices?Math.round(100*x.count/totalChoices):0)+' %</span></div><div class="bet-vote-track" role="meter" aria-label="Votes pour l’armée '+x.army.position+'" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+(totalChoices?Math.round(100*x.count/totalChoices):0)+'"><div class="bet-vote-fill" style="width:'+(totalChoices?100*x.count/totalChoices:0)+'%"></div></div></div>').join('')+'</div><details class="bet-voter-list" '+(score?'open':'')+'><summary>Votes des membres</summary><div>'+ (vv.length?vv.map(v=>{const ok=!m.is_draw&&v.army_ids.length>0&&v.army_ids.every(id=>winner.some(a=>a.id===id));return '<p><strong>'+esc(names().get(v.user_id)||'Membre supprimé')+'</strong> : '+v.army_ids.map(id=>{const a=aa.find(a=>a.id===id);return a?esc(armyVoteLabel(a)):'Armée ?'}).join(', ')+(score?' — '+(ok?'✓ Réussi':'✗ Raté'):'')+'</p>'}).join(''):'Aucun vote pour le moment.')+'</div></details></div></section>';
- return '<article class="card" id="match-'+m.id+'"><h3>'+'Partie #'+visibleMatchNumber(m.id)+' — '+esc(m.title||'Partie historique #'+visibleMatchNumber(m.id))+' <span class="bet-scoring-tag">'+(m.scoring_format==='delta'?'Point Delta':'Standard')+'</span></h3><p class="bet-meta">Format : '+esc(m.format)+' · Publiée le '+new Date(m.created_at).toLocaleString('fr-FR')+' par '+esc(names().get(m.creator_id)||'Membre supprimé')+'</p><div class="bet-armies">'+armyHTML+'</div>'+((m.map_description?.trim()||m.map_photos?.length)?'<h4 class="bet-map-info-title">🗺️ Infos sur la map</h4>':'')+(m.map_description?.trim()?'<p class="bet-map-description">'+esc(m.map_description)+'</p>':'')+(m.map_photos?.length?'<div class="bet-map-images">'+m.map_photos.filter(x=>/^https:\/\//.test(x)).map(x=>'<a href="'+esc(x)+'" target="_blank" rel="noopener"><img src="'+esc(x)+'" alt="Photo de la map" loading="lazy"></a>').join('')+'</div>':'')+voteSummary+'<div class="bet-actions">'+(!score&&(m.creator_id===user?.id||admin)?'<button type="button" data-edit-map="'+m.id+'">🗺️ Modifier la map</button>':'')+(!score&&m.creator_id===user?.id?'<button data-finish="'+m.id+'">Mettre fin à la partie</button><button data-delete="'+m.id+'">Annuler la partie</button>':'')+(admin&&(score||m.creator_id!==user?.id)?'<button data-delete="'+m.id+'">Supprimer (modération)</button>':'')+'</div><div data-map-editor="'+m.id+'" hidden></div><div data-finish-editor="'+m.id+'" hidden></div></article>'};
+ return '<article class="card" id="match-'+m.id+'"><h3>'+'Partie #'+visibleMatchNumber(m.id)+' — '+esc(m.title||'Partie historique #'+visibleMatchNumber(m.id))+' <span class="bet-scoring-tag">'+(m.scoring_format==='delta'?'Point Delta':'Standard')+'</span></h3><p class="bet-meta">Format : '+esc(m.format)+' · Publiée le '+new Date(m.created_at).toLocaleString('fr-FR')+' par '+esc(names().get(m.creator_id)||'Membre supprimé')+'</p><div class="bet-armies">'+armyHTML+'</div>'+((m.map_description?.trim()||m.map_photos?.length)?'<h4 class="bet-map-info-title">🗺️ Infos sur la map</h4>':'')+(m.map_description?.trim()?'<p class="bet-map-description">'+esc(m.map_description)+'</p>':'')+(m.map_photos?.length?'<div class="bet-map-images">'+m.map_photos.filter(x=>/^https:\/\//.test(x)).map(x=>'<a href="'+esc(x)+'" target="_blank" rel="noopener"><img src="'+esc(x)+'" alt="Photo de la map" loading="lazy"></a>').join('')+'</div>':'')+voteSummary+'<div class="bet-actions">'+(!score&&(m.creator_id===user?.id||admin)?'<button type="button" data-edit-map="'+m.id+'">🗺️ Modifier la map</button>':'')+(!score&&m.creator_id===user?.id?'<button data-finish="'+m.id+'">Mettre fin à la partie</button><button data-delete="'+m.id+'">Annuler la partie</button>':'')+(admin&&(score||m.creator_id!==user?.id)?'<button data-delete="'+m.id+'">Supprimer (modération)</button>':'')+'</div><div class="bet-comments-wrap" style="margin-top:12px"><button type="button" data-comments-toggle="'+m.id+'">💬 Commentaires</button><section data-comments-panel="'+m.id+'" hidden style="margin-top:12px;padding:12px;border:1px solid #777;border-radius:9px"></section></div><div data-map-editor="'+m.id+'" hidden></div><div data-finish-editor="'+m.id+'" hidden></div></article>'};
 function editMap(id){
  const m=matches.find(x=>x.id===id);
  if(!m||m.status!=='open'||!(m.creator_id===user?.id||admin))return;
@@ -254,6 +254,8 @@ function playedMemberScores(scoringFormat='all'){
 }
 function pages(el,page,total,callback){$(el).innerHTML='<div class="bet-pagination"><button '+(page?'':'disabled')+' data-prev>← Précédent</button> Page '+(page+1)+' / '+Math.max(1,Math.ceil(total))+' <button '+((page+1)*1<total?'':'disabled')+' data-next>Suivant →</button></div>';$(el).querySelector('[data-prev]').onclick=()=>callback(page-1);$(el).querySelector('[data-next]').onclick=()=>callback(page+1)}
 function render(){if(!cards.length)return;
+ commentsOpen.clear();
+
  const chronological=(a,b)=>new Date(a.created_at)-new Date(b.created_at)||a.id-b.id;
  if(tab==='encours'){
  const open=matches.filter(m=>m.status==='open').sort(chronological);
@@ -305,6 +307,47 @@ function render(){if(!cards.length)return;
  document.querySelectorAll('[data-finish]').forEach(b=>b.onclick=()=>finishEditor(+b.dataset.finish));
  document.querySelectorAll('[data-edit-map]').forEach(b=>b.onclick=()=>editMap(+b.dataset.editMap));
 }
+
+// Commentaires courts et paginés, chargés uniquement à l'ouverture d'une partie.
+const commentsOpen=new Set(),commentPages=new Map();
+async function showComments(id,page=0){
+ const panel=document.querySelector('[data-comments-panel="'+id+'"]');
+ if(!panel)return;
+ panel.hidden=false;commentsOpen.add(id);commentPages.set(id,page);
+ panel.textContent='Chargement des commentaires…';
+ const {data,error,count}=await db.from('bet_comments').select('id,user_id,body,created_at',{count:'exact'}).eq('match_id',id).order('created_at',{ascending:true}).order('id',{ascending:true}).range(page*10,page*10+9);
+ if(error){panel.textContent='Impossible de charger les commentaires : '+error.message;return}
+ const total=Math.max(1,Math.ceil((count||0)/10));
+ panel.innerHTML='<h4 style="margin:0 0 12px">Commentaires ('+(count||0)+')</h4>'+
+ (data.length?data.map(c=>'<div style="padding:9px 0;border-bottom:1px solid #777"><strong>'+esc(names().get(c.user_id)||'Membre supprimé')+'</strong> <small>'+esc(new Date(c.created_at).toLocaleString('fr-FR'))+'</small><p style="white-space:pre-wrap;overflow-wrap:anywhere;margin:6px 0">'+esc(c.body)+'</p>'+(admin?'<button type="button" data-comment-delete="'+c.id+'">Supprimer</button>':'')+'</div>').join(''):'<p>Aucun commentaire pour cette partie.</p>')+
+ '<div class="bet-pagination" style="margin:12px 0"><button type="button" data-comment-page="'+(page-1)+'" '+(page===0?'disabled':'')+'>← Précédent</button> Page '+(page+1)+' / '+total+' <button type="button" data-comment-page="'+(page+1)+'" '+(page+1>=total?'disabled':'')+'>Suivant →</button></div>'+
+ '<form data-comment-form><label for="bet-comment-'+id+'">Ton analyse stratégique (600 caractères maximum)</label><textarea id="bet-comment-'+id+'" maxlength="600" rows="3" required style="display:block;width:100%;box-sizing:border-box;margin:8px 0" placeholder="Une courte analyse stratégique…"></textarea><div style="display:flex;justify-content:space-between;align-items:center"><small data-comment-counter>0 / 600 caractères</small><button type="submit">Publier</button></div><small>3 commentaires maximum par partie sur 24 heures.</small></form>';
+ panel.querySelectorAll('[data-comment-page]').forEach(b=>b.onclick=()=>showComments(id,Number(b.dataset.commentPage)));
+ const area=panel.querySelector('textarea'),counter=panel.querySelector('[data-comment-counter]');
+ area.oninput=()=>{counter.textContent=area.value.length+' / 600 caractères'};
+ panel.querySelector('form').onsubmit=async e=>{
+  e.preventDefault();const body=area.value.trim();if(!body||body.length>600)return;
+  const btn=panel.querySelector('[type="submit"]');btn.disabled=true;
+  const {error:saveError}=await db.from('bet_comments').insert({match_id:id,user_id:user.id,body});
+  if(saveError){alert('Commentaire non publié : '+saveError.message);btn.disabled=false;return}
+  const {count:newCount}=await db.from('bet_comments').select('id',{count:'exact',head:true}).eq('match_id',id);
+  await showComments(id,Math.max(0,Math.ceil((newCount||1)/10)-1));
+ };
+ panel.querySelectorAll('[data-comment-delete]').forEach(b=>b.onclick=async()=>{
+  if(!confirm('Supprimer ce commentaire ?'))return;
+  const {error:deleteError}=await db.from('bet_comments').delete().eq('id',Number(b.dataset.commentDelete));
+  if(deleteError){alert(deleteError.message);return}
+  await showComments(id,page);
+ });
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-comments-toggle]');if(!b)return;
+ const id=Number(b.dataset.commentsToggle),panel=document.querySelector('[data-comments-panel="'+id+'"]');
+ if(!panel)return;
+ if(!panel.hidden){panel.hidden=true;commentsOpen.delete(id)}
+ else void showComments(id,commentPages.get(id)||0);
+});
+
 ['bet-member-sort','bet-member-direction','bet-card-search','bet-card-sort','bet-card-direction'].forEach(id=>$(id).addEventListener(id==='bet-card-search'?'input':'change',()=>{memberPage=0;cardPage=0;render()}));
 // Mises à jour légères : évènements temps réel, retour sur l'onglet et changements locaux.
 if(db){
