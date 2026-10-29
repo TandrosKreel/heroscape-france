@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/style.css?v=20261027-pagination1">
   <link rel="stylesheet" href="css/forum-background.css?v=20261016-mobilelogo1">
 <script src="js/forum-pagination.js?v=20261027-pagination1"></script>
+<link rel="stylesheet" href="css/forum-polls.css?v=20261029-1">
 </head>
 
 <body>
@@ -96,6 +97,7 @@
 <button type="button" id="topic-insert-link">🔗 Lien</button><button type="button" id="topic-insert-quote">❝ Citation</button><button type="button" id="topic-insert-image">📷 Photo</button><input type="file" id="topic-image-file" accept="image/jpeg,image/png,image/webp" hidden>
 </div>
 <div id="topic-body" class="reply-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Écris le premier message de ton sujet…"></div>
+<div id="topic-poll-editor"></div>
 <div class="smileys-toolbar">
   <button class="btn" id="topic-smileys" type="button" aria-expanded="false" aria-controls="topic-smileys-picker">😊 Smileys</button>
   <div class="smileys-picker" id="topic-smileys-picker" hidden>
@@ -141,7 +143,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="js/supabase-config.js"></script>
+<script src="js/supabase-config.js"></script><script src="js/forum-polls.js?v=20261029-2"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script>
 
 <script src="js/forum.js?v=20261020-notification1"></script>
@@ -189,6 +191,8 @@ const topicTitle =
 
 const topicBody =
   document.getElementById("topic-body");
+
+const topicPollEditor=window.HeroscapePolls.editor(document.getElementById("topic-poll-editor"));
 
 const topicMessage =
   document.getElementById("topic-message");
@@ -507,6 +511,7 @@ cancelTopicButton.addEventListener(
 
     topicTitle.value = "";
     topicBody.replaceChildren();
+    document.querySelector("#topic-poll-editor [data-poll-remove]")?.click();
     topicMessage.textContent = "";
   }
 );
@@ -545,6 +550,10 @@ publishTopicButton.addEventListener(
     }
 
 
+    let pollDraft;
+    try { pollDraft=topicPollEditor.get(); }
+    catch(e){topicMessage.textContent=e.message;return}
+
     publishTopicButton.disabled = true;
 
     topicMessage.textContent =
@@ -571,6 +580,12 @@ publishTopicButton.addEventListener(
     }
 
 
+    if(pollDraft){
+      const {data:first,error:firstError}=await window.supabaseClient.from("posts").select("id").eq("thread_id",topic.id).order("created_at",{ascending:true}).order("id",{ascending:true}).limit(1).single();
+      if(firstError||!first){topicMessage.textContent="Sujet publié, mais le sondage n’a pas pu être associé. Contacte un administrateur.";publishTopicButton.disabled=false;return}
+      try{await window.HeroscapePolls.save(first.id,pollDraft)}
+      catch(e){topicMessage.textContent="Sujet publié, mais sondage non enregistré : "+e.message;publishTopicButton.disabled=false;return}
+    }
     location.href =
       "sujet.html?v=20261013-topic11&id=" +
       encodeURIComponent(topic.id);
