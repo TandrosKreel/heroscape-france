@@ -142,12 +142,15 @@ function updateRestore(){
  restoreSelect.innerHTML=hidden.length?hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join(''):'<option value="">Aucune carte masquée</option>';
  if(hidden.some(e=>e.id===selectedId))restoreSelect.value=selectedId;
  restoreSelect.hidden=!hidden.length;
+ restoreSelect.style.display=hidden.length?'block':'none';
  $('cards-restore-empty').hidden=hidden.length>0;
  $('cards-restore-list').disabled=hidden.length===0;
  $('cards-restore').disabled=hidden.length===0;
  $('cards-restore').hidden=hidden.length===0;
+ $('cards-restore').style.display=hidden.length?'':'none';
  $('cards-permanent-delete').disabled=hidden.length===0;
  $('cards-permanent-delete').hidden=hidden.length===0;
+ $('cards-permanent-delete').style.display=hidden.length?'':'none';
 }
 function openForm(card=null){
  editing=card;
