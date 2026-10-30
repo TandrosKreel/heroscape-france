@@ -133,16 +133,21 @@ function updateManageList(){
  $('cards-manage-status').textContent=matches.length?matches.length+' carte(s) disponibles.':'Aucune carte correspondante.';
 }
 function updateRestore(){
- const hidden=edits.filter(e=>e.is_hidden&&!e.is_permanently_deleted);
+ const hidden=edits.filter(e=>e.is_hidden&&!e.is_permanently_deleted).sort((a,b)=>a.name.localeCompare(b.name,'fr'));
  const tools=$('cards-restore-tools');
  $('cards-hidden-open').textContent='Cartes masquées et suppression définitive ('+hidden.length+')';
  if(!hidden.length){$('cards-hidden-open').setAttribute('aria-expanded',String(!tools.hidden));}
  updateManageList();
- $('cards-restore-list').innerHTML=hidden.length?hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join(''):'<option value="">Aucune carte masquée</option>';
+ const restoreSelect=$('cards-restore-list'),selectedId=restoreSelect.value;
+ restoreSelect.innerHTML=hidden.length?hidden.map(e=>'<option value="'+esc(e.id)+'">'+esc(e.name)+' — '+esc(e.general)+'</option>').join(''):'<option value="">Aucune carte masquée</option>';
+ if(hidden.some(e=>e.id===selectedId))restoreSelect.value=selectedId;
+ restoreSelect.hidden=!hidden.length;
  $('cards-restore-empty').hidden=hidden.length>0;
  $('cards-restore-list').disabled=hidden.length===0;
  $('cards-restore').disabled=hidden.length===0;
+ $('cards-restore').hidden=hidden.length===0;
  $('cards-permanent-delete').disabled=hidden.length===0;
+ $('cards-permanent-delete').hidden=hidden.length===0;
 }
 function openForm(card=null){
  editing=card;
@@ -172,7 +177,7 @@ function closeForm(){panel.hidden=true;editing=null;inform('')}
 async function loadEdits(){
  if(!db)return;
  const {data,error}=await db.from('army_card_edits').select('id,source_name,name,general,points,points_order,fr,en,is_hidden,is_permanently_deleted');
- if(error){console.warn('Cartes : modifications indisponibles',error);return}
+ if(error){console.warn('Cartes : modifications indisponibles',error);inform('Impossible de charger les cartes masquées : '+error.message,true);return}
  edits=data||[];
 }
 async function uploadCardFile(file){
@@ -307,7 +312,7 @@ async function init(){
   merge();render();renderGlyphes();
   // Les commandes administrateur ne doivent pas attendre la requête du catalogue Supabase.
   void refreshAdmin();
-  void loadEdits().then(()=>{merge();render()}).catch(err=>console.warn('Catalogue Supabase indisponible :',err));
+  void loadEdits().then(()=>{merge();render();updateRestore()}).catch(err=>{console.warn('Catalogue Supabase indisponible :',err);updateRestore()});
   const requested=new URLSearchParams(location.search).get('carte');
   if(requested){q.value=requested;render();const card=[...document.querySelectorAll('.army-card')].find(el=>el.querySelector('h3')?.textContent===requested);if(card){card.id='carte-recherchee';card.scrollIntoView({block:'center'});card.style.outline='2px solid var(--gold)'}}
  }catch(err){console.error(err);status.textContent='Impossible de charger le catalogue.'}
