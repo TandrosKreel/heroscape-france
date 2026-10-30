@@ -133,7 +133,7 @@ function updateManageList(){
  $('cards-manage-status').textContent=matches.length?matches.length+' carte(s) disponibles.':'Aucune carte correspondante.';
 }
 function updateRestore(){
- const hidden=edits.filter(e=>e.is_hidden);
+ const hidden=edits.filter(e=>e.is_hidden&&!e.is_permanently_deleted);
  const tools=$('cards-restore-tools');
  $('cards-hidden-open').textContent='Cartes masquées et suppression définitive ('+hidden.length+')';
  if(!hidden.length){$('cards-hidden-open').setAttribute('aria-expanded',String(!tools.hidden));}
@@ -142,7 +142,7 @@ function updateRestore(){
  $('cards-restore-empty').hidden=hidden.length>0;
  $('cards-restore-list').disabled=hidden.length===0;
  $('cards-restore').disabled=hidden.length===0;
- $('cards-permanent-delete').disabled=hidden.length===0||!hidden.some(e=>!e.source_name);
+ $('cards-permanent-delete').disabled=hidden.length===0;
 }
 function openForm(card=null){
  editing=card;
@@ -171,7 +171,7 @@ function openForm(card=null){
 function closeForm(){panel.hidden=true;editing=null;inform('')}
 async function loadEdits(){
  if(!db)return;
- const {data,error}=await db.from('army_card_edits').select('id,source_name,name,general,points,points_order,fr,en,is_hidden');
+ const {data,error}=await db.from('army_card_edits').select('id,source_name,name,general,points,points_order,fr,en,is_hidden,is_permanently_deleted');
  if(error){console.warn('Cartes : modifications indisponibles',error);return}
  edits=data||[];
 }
@@ -438,7 +438,7 @@ $('cards-restore').addEventListener('click',async()=>{
 $('cards-permanent-delete').addEventListener('click',async()=>{
  if(!admin||!db)return;
  const id=$('cards-restore-list').value,card=edits.find(e=>e.id===id);
- if(!card||card.source_name){inform('Seules les cartes ajoutées sur le site peuvent être supprimées définitivement.',true);return}
+ if(!card||!card.is_hidden||card.is_permanently_deleted){inform('Sélectionne une carte masquée valide.',true);return}
  if(!confirm('Supprimer définitivement « '+card.name+' » ? Cette action est irréversible. Les cartes utilisées dans Pari Heroscape sont protégées.'))return;
  const confirmation=prompt('Pour confirmer, écris SUPPRIMER en majuscules :');
  if(confirmation!=='SUPPRIMER')return;
