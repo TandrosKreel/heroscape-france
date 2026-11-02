@@ -333,12 +333,14 @@ async function showComments(id,page=0){
   const {error:saveError}=await db.from('bet_comments').insert({match_id:id,user_id:user.id,body});
   if(saveError){alert('Commentaire non publié : '+saveError.message);btn.disabled=false;return}
   const {count:newCount}=await db.from('bet_comments').select('id',{count:'exact',head:true}).eq('match_id',id);
+  setCommentCount(id,newCount||0);
   await showComments(id,Math.max(0,Math.ceil((newCount||1)/10)-1));
  };
  panel.querySelectorAll('[data-comment-delete]').forEach(b=>b.onclick=async()=>{
   if(!confirm('Supprimer ce commentaire ?'))return;
   const {error:deleteError}=await db.from('bet_comments').delete().eq('id',Number(b.dataset.commentDelete));
   if(deleteError){alert(deleteError.message);return}
+  const {count:newCount}=await db.from('bet_comments').select('id',{count:'exact',head:true}).eq('match_id',id);setCommentCount(id,newCount||0);
   await showComments(id,page);
  });
 }
