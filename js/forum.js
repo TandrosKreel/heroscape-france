@@ -355,13 +355,17 @@ async function getTopics(category = null) {
       is_pinned,
       created_at,
       updated_at,
+      last_post_at,
+      last_post_id,
+      last_post_user_id,
+      post_count,
       profiles (
         username,
         avatar_url
       )
     `)
     .order("is_pinned", { ascending: false })
-    .order("updated_at", { ascending: false });
+    .order("last_post_at", { ascending: false }).order("created_at", { ascending: false }).order("id", { ascending: false });
 
   if (category) {
     const categoryId = await catId(category);
@@ -405,10 +409,11 @@ async function getTopicsPage(category, requestedPage = 1, pageSize = 20) {
   const total = count || 0;
   const page = Math.min(Math.max(1, Number(requestedPage) || 1), Math.max(1, Math.ceil(total / pageSize)));
   const { data, error } = await supabase.from("threads")
-    .select("id,category_id,user_id,title,is_locked,is_pinned,created_at,updated_at,profiles(username,avatar_url)")
+    .select("id,category_id,user_id,title,is_locked,is_pinned,created_at,updated_at,last_post_at,last_post_id,last_post_user_id,post_count,profiles(username,avatar_url)")
     .eq("category_id", categoryId)
     .order("is_pinned", { ascending: false })
-    .order("updated_at", { ascending: false })
+    .order("last_post_at", { ascending: false })
+    .order("created_at", { ascending: false })
     .order("id", { ascending: false })
     .range((page - 1) * pageSize, page * pageSize - 1);
   if (error) throw error;
