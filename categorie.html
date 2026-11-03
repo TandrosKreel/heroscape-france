@@ -146,7 +146,7 @@
 <script src="js/supabase-config.js"></script><script src="js/forum-polls.js?v=20261029-2"></script>
 <script src="js/forum-background.js?v=20261013-refresh9"></script><script src="js/forum-topbar.js?v=20261015-readaction2"></script>
 
-<script src="js/forum.js?v=20261029-poll-diagnostic1"></script>
+<script src="js/forum.js?v=20261103-last-post-sort1"></script>
 <script src="js/smileys-data.js?v=20261009-6"></script>
 <script src="js/topic-composer.js?v=20261013-1"></script>
 
@@ -390,23 +390,28 @@ async function render() {
 
 
   const currentUser = await getCurrentUser();
-  const [, latestPostResult] = await Promise.all([
+  const lastAuthorIds = [...new Set(arr.map(topic => topic.last_post_user_id).filter(Boolean))];
+  const [, lastAuthorsResult] = await Promise.all([
     loadThreadReadStates(arr.map(topic => topic.id)),
-    window.supabaseClient.from("posts")
-      .select("id,thread_id,user_id,created_at,profiles(username)")
-      .in("thread_id", arr.map(topic => topic.id))
-      .order("created_at", { ascending: false })
+    lastAuthorIds.length
+      ? window.supabaseClient.from("profiles").select("id,username").in("id", lastAuthorIds)
+      : Promise.resolve({ data: [], error: null })
   ]);
-  const latestPosts = latestPostResult.data || [];
-  if (latestPostResult.error) console.error("Erreur derniers messages :", latestPostResult.error);
+  if (lastAuthorsResult.error) console.error("Erreur auteurs des derniers messages :", lastAuthorsResult.error);
+  const authorNames = Object.fromEntries((lastAuthorsResult.data || []).map(profile => [profile.id, profile.username]));
   const lastAuthors = {};
   const lastPosts = {};
   const postCounts = {};
-  for (const post of (latestPosts || [])) {
-    postCounts[post.thread_id] = (postCounts[post.thread_id] || 0) + 1;
-    if (!lastPosts[post.thread_id]) {
-      lastPosts[post.thread_id] = post;
-      lastAuthors[post.thread_id] = post.user_id;
+  for (const topic of arr) {
+    postCounts[topic.id] = Number(topic.post_count || 0);
+    lastAuthors[topic.id] = topic.last_post_user_id;
+    if (topic.last_post_id) {
+      lastPosts[topic.id] = {
+        id: topic.last_post_id,
+        user_id: topic.last_post_user_id,
+        created_at: topic.last_post_at,
+        profiles: { username: authorNames[topic.last_post_user_id] || null }
+      };
     }
   }
 
@@ -439,7 +444,7 @@ async function render() {
 
           <div class="topic-meta">
             <span>👤 ${esc(topic.author || "Membre")}</span>
-            <span>🕒 ${formatTopicDate(topic.updated_at || topic.created_at)}</span>
+            <span>🕒 ${formatTopicDate(topic.last_post_at || topic.created_at)}</span>
           </div>
 
         </div>
