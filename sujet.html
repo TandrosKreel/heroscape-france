@@ -791,7 +791,7 @@ async function renderSubject() {
   const totalPages = Math.max(1, Math.ceil(pageResult.count / POSTS_PER_PAGE));
   const currentPage = pageResult.page;
   const pagePosts = posts;
-  const targetPostId = new URLSearchParams(location.search).get("post");
+  const targetPostId = new URLSearchParams(location.search).get("post") || (location.hash.startsWith("#post-") ? decodeURIComponent(location.hash.slice(6)) : "");
 
   let firstPostHtml = "";
   let repliesHtml = "";
@@ -978,7 +978,7 @@ async function renderSubject() {
     if(target){
       target.style.outline='2px solid var(--gold)';
       target.style.outlineOffset='4px';
-      requestAnimationFrame(()=>target.scrollIntoView({block:'end',behavior:'instant'}));
+      requestAnimationFrame(()=>requestAnimationFrame(()=>target.scrollIntoView({block:'end',behavior:'instant'})));
     }
   }
 
