@@ -973,12 +973,12 @@ async function renderSubject() {
   const {data:firstPollPost}=await window.supabaseClient.from("posts").select("id").eq("thread_id",id).order("created_at",{ascending:true}).order("id",{ascending:true}).limit(1).maybeSingle();
   await window.HeroscapePolls.show(subjectBox,posts.map(p=>p.id),currentPage>1?firstPollPost?.id:null);
 
-  if (targetPostId && /^\\d+$/.test(targetPostId)) {
+  if (targetPostId && /^\d+$/.test(targetPostId)) {
     const target=document.getElementById('post-'+targetPostId);
     if(target){
       target.style.outline='2px solid var(--gold)';
       target.style.outlineOffset='4px';
-      requestAnimationFrame(()=>requestAnimationFrame(()=>target.scrollIntoView({block:'end',behavior:'instant'})));
+      requestAnimationFrame(()=>{ target.scrollIntoView({block:'end',behavior:'auto'}); window.scrollBy(0, Math.max(0, target.getBoundingClientRect().bottom - window.innerHeight)); });
     }
   }
 
