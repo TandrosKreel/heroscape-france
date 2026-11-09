@@ -976,8 +976,7 @@ async function renderSubject() {
   if (targetPostId && /^\d+$/.test(targetPostId)) {
     const target=document.getElementById('post-'+targetPostId);
     if(target){
-      target.style.outline='2px solid var(--gold)';
-      target.style.outlineOffset='4px';
+      
       requestAnimationFrame(()=>{ target.scrollIntoView({block:'end',behavior:'auto'}); window.scrollBy(0, Math.max(0, target.getBoundingClientRect().bottom - window.innerHeight)); });
     }
   }
