@@ -2309,3 +2309,10 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
 .topic-page-links .pagination-jump{vertical-align:middle}
 .topic-page-links .pagination-jump input{width:42px;max-width:42px;padding:4px 2px;font-size:12px}
 .topic-page-links .pagination-jump button{padding:4px 5px;font-size:12px}
+
+/* Liens vers le dernier message : soulignement visible au survol. */
+#categories .category-last-link:hover .category-activity-text,
+.topic-status:hover .topic-last-post {
+  text-decoration: underline !important;
+  text-underline-offset: 2px;
+}
