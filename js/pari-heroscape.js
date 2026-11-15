@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const db=window.supabaseClient,$=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let cards=[],catalogueAll=[],catalogueStamp='',cardsRefreshing=null,members=[],user=null,admin=false,creator=false,cardStatAdjustments=[],matches=[],armies=[],items=[],votes=[],openPage=0,finishedPage=0,memberPage=0,cardPage=0,cardStatsFilter='available',build=[],tab='encours',mapPhotos=[],photoUploading=false;
+let cards=[],catalogueAll=[],catalogueStamp='',cardsRefreshing=null,members=[],user=null,admin=false,creator=false,cardStatAdjustments=[],matches=[],armies=[],items=[],votes=[],openPage=0,finishedPage=0,memberPage=0,cardPage=0,cardStatsFilter='all',build=[],tab='encours',mapPhotos=[],photoUploading=false;
 const msg=s=>$('bet-status').textContent=s;
 const call=async(name,args)=>{const {data,error}=await db.rpc(name,args);if(error)throw error;return data};
 const CREATOR_ID='a961f771-dd42-432d-827a-736d3958e5d5';
@@ -296,7 +296,7 @@ function render(){if(!cards.length)return;
  ms.sort((a,b)=>dir*(a[sort]-b[sort])||String(a.id).localeCompare(String(b.id)));
  memberPage=Math.min(memberPage,Math.max(0,Math.ceil(ms.length/20)-1));
 
- const statTiles=(rows,kind)=>'<div class="bet-stats-summary">'+(kind==='cards'?'<button type="button" class="bet-summary-filter'+(cardStatsFilter==='available'?' active':'')+'" data-card-filter="available" aria-pressed="'+(cardStatsFilter==='available')+'"><small>Cartes disponibles</small><strong>'+rows.filter(x=>!x.is_hidden&&!x.is_excluded).length+'</strong></button><button type="button" class="bet-summary-filter'+(cardStatsFilter==='played'?' active':'')+'" data-card-filter="played" aria-pressed="'+(cardStatsFilter==='played')+'"><small>Cartes jouées</small><strong>'+rows.filter(x=>x.total>0&&!x.is_excluded).length+'</strong></button>'+(creator?'<button type="button" class="bet-summary-filter'+(cardStatsFilter==='excluded'?' active':'')+'" data-card-filter="excluded" aria-pressed="'+(cardStatsFilter==='excluded')+'"><small>Cartes exclues</small><strong>'+rows.filter(x=>x.is_excluded).length+'</strong></button>':'') :playedMode?'<div><small>Joueurs</small><strong>'+rows.length+'</strong></div><div><small>Parties disputées</small><strong>'+rows.reduce((n,x)=>n+x.total,0)+'</strong></div><div><small>Victoires</small><strong>'+rows.reduce((n,x)=>n+x.wins,0)+'</strong></div>':'<div><small>Pronostiqueurs</small><strong>'+rows.length+'</strong></div><div><small>Paris réalisés</small><strong>'+rows.reduce((n,x)=>n+x.good+x.bad,0)+'</strong></div><div><small>Pronostics réussis</small><strong>'+rows.reduce((n,x)=>n+x.good,0)+'</strong></div>')+'</div>';
+ const statTiles=(rows,kind)=>'<div class="bet-stats-summary">'+(kind==='cards'?'<button type="button" class="bet-summary-filter'+(cardStatsFilter==='all'?' active':'')+'" data-card-filter="all" aria-pressed="'+(cardStatsFilter==='all')+'"><small>Toutes les cartes</small><strong>'+rows.filter(x=>!x.is_excluded).length+'</strong></button><button type="button" class="bet-summary-filter'+(cardStatsFilter==='played'?' active':'')+'" data-card-filter="played" aria-pressed="'+(cardStatsFilter==='played')+'"><small>Cartes jouées</small><strong>'+rows.filter(x=>x.total>0&&!x.is_excluded).length+'</strong></button>'+(creator?'<button type="button" class="bet-summary-filter'+(cardStatsFilter==='excluded'?' active':'')+'" data-card-filter="excluded" aria-pressed="'+(cardStatsFilter==='excluded')+'"><small>Cartes exclues</small><strong>'+rows.filter(x=>x.is_excluded).length+'</strong></button>':'') :playedMode?'<div><small>Joueurs</small><strong>'+rows.length+'</strong></div><div><small>Parties disputées</small><strong>'+rows.reduce((n,x)=>n+x.total,0)+'</strong></div><div><small>Victoires</small><strong>'+rows.reduce((n,x)=>n+x.wins,0)+'</strong></div>':'<div><small>Pronostiqueurs</small><strong>'+rows.length+'</strong></div><div><small>Paris réalisés</small><strong>'+rows.reduce((n,x)=>n+x.good+x.bad,0)+'</strong></div><div><small>Pronostics réussis</small><strong>'+rows.reduce((n,x)=>n+x.good,0)+'</strong></div>')+'</div>';
  const bar=(w,d,l)=>{const n=w+d+l;return '<div class="bet-result-track" aria-label="Victoires, égalités et défaites"><span style="width:'+(n?100*w/n:0)+'%;background:#4fba80"></span><span style="width:'+(n?100*d/n:0)+'%;background:#e2b54a"></span><span style="width:'+(n?100*l/n:0)+'%;background:#d46a6a"></span></div>'};
  if(tab==='participants'){
   $('bet-member-stats').innerHTML=statTiles(ms,'members')+'<div class="bet-stats-grid">'+ms.slice(memberPage*20,(memberPage+1)*20).map(x=>playedMode?
@@ -307,7 +307,7 @@ function render(){if(!cards.length)return;
 
  if(tab==='cartes'){
  const allCardStats=cardScores($('bet-card-scoring-format').value,true);
- let cs=allCardStats.filter(x=>(cardStatsFilter==='available'?(!x.is_hidden&&!x.is_excluded):cardStatsFilter==='played'?(x.total>0&&!x.is_excluded):(creator&&x.is_excluded))&&x.name.toLowerCase().includes($('bet-card-search').value.trim().toLowerCase()));
+ let cs=allCardStats.filter(x=>(cardStatsFilter==='all'?!x.is_excluded:cardStatsFilter==='played'?(x.total>0&&!x.is_excluded):(creator&&x.is_excluded))&&x.name.toLowerCase().includes($('bet-card-search').value.trim().toLowerCase()));
  sort=$('bet-card-sort').value;dir=$('bet-card-direction').value==='asc'?1:-1;cs.sort((a,b)=>dir*(a[sort]-b[sort])||a.name.localeCompare(b.name,'fr'));cardPage=Math.min(cardPage,Math.max(0,Math.ceil(cs.length/50)-1));
  const adminControls=x=>{
   if(!creator)return '';
@@ -332,7 +332,7 @@ function render(){if(!cards.length)return;
   try{
    await call('bet_card_stats_adjustment_set',{p_catalog_id:id,p_card_name:card.name,p_standard_wins:value('standard_wins'),p_standard_draws:value('standard_draws'),p_standard_losses:value('standard_losses'),p_delta_wins:value('delta_wins'),p_delta_draws:value('delta_draws'),p_delta_losses:value('delta_losses'),p_is_excluded:excluded,p_reason:reason||null});
    const {data,error}=await db.from('bet_card_stats_adjustments').select('*');if(error)throw error;cardStatAdjustments=data||[];
-   cardStatsFilter=excluded?'excluded':'available';cardPage=0;msg('Statistiques de '+card.name+' mises à jour.');render();
+   cardStatsFilter=excluded?'excluded':'all';cardPage=0;msg('Statistiques de '+card.name+' mises à jour.');render();
   }catch(error){msg('Modification impossible : '+error.message);b.disabled=false}
  });
  document.querySelectorAll('[data-vote-view]').forEach(button=>button.onclick=()=>{const match=button.dataset.voteMatch,view=button.dataset.voteView;document.querySelectorAll('[data-vote-view][data-vote-match="'+match+'"]').forEach(b=>b.classList.toggle('active',b.dataset.voteView===view));document.querySelectorAll('[data-vote-panel][data-vote-match="'+match+'"]').forEach(panel=>panel.hidden=panel.dataset.votePanel!==view)});
