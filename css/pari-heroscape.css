@@ -187,3 +187,21 @@
 .bet-voting-finished .bet-voter-list>div{margin-top:10px}
 .bet-voting-finished .bet-voter-list p{margin:6px 0;padding:10px 13px;border-radius:8px;background:#23303d;border:1px solid #374758}
 @media(max-width:600px){.bet-voting-finished .bet-vote-bar-row{padding:12px}.bet-voting-finished .bet-vote-bar-label{font-size:.87rem}}
+
+
+/* Gestion des statistiques des cartes — créateur uniquement. */
+.bet-card-admin{margin-top:14px;padding-top:12px;border-top:1px solid #465363}
+.bet-panel .bet-card-admin>button{margin:0;padding:8px 11px;border:1px solid #a88742;border-radius:7px;background:#283442;color:#f2d17d;font-weight:700}
+.bet-card-admin-editor{margin-top:10px;padding:12px;border:1px solid #a88742;border-radius:10px;background:#18232e}
+.bet-card-admin-editor[hidden]{display:none!important}
+.bet-card-admin-note{margin:0 0 12px;color:#c4cfdb;font-size:.84rem;line-height:1.45}
+.bet-card-admin-editor fieldset{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0;padding:10px;border:1px solid #465363;border-radius:8px;min-width:0}
+.bet-card-admin-editor legend{padding:0 5px;color:#f0c35e;font-weight:700}
+.bet-card-admin-editor label{display:flex;flex-direction:column;gap:5px;min-width:0;color:#dce3eb;font-size:.82rem}
+.bet-card-admin-editor input[type=number],.bet-card-admin-editor input[type=text]{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:8px;border:1px solid #617080;border-radius:6px;background:#111a23;color:#fff}
+.bet-card-admin-editor .bet-card-exclusion{display:flex;flex-direction:row;align-items:center;gap:8px;margin:12px 0;font-size:.88rem}
+.bet-card-admin-editor .bet-card-exclusion input{width:18px;height:18px;min-width:18px}
+.bet-card-admin-editor .bet-card-reason{margin:10px 0}
+.bet-panel .bet-card-admin-editor button[data-card-stats-save]{margin-top:5px;padding:9px 15px;background:#d2a444;color:#17202a;border:0;border-radius:7px;font-weight:800}
+.bet-stat-title>b{font-size:.72rem;color:#e9bd57;border:1px solid #a88742;border-radius:20px;padding:3px 7px}
+@media(max-width:520px){.bet-card-admin-editor fieldset{grid-template-columns:1fr}.bet-card-admin-editor fieldset label{display:grid;grid-template-columns:90px minmax(0,1fr);align-items:center}}
