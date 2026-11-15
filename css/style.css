@@ -2316,3 +2316,42 @@ body img.read-die[src*="De%20bleu%20non%20lu"]{
   text-decoration: underline !important;
   text-underline-offset: 2px;
 }
+
+
+/* Liste des sujets — confort de lecture sur téléphone */
+@media(max-width:600px){
+  #topics .topic{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:12px!important;
+    padding:16px 18px!important;
+  }
+  #topics .topic-main{
+    width:100%!important;
+    min-width:0!important;
+    padding-left:8px!important;
+    box-sizing:border-box!important;
+  }
+  #topics .topic-title{
+    padding-left:2px!important;
+  }
+  #topics .topic-side{
+    width:100%!important;
+    min-width:0!important;
+    margin:0!important;
+    justify-content:center!important;
+    flex-wrap:wrap!important;
+    gap:8px 12px!important;
+  }
+  #topics .topic-side .topic-status{
+    justify-content:center!important;
+    text-align:center!important;
+  }
+  #topics .topic-side .topic-last-post{
+    display:inline-block!important;
+    max-width:145px!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    text-align:center!important;
+    line-height:1.35!important;
+  }
+}
