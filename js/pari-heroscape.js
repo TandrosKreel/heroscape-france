@@ -235,7 +235,7 @@ function cardScores(scoringFormat='all',includeExcluded=false){
   const x=map.get(id)||{wins:0,draws:0,losses:0};
   const total=x.wins+x.draws+x.losses;
   return {...x,name:c.name,catalog_id:id,is_hidden:!!c.is_hidden,is_excluded:!!x.is_excluded,total,rate:total?100*x.wins/total:0};
- }).filter(x=>(!x.is_hidden||x.total>0)&&(includeExcluded||!x.is_excluded));
+ }).filter(x=>(!x.is_hidden||x.total>0||(includeExcluded&&x.is_excluded))&&(includeExcluded||!x.is_excluded));
  for(const [id,x] of map)if(!known.has(id)){
   const total=x.wins+x.draws+x.losses;
   output.push({...x,catalog_id:id,is_hidden:true,is_excluded:!!x.is_excluded,total,rate:total?100*x.wins/total:0});
