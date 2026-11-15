@@ -244,7 +244,7 @@ function cardScores(scoringFormat='all',includeExcluded=false){
 }
 function cardScore(name,scoringFormat='all',catalogId=null){
  const id=catalogId||'base:'+canonicalCardName(name);
- const s=cardScores(scoringFormat).find(x=>x.catalog_id===id);
+ const s=cardScores(scoringFormat,true).find(x=>x.catalog_id===id);
  return s?s.wins+'-'+s.draws+'-'+s.losses+' ('+s.rate.toFixed(1)+' %)':'0-0-0';
 }
 function memberScores(scoringFormat='all'){const map=new Map;for(const m of matches.filter(x=>x.status==='finished'&&(scoringFormat==='all'||(x.scoring_format||'standard')===scoringFormat))){const aa=byMatch(m.id);if(aa.length!==2||!/^1\s*vs\s*1$/i.test(String(m.format||'').trim()))continue;const wins=aa.filter(a=>a.is_winner).map(a=>a.id),pts=1;for(const v of voteFor(m.id)){const x=map.get(v.user_id)||{id:v.user_id,good:0,bad:0,points:0};const good=!m.is_draw&&v.army_ids.length>0&&v.army_ids.every(id=>wins.includes(id));if(good){x.good++;x.points+=pts}else x.bad++;map.set(v.user_id,x)}}return [...map.values()].map(x=>({...x,rate:100*x.good/(x.good+x.bad)}))}
