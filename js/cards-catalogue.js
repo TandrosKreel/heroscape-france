@@ -447,7 +447,7 @@ $('cards-permanent-delete').addEventListener('click',async()=>{
  if(!admin||!db)return;
  const id=$('cards-restore-list').value,card=edits.find(e=>e.id===id);
  if(!card||!card.is_hidden||card.is_permanently_deleted){inform('Sélectionne une carte masquée valide.',true);return}
- if(!confirm('Supprimer définitivement « '+card.name+' » ? Cette action est irréversible. Les cartes utilisées dans Pari Heroscape sont protégées.'))return;
+ if(!confirm('Supprimer définitivement « '+card.name+' » ? Cette action est irréversible. Ses résultats dans les parties en cours et terminées ainsi que ses statistiques historiques seront conservés ; elle ne sera plus proposée aux nouvelles parties.'))return;
  const confirmation=prompt('Pour confirmer, écris SUPPRIMER en majuscules :');
  if(confirmation!=='SUPPRIMER')return;
  const button=$('cards-permanent-delete');button.disabled=true;inform('Vérification des parties et suppression…');
